@@ -1,0 +1,205 @@
+
+<!DOCTYPE html>
+<html lang="de">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Produkt 01 – Warenbalon</title>
+<link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;700&display=swap" rel="stylesheet">
+<style>
+* { box-sizing:border-box; margin:0; padding:0; }
+body { font-family:'Montserrat', sans-serif; background:#f4f4f9; color:#111; }
+
+header { padding:20px; text-align:center; font-size:2.5rem; font-weight:700; color:#222; position: relative; }
+.back { display:block; margin:0 auto 20px auto; font-size:1rem; text-decoration:none; color:#555; text-align:center; transition:0.3s; }
+.back:hover { color:#000; }
+.cart-icon { position: absolute; top:20px; right:40px; cursor:pointer; transition: transform 0.2s; }
+.cart-icon:hover { transform: scale(1.2); }
+.cart-icon svg { width:28px; height:28px; stroke:#000; fill:none; stroke-width:2; stroke-linecap:round; stroke-linejoin:round; }
+
+#cart-dropdown { display:none; position:absolute; top:60px; right:40px; width:320px; background:#fff; border-radius:15px; box-shadow:0 8px 24px rgba(0,0,0,0.2); padding:15px; z-index:100; opacity:0; transition:opacity 0.3s ease; }
+#cart-dropdown.show { display:block; opacity:1; }
+#cart-dropdown h3 { margin:0 0 10px 0; font-size:1.2rem; border-bottom:1px solid #ddd; padding-bottom:5px; }
+#cart-dropdown ul { list-style:none; padding-left:0; max-height:220px; overflow-y:auto; margin-bottom:10px; }
+#cart-dropdown li { display:flex; justify-content:space-between; align-items:center; padding:8px 0; border-bottom:1px solid #eee; font-size:0.95rem; }
+#cart-dropdown li:last-child { border-bottom:none; }
+#cart-dropdown li button { background:none; border:none; color:red; font-weight:bold; cursor:pointer; font-size:1rem; }
+#cart-dropdown li button:hover { opacity:0.7; }
+#cart-dropdown button#checkout-btn { width:100%; padding:12px; background:#00c271; color:#fff; border:none; border-radius:10px; font-weight:bold; cursor:pointer; transition:0.3s; }
+#cart-dropdown button#checkout-btn:hover { background:#009957; }
+
+.container { display:flex; flex-wrap:wrap; max-width:1200px; margin:0 auto; justify-content:center; align-items:flex-start; gap:50px; padding:20px; }
+.product-block { display:flex; flex-direction:row; width:100%; padding:20px; gap:50px; align-items:flex-start; }
+.image-section { flex:1; display:flex; flex-direction:column; align-items:center; position:relative; overflow:hidden; touch-action: pan-y; }
+.main-image { width:100%; max-width:500px; border-radius:12px; transition:transform 0.3s; cursor:pointer; user-select:none; -webkit-user-drag:none; }
+.main-image:hover { transform:scale(1.03); }
+.sub-points { display:flex; gap:10px; justify-content:center; margin-top:15px; }
+.sub-points span { width:12px; height:12px; background:#ccc; border-radius:50%; cursor:pointer; transition:background 0.3s; }
+.sub-points span.active { background:#888; }
+
+.info-section { flex:1; display:flex; flex-direction:column; justify-content:flex-start; align-items:flex-start; gap:15px; padding-left:30px; }
+.product-name { font-size:2rem; font-weight:700; color:#111; }
+.price { font-size:1.6rem; font-weight:600; color:#00c271; }
+.quantity-wrapper { display:flex; align-items:center; gap:10px; font-size:1rem; }
+.quantity-wrapper input { width:60px; text-align:center; padding:6px; border:1px solid #ccc; border-radius:6px; font-size:1rem; }
+.add-cart-btn { padding:14px 0; width:100%; background:#00c271; color:#fff; font-weight:600; border:none; border-radius:8px; cursor:pointer; font-size:1rem; transition:0.3s; }
+.add-cart-btn:hover { background:#009957; }
+.accordion { margin-top:20px; font-size:1.5rem; font-weight:600; background:none; border:none; color:#111; cursor:pointer; transition:0.3s; align-self:center; }
+.accordion:hover { color:#555; }
+.panel { max-height:0; overflow:hidden; transition:max-height 0.4s ease; color:#555; font-size:0.95rem; text-align:left; margin-top:5px; }
+
+@media(max-width:900px){
+  .product-block { flex-direction:column; align-items:center; gap:30px; }
+  .info-section { align-items:center; text-align:center; padding-left:0; }
+  .add-cart-btn { width:100%; }
+  .accordion { margin-top:15px; }
+}
+</style>
+</head>
+<body>
+
+<header>
+  <span class="cart-icon" id="cart-icon" title="Warenkorb">
+    <svg xmlns="http://www.w3.org/2000/svg" fill="none" stroke="currentColor">
+      <path d="M6 2l1 5h10l1-5z"/>
+      <path d="M2 7h20v14H2z"/>
+      <path d="M16 11a4 4 0 0 1-8 0"/>
+    </svg>
+  </span>
+
+  <div id="cart-dropdown">
+    <h3>Warenkorb</h3>
+    <ul id="cart-items"><li>Der Warenkorb ist leer</li></ul>
+    <button id="checkout-btn">Zur Kasse</button>
+  </div>
+</header>
+
+<a href="index.html" class="back">← Startseite</a>
+
+<div class="container">
+  <div class="product-block">
+    <div class="image-section" id="imageSection">
+      <img class="main-image" id="mainImage" src="https://picsum.photos/500/500?random=11" alt="Produktbild">
+      <div class="sub-points">
+        <span onclick="changeImageByIndex(0)" class="active"></span>
+        <span onclick="changeImageByIndex(1)"></span>
+        <span onclick="changeImageByIndex(2)"></span>
+      </div>
+    </div>
+
+    <div class="info-section">
+      <div class="product-name" id="productName">Warenbalon</div>
+      <div class="price" id="priceDisplay">100 USDT / 100 USDC</div>
+      <div class="quantity-wrapper">
+        <label for="quantityInput">Menge:</label>
+        <input type="number" id="quantityInput" value="1" min="1">
+      </div>
+
+      <button type="button" class="add-cart-btn" onclick="addToCart()">Zum Warenkorb hinzufügen</button>
+      <button class="accordion">+</button>
+      <div class="panel">
+        <p>LIMITED RELEASE.<br>HOCHWERTIGE INHALTSSTOFFE.<br>ONLINE EXKLUSIV.</p>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+// Accordion
+const acc = document.querySelector('.accordion');
+const panel = document.querySelector('.panel');
+acc.addEventListener('click', () => {
+  acc.classList.toggle('active');
+  panel.style.maxHeight = panel.style.maxHeight ? null : panel.scrollHeight + "px";
+});
+
+// Bilder-Slider (funktionierende Bilder)
+const productImages = [
+  "https://picsum.photos/500/500?random=11",
+  "https://picsum.photos/500/500?random=12",
+  "https://picsum.photos/500/500?random=13"
+];
+let currentIndex = 0;
+
+function changeImageByIndex(index){
+  currentIndex = index;
+  document.getElementById('mainImage').src = productImages[index];
+  document.querySelectorAll('.sub-points span').forEach((p,i)=>p.classList.toggle('active',i===index));
+}
+
+// Swipe Touch
+let startX = 0;
+const imageSection = document.getElementById('imageSection');
+imageSection.addEventListener('touchstart', e => startX = e.touches[0].clientX );
+imageSection.addEventListener('touchend', e => {
+  const endX = e.changedTouches[0].clientX;
+  if(endX-startX>50) currentIndex = (currentIndex-1+productImages.length)%productImages.length;
+  else if(startX-endX>50) currentIndex = (currentIndex+1)%productImages.length;
+  changeImageByIndex(currentIndex);
+});
+
+// Klick Desktop
+document.getElementById('mainImage').addEventListener('click', e => {
+  const rect = e.target.getBoundingClientRect();
+  currentIndex = (e.clientX - rect.left > rect.width/2) ? (currentIndex+1)%productImages.length : (currentIndex-1+productImages.length)%productImages.length;
+  changeImageByIndex(currentIndex);
+});
+
+// Menge
+const quantityInput = document.getElementById('quantityInput');
+
+// Warenkorb
+let cart = [];
+const cartIcon = document.getElementById('cart-icon');
+const cartDropdown = document.getElementById('cart-dropdown');
+const cartItems = document.getElementById('cart-items');
+const checkoutBtn = document.getElementById('checkout-btn');
+
+function updateCartDropdown() {
+  cartItems.innerHTML='';
+  if(cart.length===0){ cartItems.innerHTML='<li>Der Warenkorb ist leer</li>'; return; }
+  cart.forEach((item,index)=>{
+    const li=document.createElement('li');
+    li.innerHTML=`${item.name} x${item.quantity} - ${item.price} <button class="remove-btn" data-index="${index}">×</button>`;
+    cartItems.appendChild(li);
+  });
+  localStorage.setItem('cart',JSON.stringify(cart));
+}
+
+cartItems.addEventListener('click', e=>{
+  if(e.target.classList.contains('remove-btn')){
+    const idx = e.target.dataset.index;
+    cart.splice(idx,1);
+    updateCartDropdown();
+    e.stopPropagation();
+  }
+});
+
+cartIcon.addEventListener('click', e=>{ e.stopPropagation(); cartDropdown.classList.toggle('show'); });
+document.addEventListener('click', e=>{ if(!cartDropdown.contains(e.target) && e.target!==cartIcon){ cartDropdown.classList.remove('show'); } });
+
+// Load Cart
+const stored = localStorage.getItem('cart');
+if(stored){ cart = JSON.parse(stored); updateCartDropdown(); }
+
+function addToCart() {
+  const name='Warenbalon';
+  const price='100 USDT / 100 USDC';
+  const quantity=parseInt(quantityInput.value)||1;
+  const existing=cart.find(i=>i.name===name);
+  if(existing){ existing.quantity += quantity; } else { cart.push({name,price,quantity}); }
+  updateCartDropdown();
+  cartDropdown.classList.add('show');
+  alert('Produkt wurde zum Warenkorb hinzugefügt!');
+}
+
+checkoutBtn.addEventListener('click', ()=>{
+  if(cart.length===0){ alert('Dein Warenkorb ist leer!'); return; }
+  const index = cart.findIndex(i=>i.name==='Warenbalon');
+  if(index!==-1){ cart[index].quantity = parseInt(quantityInput.value)||1; }
+  const ordersParam = encodeURIComponent(JSON.stringify(cart));
+  window.location.href = `pay.html?orders=${ordersParam}`;
+});
+</script>
+</body>
+</html>

@@ -1,0 +1,24 @@
+Last login: Sun Feb 22 12:53:48 on ttys000
+dompom@Mac Dompomstore % cd /Pfad/zu/deinem/shop
+git init
+git add .
+git commit -m "Initial commit"
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

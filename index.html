@@ -1,0 +1,201 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Shop Index</title>
+<link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;700&display=swap" rel="stylesheet">
+<style>
+* { box-sizing:border-box; margin:0; padding:0; }
+body { font-family:'Montserrat', sans-serif; background:#f4f4f9; color:#111; }
+
+/* HEADER */
+header {
+  padding:20px;
+  text-align:center;
+  font-size:2.5rem;
+  font-weight:700;
+  color:#222;
+  position: relative;
+}
+.cart-icon { position: absolute; top:20px; right:40px; cursor:pointer; transition: transform 0.2s; }
+.cart-icon:hover { transform: scale(1.2); }
+.cart-icon svg { width:28px; height:28px; stroke:#000; fill:none; stroke-width:2; stroke-linecap:round; stroke-linejoin:round; }
+
+#cart-dropdown { display:none; position:absolute; top:70px; right:40px; width:350px; background:#fff; border-radius:15px; box-shadow:0 10px 30px rgba(0,0,0,0.2); padding:15px; z-index:1000; }
+#cart-dropdown.show { display:block; }
+#cart-dropdown h3 { font-size:1.2rem; margin-bottom:10px; border-bottom:1px solid #ddd; padding-bottom:6px; }
+#cart-items { list-style:none; max-height:220px; overflow-y:auto; margin-bottom:12px; padding-left:0; }
+#cart-items li { display:flex; justify-content:space-between; align-items:center; font-size:0.95rem; padding:8px 0; border-bottom:1px solid #eee; }
+#cart-items li:last-child { border-bottom:none; }
+#cart-items button { background:none; border:none; color:red; cursor:pointer; font-size:1.1rem; }
+
+#checkout-btn { width:100%; padding:12px; background:#00c271; color:#fff; border:none; border-radius:10px; font-weight:bold; cursor:pointer; }
+#checkout-btn:hover { background:#009957; }
+
+/* PRODUKT GRID */
+.container {
+  max-width:1400px;
+  margin:40px auto;
+  padding:0 20px;
+  display:grid;
+  grid-template-columns: repeat(5, 1fr);
+  gap:28px;
+}
+
+/* PRODUKT BOX */
+.product-box {
+  text-align:center;
+  user-select:none;
+}
+
+.product-box img {
+  width:100%;
+  height:220px;
+  object-fit:cover;
+  display:block;
+  border-radius:15px;
+  background:#fff;
+  cursor:pointer;
+  transition: transform 0.25s ease, box-shadow 0.25s ease;
+}
+.product-box img:hover {
+  transform: translateY(-6px);
+  box-shadow: 0 10px 28px rgba(0,0,0,0.15);
+}
+
+.product-name { font-size:0.95rem; font-weight:700; letter-spacing:0.08em; text-transform:uppercase; color:#111; margin-top:12px; }
+
+@media (max-width:1200px) { .container { grid-template-columns: repeat(4, 1fr); } }
+@media (max-width:900px)  { .container { grid-template-columns: repeat(3, 1fr); } }
+@media (max-width:600px)  { .container { grid-template-columns: repeat(2, 1fr); } }
+</style>
+</head>
+<body>
+
+<header>
+  Dompomstore
+  <span class="cart-icon" id="cart-icon">
+    <svg xmlns="http://www.w3.org/2000/svg">
+      <path d="M6 2l1 5h10l1-5z"/>
+      <path d="M2 7h20v14H2z"/>
+      <path d="M16 11a4 4 0 0 1-8 0"/>
+    </svg>
+  </span>
+
+  <div id="cart-dropdown">
+    <h3>Warenkorb</h3>
+    <ul id="cart-items"><li>Der Warenkorb ist leer</li></ul>
+    <button id="checkout-btn">Zur Kasse</button>
+  </div>
+</header>
+
+<div class="container">
+  <div class="product-box" data-price="25">
+    <img src="images/test cyp.png" alt="TEST CYP" data-link="produkt1.html">
+    <div class="product-name">TEST CYP</div>
+  </div>
+
+  <div class="product-box" data-price="19">
+    <img src="https://picsum.photos/seed/p02/400/400" alt="PRODUKT 02" data-link="produkt2.html">
+    <div class="product-name">PRODUKT 02</div>
+  </div>
+
+  <div class="product-box" data-price="30">
+    <img src="https://picsum.photos/seed/p03/400/400" alt="PRODUKT 03" data-link="produkt3.html">
+    <div class="product-name">PRODUKT 03</div>
+  </div>
+
+  <div class="product-box" data-price="22">
+    <img src="images/zyn.png" alt="PRODUKT 04" data-link="produkt4.html">
+    <div class="product-name">PRODUKT 04</div>
+  </div>
+
+  <div class="product-box" data-price="18">
+    <img src="https://picsum.photos/seed/p05/400/400" alt="PRODUKT 05" data-link="produkt5.html">
+    <div class="product-name">PRODUKT 05</div>
+  </div>
+</div>
+
+<script>
+// Warenkorb
+let cart = [];
+const cartIcon = document.getElementById('cart-icon');
+const cartDropdown = document.getElementById('cart-dropdown');
+const cartItems = document.getElementById('cart-items');
+const checkoutBtn = document.getElementById('checkout-btn');
+
+// 1️⃣ Warenkorb aus localStorage laden
+function loadCart() {
+  const stored = localStorage.getItem('cart');
+  cart = stored ? JSON.parse(stored) : [];
+  cart.forEach(item => { if(!item.quantity) item.quantity = 1; });
+  updateCartDropdown();
+}
+
+// 2️⃣ Warenkorb rendern / update (nur Name + Menge)
+function updateCartDropdown() {
+  cartItems.innerHTML = '';
+  if(cart.length === 0){
+    cartItems.innerHTML = '<li>Der Warenkorb ist leer</li>';
+    localStorage.setItem('cart', JSON.stringify(cart));
+    return;
+  }
+  cart.forEach((item, index) => {
+    const li = document.createElement('li');
+    li.innerHTML = `${item.name} x${item.quantity} <button class="remove-btn" data-index="${index}">×</button>`;
+    cartItems.appendChild(li);
+  });
+  // ✅ Synchronisiere immer mit localStorage
+  localStorage.setItem('cart', JSON.stringify(cart));
+}
+
+// Entfernen aus Warenkorb
+cartItems.addEventListener('click', e => {
+  if(e.target.classList.contains('remove-btn')){
+    const idx = e.target.dataset.index;
+    // 1️⃣ immer aktuell laden
+    loadCart();
+    // 2️⃣ Element entfernen
+    cart.splice(idx, 1);
+    // 3️⃣ Dropdown & localStorage aktualisieren
+    updateCartDropdown();
+    e.stopPropagation();
+  }
+});
+
+// Icon Klick
+cartIcon.addEventListener('click', e=>{
+  e.stopPropagation();
+  loadCart(); // immer den aktuellen Warenkorb laden
+  cartDropdown.classList.toggle('show');
+});
+
+// Klick außerhalb schließt
+document.addEventListener('click', e=>{
+  if(!cartDropdown.contains(e.target) && e.target!==cartIcon){
+    cartDropdown.classList.remove('show');
+  }
+});
+
+// Load on page load
+loadCart();
+
+// Produkte Klick -> Weiterleitung auf Produktseite
+document.querySelectorAll('.product-box').forEach(box=>{
+  const img = box.querySelector('img');
+  img.addEventListener('click', ()=>{
+    window.location.href = img.dataset.link;
+  });
+});
+
+// Checkout Button
+checkoutBtn.addEventListener('click', ()=>{
+  loadCart(); // immer aktuellen Warenkorb laden
+  if(cart.length===0){ alert('Dein Warenkorb ist leer!'); return; }
+  const ordersParam = encodeURIComponent(JSON.stringify(cart));
+  window.location.href = `pay.html?orders=${ordersParam}`;
+});
+</script>
+</body>
+</html>

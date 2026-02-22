@@ -1,0 +1,174 @@
+
+
+<!DOCTYPE html>
+<html lang="de">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Danke – Bestellung erfolgreich</title>
+<link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;700&display=swap" rel="stylesheet">
+
+<style>
+body {
+  margin: 0;
+  font-family: 'Montserrat', sans-serif;
+  background: linear-gradient(135deg, #f9f9f9, #f1f3f6);
+  color: #111;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  min-height: 100vh;
+  padding: 20px;
+}
+
+.container {
+  background: #fff;
+  padding: 45px 30px;
+  border-radius: 22px;
+  max-width: 520px;
+  width: 100%;
+  box-shadow: 0 12px 40px rgba(0,0,0,0.12);
+  text-align: center;
+  animation: fadeIn 0.6s ease;
+}
+
+.success-icon { font-size: 46px; margin-bottom: 6px; }
+
+h1 { font-size: 28px; font-weight: 700; margin-bottom: 6px; }
+
+.subline {
+  width: 60px;
+  height: 3px;
+  background: linear-gradient(90deg, #111, #555);
+  border-radius: 5px;
+  margin: 10px auto 18px;
+}
+
+p { font-size: 14px; color: #555; margin-bottom: 25px; }
+
+.box { text-align: left; margin-bottom: 30px; padding: 18px 14px; background: #fafafa; border-radius: 14px; border: 1px solid #eee; }
+
+.box-header { display: flex; flex-direction: column; align-items: center; margin-bottom: 12px; }
+.box-header h3 { font-size: 16px; margin: 6px 0 0; }
+
+.bag-svg { width: 36px; height: 36px; stroke: #000; fill: none; stroke-width: 2; stroke-linecap: round; stroke-linejoin: round; }
+
+.box ul { list-style: none; padding: 0; margin: 0; }
+.box li { font-size: 14px; padding: 8px 0; border-bottom: 1px dashed #e5e5e5; }
+.box li:last-child { border-bottom: none; }
+
+.item-row { display: flex; justify-content: space-between; }
+.item-meta { font-size: 12px; color: #777; }
+.total { font-weight: 700; margin-top: 12px; display: flex; justify-content: space-between; font-size: 15px; }
+
+.btn { display: block; background: linear-gradient(135deg, #111, #2a2a2a); color: #fff; font-weight: 700; text-transform: uppercase; padding: 15px; border-radius: 14px; text-decoration: none; transition: 0.25s ease; margin-bottom: 12px; }
+.btn:hover { transform: translateY(-1px); box-shadow: 0 8px 24px rgba(0,0,0,0.18); }
+.btn-telegram { background: linear-gradient(135deg, #0088cc, #006699); }
+
+@keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
+</style>
+</head>
+
+<body>
+
+<div class="container">
+  <div class="success-icon">✅</div>
+
+  <h1>Bestellung erfolgreich!</h1>
+  <div class="subline"></div>
+
+  <p>Vielen Dank für dein Vertrauen.<br>Hier sind alle Details deiner Bestellung:</p>
+
+  <div class="box">
+    <div class="box-header">
+      <svg class="bag-svg" xmlns="http://www.w3.org/2000/svg">
+        <path d="M6 2l1 5h10l1-5z"/>
+        <path d="M2 7h20v14H2z"/>
+        <path d="M16 11a4 4 0 0 1-8 0"/>
+      </svg>
+      <h3>Bestellte Artikel</h3>
+    </div>
+
+    <ul id="order-items"><li>Keine Bestellung gefunden</li></ul>
+    <div class="total">
+      <span>Gesamtbetrag</span>
+      <span id="order-total">0.00 €</span>
+    </div>
+  </div>
+
+  <a href="index.html" class="btn" id="home-btn">Startseite</a>
+  <a href="https://t.me/dompomstore" target="_blank" class="btn btn-telegram" id="telegram-btn">Telegram Support</a>
+</div>
+
+<script>
+function getURLParam(name) {
+  const params = new URLSearchParams(window.location.search);
+  return params.get(name);
+}
+
+const orderItemsEl = document.getElementById('order-items');
+const orderTotalEl = document.getElementById('order-total');
+
+let cart = [];
+const ordersParam = getURLParam('orders');
+
+if (ordersParam) {
+  try { cart = JSON.parse(decodeURIComponent(ordersParam)); } catch(e){ cart = []; }
+} else {
+  cart = JSON.parse(localStorage.getItem('cart') || '[]');
+}
+
+orderItemsEl.innerHTML = '';
+let total = 0;
+
+if(cart.length === 0) {
+  orderItemsEl.innerHTML = '<li>Keine Bestellung gefunden</li>';
+} else {
+  let currency = ''; // Währung speichern
+  orderItemsEl.innerHTML = ''; // vorherige Liste leeren
+  let total = 0;
+
+  cart.forEach(item => {
+    // Einzelpreis extrahieren
+    let match = item.price.match(/\d+(\.\d+)?/);
+    let priceNum = match ? parseFloat(match[0]) : 0;
+
+    // Währung extrahieren (nur einmal)
+    if(!currency) {
+      currency = item.price.replace(/[\d\s\/]/g,'').trim();
+    }
+
+    const quantity = parseInt(item.quantity) || 1;
+    const itemTotal = priceNum * quantity;
+    total += itemTotal;
+
+    const li = document.createElement('li');
+    li.innerHTML = `
+      <div class="item-row">
+        <strong>${item.name}</strong>
+        <strong>${itemTotal.toFixed(2)} ${currency}</strong>
+      </div>
+      <div class="item-meta">
+        ${quantity} × ${priceNum.toFixed(2)} ${currency}
+      </div>
+    `;
+    orderItemsEl.appendChild(li);
+  });
+
+  // Gesamtbetrag korrekt anzeigen
+  orderTotalEl.textContent = total.toFixed(2) + ' ' + currency;
+}
+
+function clearCartAndGo(url) {
+  localStorage.removeItem('cart');
+  localStorage.removeItem('shipping');
+  localStorage.removeItem('currency');
+  window.location.href = url;
+}
+
+document.getElementById('home-btn').addEventListener('click', () => clearCartAndGo('index.html'));
+document.getElementById('telegram-btn').addEventListener('click', () => clearCartAndGo('https://t.me/dompomstore'));
+</script>
+
+</body>
+</html>
