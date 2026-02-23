@@ -88,6 +88,14 @@ header {
   .cart-panel { width: 400px; max-width: none; right: -100%; }
 }
 
+/* Mobile: beim Öffnen etwas weiter nach links */
+@media (max-width: 767px) {
+  .cart-panel.open {
+    right: 10px;
+  }
+}
+
+/* Desktop */
 .cart-panel.open { right: 0; }
 
 .cart-panel h3 { font-size: 0.9rem; letter-spacing: 0.12em; margin-bottom: 20px; }
