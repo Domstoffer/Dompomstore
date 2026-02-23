@@ -120,19 +120,81 @@ header {
 @media (max-width:1200px) { .container { grid-template-columns: repeat(4, 1fr); } }
 @media (max-width:900px)  { .container { grid-template-columns: repeat(3, 1fr); } }
 @media (max-width:600px)  { .container { grid-template-columns: repeat(2, 1fr); } }
+/* =========================
+   MOBILE OPTIMIERUNG
+========================= */
+
+@media (max-width:768px){
+
+  header{
+    font-size:1.6rem;
+    padding:18px 15px;
+  }
+
+  .cart-icon{
+    right:18px;
+    top:18px;
+  }
+
+  #cart-dropdown{
+    right:4%;
+    width:92%;
+    top:70px;
+    border-radius:18px;
+  }
+
+  .container{
+    margin:25px auto;
+    gap:18px;
+  }
+
+  .product-box img{
+    height:170px;
+  }
+
+  .product-name{
+    font-size:0.85rem;
+    margin-top:10px;
+  }
+}
+.cart-icon{
+  position:absolute;
+  top:20px;
+  right:40px;
+  cursor:pointer;
+  transition: transform 0.2s;
+}
+
+.cart-badge{
+  position:absolute;
+  top:-6px;
+  right:-8px;
+  background:#ff3b30;
+  color:#fff;
+  font-size:11px;
+  font-weight:600;
+  border-radius:50%;
+  width:18px;
+  height:18px;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+}
 </style>
+
 </head>
 <body>
 
 <header>
   Dompomstore
-  <span class="cart-icon" id="cart-icon">
-    <svg xmlns="http://www.w3.org/2000/svg">
-      <path d="M6 2l1 5h10l1-5z"/>
-      <path d="M2 7h20v14H2z"/>
-      <path d="M16 11a4 4 0 0 1-8 0"/>
-    </svg>
-  </span>
+ <span class="cart-icon" id="cart-icon">
+  <div id="cart-count" class="cart-badge" style="display:none;">0</div>
+  <svg xmlns="http://www.w3.org/2000/svg">
+    <path d="M6 2l1 5h10l1-5z"/>
+    <path d="M2 7h20v14H2z"/>
+    <path d="M16 11a4 4 0 0 1-8 0"/>
+  </svg>
+</span>
 
   <div id="cart-dropdown">
     <h3>Warenkorb</h3>
@@ -174,6 +236,7 @@ const cartIcon = document.getElementById('cart-icon');
 const cartDropdown = document.getElementById('cart-dropdown');
 const cartItems = document.getElementById('cart-items');
 const checkoutBtn = document.getElementById('checkout-btn');
+const cartCount = document.getElementById('cart-count');
 
 function loadCart() {
   const stored = localStorage.getItem('cart');
@@ -184,16 +247,30 @@ function loadCart() {
 
 function updateCartDropdown() {
   cartItems.innerHTML = '';
+
+  let totalItems = 0;
+
   if(cart.length === 0){
     cartItems.innerHTML = '<li>Der Warenkorb ist leer</li>';
+    cartCount.style.display = "none";
     localStorage.setItem('cart', JSON.stringify(cart));
     return;
   }
+
   cart.forEach((item, index) => {
+    totalItems += item.quantity;
+
     const li = document.createElement('li');
-    li.innerHTML = `${item.name} x${item.quantity} <button class="remove-btn" data-index="${index}">×</button>`;
+    li.innerHTML = `
+      ${item.name} x${item.quantity}
+      <button class="remove-btn" data-index="${index}">×</button>
+    `;
     cartItems.appendChild(li);
   });
+
+  cartCount.style.display = "flex";
+  cartCount.textContent = totalItems;
+
   localStorage.setItem('cart', JSON.stringify(cart));
 }
 
