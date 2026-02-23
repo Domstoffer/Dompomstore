@@ -99,7 +99,7 @@ header {
   top: 0;
   right: -100%;
   width: 85%;
-  max-width: 320px; /* kleiner für mobile */
+  max-width: 320px;
   height: 100%;
   background: #fff;
   box-shadow: -10px 0 30px rgba(0,0,0,0.15);
@@ -110,7 +110,7 @@ header {
 
 @media (min-width: 768px) {
   .cart-panel {
-    width: 400px; /* größer für Desktop */
+    width: 400px;
   }
 }
 
@@ -252,9 +252,9 @@ function renderCart() {
   }
 }
 
+// Artikel hinzufügen / entfernen
 function addToCart(index) { cart.push(products[index]); saveCart(); renderCart(); }
 function removeFromCart(index) { cart.splice(index, 1); saveCart(); renderCart(); }
-renderCart();
 
 // =======================
 // Grid Toggle Handy 3 -> 2 -> 1 Spalte
@@ -280,8 +280,16 @@ const cartBtn = document.getElementById('cartBtn');
 const cartPanel = document.getElementById('cartPanel');
 const overlay = document.getElementById('overlay');
 
-cartBtn.addEventListener('click', () => { cartPanel.classList.add('open'); overlay.classList.add('show'); renderCart(); });
-overlay.addEventListener('click', () => { cartPanel.classList.remove('open'); overlay.classList.remove('show'); });
+cartBtn.addEventListener('click', () => {
+  renderCart(); // immer aktuellen Warenkorb anzeigen
+  cartPanel.classList.add('open');
+  overlay.classList.add('show');
+});
+
+overlay.addEventListener('click', () => {
+  cartPanel.classList.remove('open');
+  overlay.classList.remove('show');
+});
 
 // =======================
 // Newsletter Popup beim Laden
@@ -321,50 +329,18 @@ window.addEventListener('load', () => {
 
       document.getElementById('subscribeBtn').addEventListener('click', () => {
         const email = document.getElementById('newsletterEmail').value;
-        if(email) { alert(`Danke! ${email} wurde eingetragen.`); localStorage.setItem('newsletterClosed','true'); document.body.removeChild(popup); }
+        if(email) {
+          alert(`Danke! ${email} wurde eingetragen.`);
+          localStorage.setItem('newsletterClosed','true');
+          document.body.removeChild(popup);
+        }
       });
     }
   }, 500);
 });
 
-// Artikel hinzufügen
-function addToCart(index) {
-  cart.push(products[index]);
-  saveCart();
-  renderCart();
-}
-
-// Artikel entfernen
-function removeFromCart(index) {
-  cart.splice(index, 1);
-  saveCart();
-  renderCart();
-}
-
 // Initial render
 renderCart();
-
-/* GRID TOGGLE */
-const grid = document.getElementById('productGrid');
-const toggleBtn = document.getElementById('gridToggle');
-toggleBtn.addEventListener('click', () => {
-  grid.classList.toggle('two-cols');
-});
-
-/* CART OPEN / CLOSE */
-const cartBtn = document.getElementById('cartBtn');
-const cartPanel = document.getElementById('cartPanel');
-const overlay = document.getElementById('overlay');
-
-cartBtn.addEventListener('click', () => {
-  cartPanel.classList.add('open');
-  overlay.classList.add('show');
-});
-
-overlay.addEventListener('click', () => {
-  cartPanel.classList.remove('open');
-  overlay.classList.remove('show');
-});
 </script>
 
 </body>
