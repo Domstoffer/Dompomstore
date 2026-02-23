@@ -1,184 +1,202 @@
+
 <!DOCTYPE html>
 <html lang="de">
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Dompomstore</title>
-
-<link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500&display=swap" rel="stylesheet">
-
+<title>Shop Index</title>
+<link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;700&display=swap" rel="stylesheet">
 <style>
-* { box-sizing: border-box; margin: 0; padding: 0; }
-body { font-family: 'Montserrat', sans-serif; background: #fff; color: #000; }
+* { box-sizing:border-box; margin:0; padding:0; }
+body { font-family:'Montserrat', sans-serif; background:#f4f4f9; color:#111; }
 
 /* HEADER */
 header {
-  height: 52px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  font-size: 0.85rem;
-  font-weight: 500;
-  letter-spacing: 0.14em;
-  position: sticky;
-  top: 0;
-  background: #fff;
-  z-index: 100;
+  padding:20px;
+  text-align:center;
+  font-size:2.5rem;
+  font-weight:700;
+  color:#222;
+  position: relative;
 }
-.grid-toggle { position: absolute; left: 14px; font-size: 22px; cursor: pointer; user-select: none; }
-.cart-icon { position: absolute; right: 14px; cursor: pointer; z-index: 250; }
-.cart-icon svg { width: 22px; height: 22px; stroke: #000; fill: none; stroke-width: 2; }
+.cart-icon { position: absolute; top:20px; right:40px; cursor:pointer; transition: transform 0.2s; }
+.cart-icon:hover { transform: scale(1.2); }
+.cart-icon svg { width:28px; height:28px; stroke:#000; fill:none; stroke-width:2; stroke-linecap:round; stroke-linejoin:round; }
+
+#cart-dropdown { display:none; position:absolute; top:70px; right:40px; width:350px; background:#fff; border-radius:15px; box-shadow:0 10px 30px rgba(0,0,0,0.2); padding:15px; z-index:1000; }
+#cart-dropdown.show { display:block; }
+#cart-dropdown h3 { font-size:1.2rem; margin-bottom:10px; border-bottom:1px solid #ddd; padding-bottom:6px; }
+#cart-items { list-style:none; max-height:220px; overflow-y:auto; margin-bottom:12px; padding-left:0; }
+#cart-items li { display:flex; justify-content:space-between; align-items:center; font-size:0.95rem; padding:8px 0; border-bottom:1px solid #eee; }
+#cart-items li:last-child { border-bottom:none; }
+#cart-items button { background:none; border:none; color:red; cursor:pointer; font-size:1.1rem; }
+
+#checkout-btn { width:100%; padding:12px; background:#00c271; color:#fff; border:none; border-radius:10px; font-weight:bold; cursor:pointer; }
+#checkout-btn:hover { background:#009957; }
 
 /* PRODUKT GRID */
 .container {
-  display: grid;
-  grid-template-columns: repeat(1, 1fr);
-  column-gap: 16px;
-  row-gap: 36px;
-  padding: 18px 14px 80px;
+  max-width:1400px;
+  margin:40px auto;
+  padding:0 20px;
+  display:grid;
+  grid-template-columns: repeat(5, 1fr);
+  gap:28px;
 }
-.product-box { text-align: center; }
-.product-box img { width: 100%; display: block; cursor: pointer; }
-.product-name { margin-top: 8px; font-size: 0.7rem; letter-spacing: 0.18em; font-weight: 500; }
 
-/* WARENKORB */
-.cart-panel {
-  position: fixed;
-  top: 0;
-  right: -85%; /* mobile start */
-  width: 75%;
-  max-width: 300px;
-  height: 100%;
-  background: #fff;
-  box-shadow: -10px 0 30px rgba(0,0,0,0.15);
-  padding: 20px;
-  transition: right 0.3s ease;
-  z-index: 200;
+/* PRODUKT BOX */
+.product-box {
+  text-align:center;
+  user-select:none;
 }
-.cart-panel.open { right: 0; }
-.cart-panel h3 { font-size: 0.9rem; letter-spacing: 0.12em; margin-bottom: 20px; }
-#cartItems { font-size: 0.8rem; margin-bottom: 10px; }
-.cart-item { display: flex; align-items: center; margin-bottom: 10px; }
-.cart-item img { width: 40px; height: 40px; object-fit: cover; margin-right: 8px; }
 
-/* OVERLAY */
-.overlay {
-  position: fixed;
-  inset: 0;
-  background: rgba(0,0,0,0.3);
-  opacity: 0;
-  pointer-events: none;
-  transition: opacity 0.3s;
-  z-index: 150;
+.product-box img {
+  width:100%;
+  height:220px;
+  object-fit:cover;
+  display:block;
+  border-radius:15px;
+  background:#fff;
+  cursor:pointer;
+  transition: transform 0.25s ease, box-shadow 0.25s ease;
 }
-.overlay.show { opacity: 1; pointer-events: auto; }
+.product-box img:hover {
+  transform: translateY(-6px);
+  box-shadow: 0 10px 28px rgba(0,0,0,0.15);
+}
 
-/* DESKTOP STYLES */
-@media (min-width: 768px) {
-  .container { grid-template-columns: repeat(3, 1fr); max-width: 1200px; margin: 0 auto; }
-  .container.two-cols { grid-template-columns: repeat(2, 1fr); }
-  .cart-panel { width: 400px; right: -100%; }
-}
+.product-name { font-size:0.95rem; font-weight:700; letter-spacing:0.08em; text-transform:uppercase; color:#111; margin-top:12px; }
+
+@media (max-width:1200px) { .container { grid-template-columns: repeat(4, 1fr); } }
+@media (max-width:900px)  { .container { grid-template-columns: repeat(3, 1fr); } }
+@media (max-width:600px)  { .container { grid-template-columns: repeat(2, 1fr); } }
 </style>
 </head>
-
 <body>
 
 <header>
-  <span class="grid-toggle" id="gridToggle">＋</span>
-  DOMPOMSTORE
-  <span class="cart-icon" id="cartBtn">
+  Dompomstore
+  <span class="cart-icon" id="cart-icon">
     <svg xmlns="http://www.w3.org/2000/svg">
       <path d="M6 2l1 5h10l1-5z"/>
       <path d="M2 7h20v14H2z"/>
+      <path d="M16 11a4 4 0 0 1-8 0"/>
     </svg>
   </span>
+
+  <div id="cart-dropdown">
+    <h3>Warenkorb</h3>
+    <ul id="cart-items"><li>Der Warenkorb ist leer</li></ul>
+    <button id="checkout-btn">Zur Kasse</button>
+  </div>
 </header>
 
-<div class="container" id="productGrid"></div>
+<div class="container">
+  <div class="product-box" data-price="25">
+    <img src="images/test cyp.png" alt="TEST CYP" data-link="produkt1.html">
+    <div class="product-name">TEST CYP</div>
+  </div>
 
-<!-- WARENKORB -->
-<div class="cart-panel" id="cartPanel">
-  <h3>WARENKORB</h3>
-  <div id="cartItems">Dein Warenkorb ist leer</div>
-  <div id="cartTotal" style="margin-top:10px; font-weight:500;">Gesamt: €0.00</div>
+  <div class="product-box" data-price="19">
+    <img src="https://picsum.photos/seed/p02/400/400" alt="PRODUKT 02" data-link="produkt2.html">
+    <div class="product-name">PRODUKT 02</div>
+  </div>
+
+  <div class="product-box" data-price="30">
+    <img src="https://picsum.photos/seed/p03/400/400" alt="PRODUKT 03" data-link="produkt3.html">
+    <div class="product-name">PRODUKT 03</div>
+  </div>
+
+  <div class="product-box" data-price="22">
+    <img src="images/zyn.png" alt="PRODUKT 04" data-link="produkt4.html">
+    <div class="product-name">PRODUKT 04</div>
+  </div>
+
+  <div class="product-box" data-price="18">
+    <img src="https://picsum.photos/seed/p05/400/400" alt="PRODUKT 05" data-link="produkt5.html">
+    <div class="product-name">PRODUKT 05</div>
+  </div>
 </div>
 
-<div class="overlay" id="overlay"></div>
-
 <script>
-// Produkte Array
-const products = [
-  {name:"PK-01", price:29.99, page:"produkt1.html", img:"images/test cyp.png"},
-  {name:"JC-10", price:19.99, page:"produkt2.html", img:"https://picsum.photos/seed/a/500/500"},
-  {name:"JC-11", price:24.99, page:"produkt3.html", img:"https://picsum.photos/seed/b/500/500"},
-  {name:"SL-03", price:14.99, page:"produkt4.html", img:"https://picsum.photos/seed/c/500/500"}
-];
-
-// Produkte rendern
-const productGrid = document.getElementById('productGrid');
-function renderProducts() {
-  productGrid.innerHTML = products.map(p => `
-    <div class="product-box">
-      <img src="${p.img}" onclick="location.href='${p.page}'">
-      <div class="product-name">${p.name}</div>
-    </div>
-  `).join("");
-}
-
 // Warenkorb
-let cart = JSON.parse(localStorage.getItem('cart')) || [];
+let cart = [];
+const cartIcon = document.getElementById('cart-icon');
+const cartDropdown = document.getElementById('cart-dropdown');
+const cartItems = document.getElementById('cart-items');
+const checkoutBtn = document.getElementById('checkout-btn');
 
-function renderCart() {
-  const cartDiv = document.getElementById('cartItems');
-  const totalDiv = document.getElementById('cartTotal');
-  if(cart.length === 0){
-    cartDiv.innerHTML = "Dein Warenkorb ist leer";
-    totalDiv.textContent = "Gesamt: €0.00";
-  } else {
-    cartDiv.innerHTML = cart.map(item => `
-      <div class="cart-item">
-        <img src="${item.img}" alt="${item.name}">
-        <span>${item.name} (€${item.price.toFixed(2)})</span>
-      </div>
-    `).join("");
-    const total = cart.reduce((sum,item)=>sum+item.price,0);
-    totalDiv.textContent = `Gesamt: €${total.toFixed(2)}`;
-  }
+// 1️⃣ Warenkorb aus localStorage laden
+function loadCart() {
+  const stored = localStorage.getItem('cart');
+  cart = stored ? JSON.parse(stored) : [];
+  cart.forEach(item => { if(!item.quantity) item.quantity = 1; });
+  updateCartDropdown();
 }
 
-// Grid Toggle
-const toggleBtn = document.getElementById('gridToggle');
-toggleBtn.addEventListener('click', ()=>{
-  if(window.innerWidth <= 767){
-    const current = getComputedStyle(productGrid).gridTemplateColumns;
-    if(current.includes("1fr 1fr")) productGrid.style.gridTemplateColumns="repeat(3,1fr)";
-    else if(current.includes("1fr 1fr 1fr")) productGrid.style.gridTemplateColumns="repeat(1,1fr)";
-    else productGrid.style.gridTemplateColumns="repeat(2,1fr)";
-  } else {
-    productGrid.classList.toggle('two-cols');
+// 2️⃣ Warenkorb rendern / update (nur Name + Menge)
+function updateCartDropdown() {
+  cartItems.innerHTML = '';
+  if(cart.length === 0){
+    cartItems.innerHTML = '<li>Der Warenkorb ist leer</li>';
+    localStorage.setItem('cart', JSON.stringify(cart));
+    return;
+  }
+  cart.forEach((item, index) => {
+    const li = document.createElement('li');
+    li.innerHTML = `${item.name} x${item.quantity} <button class="remove-btn" data-index="${index}">×</button>`;
+    cartItems.appendChild(li);
+  });
+  // ✅ Synchronisiere immer mit localStorage
+  localStorage.setItem('cart', JSON.stringify(cart));
+}
+
+// Entfernen aus Warenkorb
+cartItems.addEventListener('click', e => {
+  if(e.target.classList.contains('remove-btn')){
+    const idx = e.target.dataset.index;
+    // 1️⃣ immer aktuell laden
+    loadCart();
+    // 2️⃣ Element entfernen
+    cart.splice(idx, 1);
+    // 3️⃣ Dropdown & localStorage aktualisieren
+    updateCartDropdown();
+    e.stopPropagation();
   }
 });
 
-// Warenkorb Open/Close
-const cartBtn = document.getElementById('cartBtn');
-const cartPanel = document.getElementById('cartPanel');
-const overlay = document.getElementById('overlay');
-
-cartBtn.addEventListener('click', ()=>{
-  renderCart();
-  cartPanel.classList.add('open');
-  overlay.classList.add('show');
+// Icon Klick
+cartIcon.addEventListener('click', e=>{
+  e.stopPropagation();
+  loadCart(); // immer den aktuellen Warenkorb laden
+  cartDropdown.classList.toggle('show');
 });
 
-overlay.addEventListener('click', ()=>{
-  cartPanel.classList.remove('open');
-  overlay.classList.remove('show');
+// Klick außerhalb schließt
+document.addEventListener('click', e=>{
+  if(!cartDropdown.contains(e.target) && e.target!==cartIcon){
+    cartDropdown.classList.remove('show');
+  }
 });
 
-// Initial render
-renderProducts();
-renderCart();
+// Load on page load
+loadCart();
+
+// Produkte Klick -> Weiterleitung auf Produktseite
+document.querySelectorAll('.product-box').forEach(box=>{
+  const img = box.querySelector('img');
+  img.addEventListener('click', ()=>{
+    window.location.href = img.dataset.link;
+  });
+});
+
+// Checkout Button
+checkoutBtn.addEventListener('click', ()=>{
+  loadCart(); // immer aktuellen Warenkorb laden
+  if(cart.length===0){ alert('Dein Warenkorb ist leer!'); return; }
+  const ordersParam = encodeURIComponent(JSON.stringify(cart));
+  window.location.href = `pay.html?orders=${ordersParam}`;
+});
 </script>
 </body>
 </html>
