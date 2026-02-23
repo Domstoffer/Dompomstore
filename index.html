@@ -115,14 +115,14 @@ const products = [
   {name:"SL-03", price:14.99, page:"produkt4.html", img:"https://picsum.photos/seed/c/500/500"}
 ];
 
-// GRID DYNAMISCH FÜLLEN
+// PRODUKTE RENDERN
 const productGrid = document.getElementById('productGrid');
+
 function renderProducts() {
   productGrid.innerHTML = products.map(p => `
     <div class="product-box">
       <img src="${p.img}" onclick="location.href='${p.page}'">
       <div class="product-name">${p.name}</div>
-      <button onclick="addToCart(${products.indexOf(p)})">In Warenkorb</button>
     </div>
   `).join("");
 }
@@ -130,19 +130,22 @@ function renderProducts() {
 // WARENKORB
 let cart = JSON.parse(localStorage.getItem('cart')) || [];
 
-function saveCart() { localStorage.setItem('cart', JSON.stringify(cart)); }
+function saveCart() {
+  localStorage.setItem('cart', JSON.stringify(cart));
+}
 
 function renderCart() {
   const cartDiv = document.getElementById('cartItems');
   const totalDiv = document.getElementById('cartTotal');
-  if(cart.length === 0) {
+
+  if(cart.length === 0){
     cartDiv.innerHTML = "Dein Warenkorb ist leer";
     totalDiv.textContent = "Gesamt: €0.00";
   } else {
-    cartDiv.innerHTML = cart.map((item,i)=>`
+    cartDiv.innerHTML = cart.map(item => `
       <div class="cart-item">
+        <img src="${item.img}" alt="${item.name}" style="width:40px; height:40px; object-fit:cover; margin-right:8px;">
         <span>${item.name} (€${item.price.toFixed(2)})</span>
-        <button onclick="removeFromCart(${i})">✕</button>
       </div>
     `).join("");
     const total = cart.reduce((sum,item)=>sum+item.price,0);
@@ -150,19 +153,7 @@ function renderCart() {
   }
 }
 
-function addToCart(index) {
-  cart.push(products[index]);
-  saveCart();
-  renderCart();
-}
-
-function removeFromCart(index) {
-  cart.splice(index,1);
-  saveCart();
-  renderCart();
-}
-
-// GRID TOGGLE
+// GRID TOGGLE (MOBILE/ DESKTOP)
 const grid = document.getElementById('productGrid');
 const toggleBtn = document.getElementById('gridToggle');
 toggleBtn.addEventListener('click', ()=>{
@@ -180,9 +171,19 @@ toggleBtn.addEventListener('click', ()=>{
 const cartBtn = document.getElementById('cartBtn');
 const cartPanel = document.getElementById('cartPanel');
 const overlay = document.getElementById('overlay');
+
 cartBtn.addEventListener('click', ()=>{
   renderCart();
   cartPanel.classList.add('open');
   overlay.classList.add('show');
 });
+
 overlay.addEventListener('click', ()=>{
+  cartPanel.classList.remove('open');
+  overlay.classList.remove('show');
+});
+
+// INITIAL RENDER
+renderProducts();
+renderCart();
+</script>
