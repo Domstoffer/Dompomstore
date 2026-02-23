@@ -158,6 +158,23 @@ header {
   opacity: 1;
   pointer-events: auto;
 }
+
+/* Desktop: In den Warenkorb Buttons sichtbar */
+@media (min-width: 768px) {
+  .product-box button {
+    display: inline-block;
+    margin-top: 5px;
+    font-size: 0.7rem;
+    cursor: pointer;
+  }
+}
+
+/* Mobile: Buttons unter Bildern ausblenden */
+@media (max-width: 767px) {
+  .product-box button {
+    display: none;
+  }
+}
 </style>
 </head>
 
@@ -201,7 +218,7 @@ productGrid.innerHTML = products.map((p, i) => `
   <div class="product-box">
     <img src="${p.img}" onclick="location.href='${p.page}'">
     <div class="product-name">${p.name}</div>
-    <button onclick="addToCart(${i})" style="margin-top:5px;font-size:0.7rem;">In den Warenkorb</button>
+    <button onclick="addToCart(${i})">In den Warenkorb</button>
   </div>
 `).join("");
 
