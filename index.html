@@ -180,12 +180,48 @@ header {
   align-items:center;
   justify-content:center;
 }
+.layout-btn{
+  position:absolute;
+  left:20px;
+  top:22px;
+  width:34px;
+  height:34px;
+  border-radius:50%;
+  background:#111;
+  color:#fff;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  cursor:pointer;
+  font-weight:700;
+  font-size:18px;
+  transition:transform .2s, background .2s;
+}
+.layout-btn:hover{
+  transform:scale(1.1);
+  background:#333;
+}
+
+/* Grid Modi */
+.container.mode-3{
+  grid-template-columns: repeat(3, 1fr);
+}
+
+.container.mode-2{
+  grid-template-columns: repeat(2, 1fr);
+}
+
+.container.mode-1{
+  grid-template-columns: repeat(1, 1fr);
+}
 </style>
+
 
 </head>
 <body>
 
 <header>
+  <div id="layout-toggle" class="layout-btn">+</div>
   Dompomstore
  <span class="cart-icon" id="cart-icon">
   <div id="cart-count" class="cart-badge" style="display:none;">0</div>
@@ -311,6 +347,30 @@ checkoutBtn.addEventListener('click', ()=>{
   }
   window.location.href = 'checkout.html';
 });
+const container = document.querySelector('.container');
+const layoutBtn = document.getElementById('layout-toggle');
+
+let layoutMode = localStorage.getItem('layoutMode') || "mode-3";
+
+applyLayout(layoutMode);
+
+layoutBtn.addEventListener('click', ()=>{
+  if(layoutMode === "mode-3"){
+    layoutMode = "mode-2";
+  } else if(layoutMode === "mode-2"){
+    layoutMode = "mode-1";
+  } else {
+    layoutMode = "mode-3";
+  }
+
+  localStorage.setItem('layoutMode', layoutMode);
+  applyLayout(layoutMode);
+});
+
+function applyLayout(mode){
+  container.classList.remove("mode-3","mode-2","mode-1");
+  container.classList.add(mode);
+}
 </script>
 
 </body>
