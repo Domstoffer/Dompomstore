@@ -45,7 +45,7 @@ header {
 .cart-panel {
   position: fixed;
   top: 0;
-  right: -85%;
+  right: -85%; /* mobile start */
   width: 75%;
   max-width: 300px;
   height: 100%;
@@ -58,8 +58,8 @@ header {
 .cart-panel.open { right: 0; }
 .cart-panel h3 { font-size: 0.9rem; letter-spacing: 0.12em; margin-bottom: 20px; }
 #cartItems { font-size: 0.8rem; margin-bottom: 10px; }
-.cart-item { display: flex; justify-content: space-between; align-items: center; margin-bottom: 10px; }
-.cart-item button { background: none; border: none; color: red; font-size: 0.8rem; cursor: pointer; }
+.cart-item { display: flex; align-items: center; margin-bottom: 10px; }
+.cart-item img { width: 40px; height: 40px; object-fit: cover; margin-right: 8px; }
 
 /* OVERLAY */
 .overlay {
@@ -107,7 +107,7 @@ header {
 <div class="overlay" id="overlay"></div>
 
 <script>
-// PRODUKTE ARRAY
+// Produkte Array
 const products = [
   {name:"PK-01", price:29.99, page:"produkt1.html", img:"images/test cyp.png"},
   {name:"JC-10", price:19.99, page:"produkt2.html", img:"https://picsum.photos/seed/a/500/500"},
@@ -115,9 +115,8 @@ const products = [
   {name:"SL-03", price:14.99, page:"produkt4.html", img:"https://picsum.photos/seed/c/500/500"}
 ];
 
-// PRODUKTE RENDERN
+// Produkte rendern
 const productGrid = document.getElementById('productGrid');
-
 function renderProducts() {
   productGrid.innerHTML = products.map(p => `
     <div class="product-box">
@@ -127,24 +126,19 @@ function renderProducts() {
   `).join("");
 }
 
-// WARENKORB
+// Warenkorb
 let cart = JSON.parse(localStorage.getItem('cart')) || [];
-
-function saveCart() {
-  localStorage.setItem('cart', JSON.stringify(cart));
-}
 
 function renderCart() {
   const cartDiv = document.getElementById('cartItems');
   const totalDiv = document.getElementById('cartTotal');
-
   if(cart.length === 0){
     cartDiv.innerHTML = "Dein Warenkorb ist leer";
     totalDiv.textContent = "Gesamt: €0.00";
   } else {
     cartDiv.innerHTML = cart.map(item => `
       <div class="cart-item">
-        <img src="${item.img}" alt="${item.name}" style="width:40px; height:40px; object-fit:cover; margin-right:8px;">
+        <img src="${item.img}" alt="${item.name}">
         <span>${item.name} (€${item.price.toFixed(2)})</span>
       </div>
     `).join("");
@@ -153,21 +147,20 @@ function renderCart() {
   }
 }
 
-// GRID TOGGLE (MOBILE/ DESKTOP)
-const grid = document.getElementById('productGrid');
+// Grid Toggle
 const toggleBtn = document.getElementById('gridToggle');
 toggleBtn.addEventListener('click', ()=>{
   if(window.innerWidth <= 767){
-    let current = grid.style.gridTemplateColumns;
-    if(current==="repeat(1, 1fr)") grid.style.gridTemplateColumns="repeat(2, 1fr)";
-    else if(current==="repeat(2, 1fr)") grid.style.gridTemplateColumns="repeat(3, 1fr)";
-    else grid.style.gridTemplateColumns="repeat(1, 1fr)";
+    const current = getComputedStyle(productGrid).gridTemplateColumns;
+    if(current.includes("1fr 1fr")) productGrid.style.gridTemplateColumns="repeat(3,1fr)";
+    else if(current.includes("1fr 1fr 1fr")) productGrid.style.gridTemplateColumns="repeat(1,1fr)";
+    else productGrid.style.gridTemplateColumns="repeat(2,1fr)";
   } else {
-    grid.classList.toggle('two-cols');
+    productGrid.classList.toggle('two-cols');
   }
 });
 
-// WARENKORB OPEN/CLOSE
+// Warenkorb Open/Close
 const cartBtn = document.getElementById('cartBtn');
 const cartPanel = document.getElementById('cartPanel');
 const overlay = document.getElementById('overlay');
@@ -183,7 +176,9 @@ overlay.addEventListener('click', ()=>{
   overlay.classList.remove('show');
 });
 
-// INITIAL RENDER
+// Initial render
 renderProducts();
 renderCart();
 </script>
+</body>
+</html>
