@@ -98,19 +98,20 @@ header {
   position: fixed;
   top: 0;
   right: -100%;
-  width: 85%;
-  max-width: 320px;
+  width: 75%; /* kleiner auf Mobile */
+  max-width: 300px;
   height: 100%;
   background: #fff;
   box-shadow: -10px 0 30px rgba(0,0,0,0.15);
-  padding: 20px;
+  padding: 15px;
   transition: right 0.3s ease;
   z-index: 200;
 }
 
 @media (min-width: 768px) {
   .cart-panel {
-    width: 400px;
+    width: 400px; /* Desktop */
+    max-width: none;
   }
 }
 
@@ -158,23 +159,6 @@ header {
   opacity: 1;
   pointer-events: auto;
 }
-
-/* Desktop: In den Warenkorb Buttons sichtbar */
-@media (min-width: 768px) {
-  .product-box button {
-    display: inline-block;
-    margin-top: 5px;
-    font-size: 0.7rem;
-    cursor: pointer;
-  }
-}
-
-/* Mobile: Buttons unter Bildern ausblenden */
-@media (max-width: 767px) {
-  .product-box button {
-    display: none;
-  }
-}
 </style>
 </head>
 
@@ -218,11 +202,10 @@ const products = [
 // Grid dynamisch füllen
 // =======================
 const productGrid = document.getElementById('productGrid');
-productGrid.innerHTML = products.map((p, i) => `
+productGrid.innerHTML = products.map(p => `
   <div class="product-box">
     <img src="${p.img}" onclick="location.href='${p.page}'">
     <div class="product-name">${p.name}</div>
-    <button onclick="addToCart(${i})">In den Warenkorb</button>
   </div>
 `).join("");
 
@@ -231,7 +214,9 @@ productGrid.innerHTML = products.map((p, i) => `
 // =======================
 let cart = JSON.parse(localStorage.getItem('cart')) || [];
 
-function saveCart() { localStorage.setItem('cart', JSON.stringify(cart)); }
+function saveCart() {
+  localStorage.setItem('cart', JSON.stringify(cart));
+}
 
 function renderCart() {
   const cartDiv = document.getElementById('cartItems');
@@ -252,22 +237,25 @@ function renderCart() {
   }
 }
 
-// Artikel hinzufügen / entfernen
-function addToCart(index) { cart.push(products[index]); saveCart(); renderCart(); }
-function removeFromCart(index) { cart.splice(index, 1); saveCart(); renderCart(); }
+function removeFromCart(index) {
+  cart.splice(index, 1);
+  saveCart();
+  renderCart();
+}
 
 // =======================
 // Grid Toggle Handy 3 -> 2 -> 1 Spalte
 // =======================
 const toggleBtn = document.getElementById('gridToggle');
-let gridState = 0; // 0=3,1=2,2=1 Spalte
+let gridState = 0;
 
 toggleBtn.addEventListener('click', () => {
   if (window.innerWidth <= 767) {
     gridState = (gridState + 1) % 3;
-    if (gridState === 0) productGrid.style.gridTemplateColumns = "repeat(3, 1fr)";
-    if (gridState === 1) productGrid.style.gridTemplateColumns = "repeat(2, 1fr)";
-    if (gridState === 2) productGrid.style.gridTemplateColumns = "repeat(1, 1fr)";
+    productGrid.style.gridTemplateColumns =
+      gridState === 0 ? "repeat(3, 1fr)" :
+      gridState === 1 ? "repeat(2, 1fr)" :
+                        "repeat(1, 1fr)";
   } else {
     productGrid.classList.toggle('two-cols');
   }
@@ -289,54 +277,6 @@ cartBtn.addEventListener('click', () => {
 overlay.addEventListener('click', () => {
   cartPanel.classList.remove('open');
   overlay.classList.remove('show');
-});
-
-// =======================
-// Newsletter Popup beim Laden
-// =======================
-window.addEventListener('load', () => {
-  setTimeout(() => {
-    if (!localStorage.getItem('newsletterClosed')) {
-      const popup = document.createElement('div');
-      popup.style.position = 'fixed';
-      popup.style.top = '0';
-      popup.style.left = '0';
-      popup.style.width = '100%';
-      popup.style.height = '100%';
-      popup.style.background = 'rgba(0,0,0,0.5)';
-      popup.style.display = 'flex';
-      popup.style.justifyContent = 'center';
-      popup.style.alignItems = 'center';
-      popup.style.zIndex = '300';
-
-      popup.innerHTML = `
-        <div style="background:#fff; padding:20px; max-width:300px; text-align:center; border-radius:6px;">
-          <h3>Newsletter</h3>
-          <p>Trage deine Email ein:</p>
-          <input type="email" id="newsletterEmail" placeholder="Email" style="width:100%; margin-bottom:10px; padding:5px;">
-          <br>
-          <button id="subscribeBtn" style="padding:5px 10px; margin-right:5px;">Abonnieren</button>
-          <button id="closePopup" style="padding:5px 10px;">Schließen</button>
-        </div>
-      `;
-
-      document.body.appendChild(popup);
-
-      document.getElementById('closePopup').addEventListener('click', () => {
-        localStorage.setItem('newsletterClosed', 'true');
-        document.body.removeChild(popup);
-      });
-
-      document.getElementById('subscribeBtn').addEventListener('click', () => {
-        const email = document.getElementById('newsletterEmail').value;
-        if(email) {
-          alert(`Danke! ${email} wurde eingetragen.`);
-          localStorage.setItem('newsletterClosed','true');
-          document.body.removeChild(popup);
-        }
-      });
-    }
-  }, 500);
 });
 
 // Initial render
