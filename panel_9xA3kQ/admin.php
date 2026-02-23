@@ -1,4 +1,7 @@
 <?php
+ini_set('display_errors', 1);
+error_reporting(E_ALL);
+
 session_start();
 
 /* ===============================
@@ -11,29 +14,134 @@ define('SESSION_LIFETIME', 3600);
 define('SECRET_KEY', 'DeinSuperGeheimerKey1234567890!@');
 
 $ordersFile = __DIR__ . '/bestellungen.enc';
+$rateFile   = __DIR__ . '/rate_limit.json';
+
+
+/* ===============================
+   📦 NEW ORDER RECEIVE (API)
+================================ */
+if (
+    $_SERVER['REQUEST_METHOD'] === 'POST' &&
+    isset($_SERVER['CONTENT_TYPE']) &&
+    strpos($_SERVER['CONTENT_TYPE'], 'application/json') !== false
+) {
+
+    $ip  = $_SERVER['REMOTE_ADDR'];
+    $now = time();
+
+    // Rate limit (max 5 in 10 min)
+    $rateData = file_exists($rateFile)
+        ? json_decode(file_get_contents($rateFile), true)
+        : [];
+
+    $rateData[$ip] = array_filter(
+        $rateData[$ip] ?? [],
+        function($t) use ($now) { return $t > $now - 600; }
+    );
+
+    if (count($rateData[$ip]) >= 5) {
+        http_response_code(429);
+        exit("Too many requests");
+    }
+
+    $rateData[$ip][] = $now;
+    file_put_contents($rateFile, json_encode($rateData));
+
+    $data = json_decode(file_get_contents("php://input"), true);
+
+    if (!$data) {
+        http_response_code(400);
+        exit("Invalid data");
+    }
+
+    if (!empty($data['website'])) {
+        http_response_code(403);
+        exit("Spam detected");
+    }
+
+    if (empty($data['cart']) || empty($data['shipping']['firstname'])) {
+        http_response_code(400);
+        exit("Missing required fields");
+    }
+
+    $orders = [];
+
+    if (file_exists($ordersFile)) {
+        $raw = base64_decode(file_get_contents($ordersFile));
+
+        if ($raw && strlen($raw) > 16) {
+            $iv  = substr($raw, 0, 16);
+            $enc = substr($raw, 16);
+
+            $json = openssl_decrypt(
+                $enc,
+                'AES-256-CBC',
+                SECRET_KEY,
+                OPENSSL_RAW_DATA,
+                $iv
+            );
+
+            if ($json !== false) {
+                $orders = json_decode($json, true) ?: [];
+            }
+        }
+    }
+
+    $data['id']     = bin2hex(random_bytes(6));
+    $data['status'] = 'Neu';
+    $data['note']   = '';
+    $data['ip']     = $ip;
+
+    $orders[] = $data;
+
+    $iv = random_bytes(16);
+
+    $enc = openssl_encrypt(
+        json_encode($orders, JSON_PRETTY_PRINT),
+        'AES-256-CBC',
+        SECRET_KEY,
+        OPENSSL_RAW_DATA,
+        $iv
+    );
+
+    file_put_contents($ordersFile, base64_encode($iv . $enc));
+
+    echo "OK";
+    exit;
+}
+
 
 /* ===============================
    ⏱️ SESSION TIMEOUT
 ================================ */
-if (isset($_SESSION['admin_time']) && time() - $_SESSION['admin_time'] > SESSION_LIFETIME) {
+if (isset($_SESSION['admin_time']) &&
+    time() - $_SESSION['admin_time'] > SESSION_LIFETIME) {
+
     session_destroy();
     header("Location: admin.php");
     exit;
 }
 
+
 /* ===============================
    🔐 LOGIN
 ================================ */
 if (isset($_POST['username'], $_POST['password'])) {
-    if ($_POST['username'] === $ADMIN_USER && password_verify($_POST['password'], $ADMIN_PASS_HASH)) {
-        $_SESSION['admin'] = true;
+
+    if ($_POST['username'] === $ADMIN_USER &&
+        password_verify($_POST['password'], $ADMIN_PASS_HASH)) {
+
+        $_SESSION['admin']      = true;
         $_SESSION['admin_time'] = time();
+
         header("Location: admin.php");
         exit;
+
     } else {
-        $error = 'Ungültiger Login';
+        $error = "Ungültiger Login";
     }
 }
+
 
 /* ===============================
    🚪 LOGOUT
@@ -43,6 +151,7 @@ if (isset($_GET['logout'])) {
     header("Location: admin.php");
     exit;
 }
+
 
 /* ===============================
    🔑 LOGIN PAGE
@@ -65,7 +174,9 @@ button{background:#111;color:#fff;border:none;font-weight:600;cursor:pointer}
 <body>
 <div class="box">
 <h2>Admin Login</h2>
-<?php if(!empty($error)): ?><div class="error"><?=htmlspecialchars($error)?></div><?php endif; ?>
+<?php if(!empty($error)): ?>
+<div class="error"><?=htmlspecialchars($error)?></div>
+<?php endif; ?>
 <form method="post">
 <input name="username" placeholder="Username" required>
 <input name="password" type="password" placeholder="Password" required>
@@ -76,152 +187,202 @@ button{background:#111;color:#fff;border:none;font-weight:600;cursor:pointer}
 </html>
 <?php exit; endif; ?>
 
+
 <?php
 /* ===============================
    🔓 LOAD & DECRYPT ORDERS
 ================================ */
 $orders = [];
+
 if (file_exists($ordersFile)) {
+
     $raw = base64_decode(file_get_contents($ordersFile));
-    $iv = substr($raw, 0, 16);
-    $enc = substr($raw, 16);
-    $json = openssl_decrypt($enc, 'AES-256-CBC', SECRET_KEY, 0, $iv);
-    $orders = json_decode($json, true) ?: [];
-}
 
-/* ===============================
-   ✏️ UPDATE STATUS / NOTE
-================================ */
-if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+    if ($raw && strlen($raw) > 16) {
 
-    // DELETE ORDER
-    if (isset($_POST['delete_order'])) {
-        $orders = array_filter($orders, fn($o) => $o['id'] !== $_POST['delete_order']);
-    }
+        $iv  = substr($raw, 0, 16);
+        $enc = substr($raw, 16);
 
-    // UPDATE STATUS / NOTE
-    if (isset($_POST['order_id'])) {
-        foreach ($orders as &$o) {
-            if ($o['id'] === $_POST['order_id']) {
-                $o['status'] = $_POST['status'] ?? $o['status'];
-                $o['note'] = $_POST['note'] ?? '';
-            }
+        $json = openssl_decrypt(
+            $enc,
+            'AES-256-CBC',
+            SECRET_KEY,
+            OPENSSL_RAW_DATA,
+            $iv
+        );
+
+        if ($json !== false) {
+            $orders = json_decode($json, true) ?: [];
         }
-        unset($o);
     }
-
-    // SAVE BACK
-    $iv = random_bytes(16);
-    $enc = openssl_encrypt(json_encode(array_values($orders), JSON_PRETTY_PRINT), 'AES-256-CBC', SECRET_KEY, 0, $iv);
-    file_put_contents($ordersFile, base64_encode($iv.$enc));
-
-    header("Location: admin.php");
-    exit;
 }
 
-$remaining = SESSION_LIFETIME - (time() - ($_SESSION['admin_time'] ?? time()));
-if ($remaining < 0) $remaining = 0;
+$remaining = SESSION_LIFETIME - (time() - $_SESSION['admin_time']);
 ?>
-
 <!DOCTYPE html>
 <html lang="de">
 <head>
 <meta charset="UTF-8">
-<title>Admin Dashboard</title>
+<title>Orders Dashboard</title>
+
 <style>
-body{font-family:Arial;background:#f4f4f9;padding:30px}
-.top{display:flex;justify-content:space-between;align-items:center;margin-bottom:20px}
-.logout{background:#111;color:#fff;padding:10px 14px;border-radius:8px;text-decoration:none}
-.order{background:#fff;border-radius:14px;padding:20px;margin-bottom:15px;box-shadow:0 6px 15px rgba(0,0,0,.08)}
-.header{display:flex;justify-content:space-between;cursor:pointer}
-.details{display:none;margin-top:15px}
-select,textarea,button{padding:8px;border-radius:6px;width:100%;margin-top:6px}
-button{background:#111;color:#fff;border:none;margin-top:10px;cursor:pointer}
-.status{font-weight:700}
-.countdown{color:#d32f2f;font-weight:600}
-.meta{font-size:13px;color:#555;margin-top:6px}
-.delete-btn{background:#d32f2f;color:#fff;margin-top:6px}
+body{
+  font-family:Arial;
+  background:#f4f6f9;
+  padding:30px
+}
+
+.top{
+  display:flex;
+  justify-content:space-between;
+  align-items:center;
+  margin-bottom:25px
+}
+
+.logout{
+  background:#111;
+  color:#fff;
+  padding:10px 14px;
+  border-radius:8px;
+  text-decoration:none
+}
+
+.order{
+  background:#fff;
+  border-radius:16px;
+  padding:20px;
+  margin-bottom:18px;
+  box-shadow:0 8px 25px rgba(0,0,0,.08);
+}
+
+.header{
+  display:flex;
+  justify-content:space-between;
+  cursor:pointer;
+  align-items:center;
+}
+
+.name{
+  font-size:18px;
+  font-weight:700;
+}
+
+.badge{
+  background:#e3f2fd;
+  padding:6px 10px;
+  border-radius:8px;
+  font-size:13px;
+  font-weight:600;
+}
+
+.details{
+  margin-top:18px;
+  display:none;
+  font-size:14px;
+  line-height:1.6;
+}
+
+.section{
+  margin-bottom:14px;
+  padding:12px;
+  background:#fafafa;
+  border-radius:10px;
+}
+
+.section strong{
+  display:block;
+  margin-bottom:6px;
+}
+
+.countdown{
+  color:#d32f2f;
+  font-weight:600
+}
 </style>
 
 <script>
 let t = <?= $remaining ?>;
 setInterval(()=>{
   if(t<=0) location.href='?logout=1';
-  document.getElementById('cd').innerText =
-    'Logout in ' + Math.floor(t/60)+':'+('0'+t%60).slice(-2);
   t--;
 },1000);
 
 function toggle(el){
-  el.nextElementSibling.style.display =
-  el.nextElementSibling.style.display === 'block' ? 'none' : 'block';
+  let d = el.parentElement.querySelector('.details');
+  d.style.display = d.style.display === 'block' ? 'none' : 'block';
 }
 </script>
 </head>
 <body>
 
 <div class="top">
-<h1>Orders Dashboard</h1>
+<h1>📦 Orders Dashboard</h1>
 <div>
-<span class="countdown" id="cd"></span>
+<span class="countdown">Auto Logout nach 1 Stunde</span>
 <a class="logout" href="?logout=1">Logout</a>
 </div>
 </div>
 
 <?php if(empty($orders)): ?>
 <p>Keine Bestellungen vorhanden.</p>
-<?php else: foreach($orders as $o): ?>
+<?php else: foreach(array_reverse($orders) as $o): ?>
+
 <div class="order">
 
 <div class="header" onclick="toggle(this)">
-<div>
-<strong><?=htmlspecialchars($o['shipping']['firstname'].' '.$o['shipping']['lastname'])?></strong><br>
-
-<div class="meta">
-🆔 <strong>Order ID:</strong> <?=htmlspecialchars($o['id'])?><br>
-📍 <?=htmlspecialchars(
-    $o['shipping']['street'].' '.
-    $o['shipping']['zip'].' '.
-    $o['shipping']['city'].' – '.
-    $o['shipping']['country']
-)?>
+<div class="name">
+<?=htmlspecialchars($o['shipping']['firstname'].' '.$o['shipping']['lastname'])?>
 </div>
 
-<?=date('d.m.Y H:i',$o['timestamp'])?> – 
-<?=number_format(array_sum(array_map(fn($i)=>floatval(str_replace(',','.',$i['price']))*$i['quantity'],$o['cart'])),2)?> <?=strtoupper($o['currency'])?>
+<div class="badge">
+<?=htmlspecialchars($o['status'])?>
 </div>
-
-<div class="status"><?= $o['status'] ?? 'Neu' ?></div>
 </div>
 
 <div class="details">
-<strong>Artikel:</strong><br>
-<?php foreach($o['cart'] as $i): ?>
-- <?=htmlspecialchars($i['name'])?> (<?= $i['quantity'] ?> × <?=htmlspecialchars($i['price'])?>)<br>
-<?php endforeach; ?>
 
-<form method="post">
-<input type="hidden" name="order_id" value="<?=htmlspecialchars($o['id'])?>">
-<label>Status</label>
-<select name="status">
-<?php foreach(['Neu','Bezahlt','Versendet','Erledigt'] as $s): ?>
-<option <?=($o['status']??'Neu')===$s?'selected':''?>><?=$s?></option>
-<?php endforeach; ?>
-</select>
+<div class="section">
+<strong>🆔 Order Infos</strong>
+Order ID: <?=htmlspecialchars($o['id'])?><br>
+Datum: <?=date('d.m.Y H:i', intval(($o['timestamp'] ?? 0) / 1000))?><br>
+IP: <?=htmlspecialchars($o['ip'])?><br>
+Währung: <?=htmlspecialchars($o['currency'])?>
+</div>
 
-<label>Notiz</label>
-<textarea name="note"><?=htmlspecialchars($o['note']??'')?></textarea>
-<button>Speichern</button>
-</form>
+<div class="section">
+<strong>🚚 Versandadresse</strong>
+<?=htmlspecialchars($o['shipping']['firstname'].' '.$o['shipping']['lastname'])?><br>
+<?=htmlspecialchars($o['shipping']['street'])?><br>
+<?=htmlspecialchars($o['shipping']['zip'].' '.$o['shipping']['city'])?><br>
+<?=htmlspecialchars($o['shipping']['country'] ?? '')?>
+</div>
 
-<form method="post">
-<input type="hidden" name="delete_order" value="<?=htmlspecialchars($o['id'])?>">
-<button class="delete-btn" onclick="return confirm('Möchten Sie diese Bestellung wirklich löschen?')">Bestellung löschen</button>
-</form>
 
+
+<div class="section">
+<strong>🛒 Artikel</strong>
+<?php 
+$total = 0;
+
+if(!empty($o['cart']) && is_array($o['cart'])):
+foreach($o['cart'] as $i):
+
+  $price = isset($i['price']) ? floatval(str_replace(',','.',$i['price'])) : 0;
+  $qty   = isset($i['quantity']) ? intval($i['quantity']) : 1;
+
+  $sum = $price * $qty;
+  $total += $sum;
+?>
+- <?=htmlspecialchars($i['name'] ?? 'Unbekannt')?> 
+(<?= $qty ?> × <?= number_format($price,2) ?>)<br>
+<?php endforeach; endif; ?>
+<br>
+<strong>Gesamt: <?= number_format($total,2) ?> <?=htmlspecialchars($o['currency'] ?? '')?></strong>
 </div>
 
 </div>
+</div>
+
 <?php endforeach; endif; ?>
 
 </body>

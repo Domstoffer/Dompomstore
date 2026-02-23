@@ -1,0 +1,109 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Checkout – Dompomstore</title>
+
+<link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;700&display=swap" rel="stylesheet">
+
+<style>
+body{
+  margin:0;
+  font-family:'Montserrat',sans-serif;
+  background:#f5f5f7;
+  display:flex;
+  justify-content:center;
+  align-items:center;
+  min-height:100vh;
+}
+
+/* Zurück-Link oben mittig */
+.back-top{
+  position:absolute;
+  top:18px;
+  left:50%;
+  transform:translateX(-50%);
+  font-size:12px;
+  color:#555;
+  text-decoration:none;
+  letter-spacing:.05em;
+}
+
+.box{
+  background:#fff;
+  width:100%;
+  max-width:420px;
+  padding:30px;
+  border-radius:22px;
+  box-shadow:0 10px 40px rgba(0,0,0,.08);
+}
+
+h1{
+  text-align:center;
+  margin-bottom:10px;
+}
+
+.sub{
+  text-align:center;
+  font-size:13px;
+  color:#666;
+  margin-bottom:20px;
+}
+
+input{
+  width:100%;
+  padding:14px;
+  border-radius:14px;
+  border:1px solid #ddd;
+  margin-bottom:14px;
+  font-size:14px;
+}
+
+button{
+  width:100%;
+  padding:16px;
+  border:none;
+  border-radius:16px;
+  background:#000;
+  color:#fff;
+  font-weight:700;
+  letter-spacing:1px;
+  cursor:pointer;
+}
+</style>
+</head>
+
+<body>
+
+<a href="index.html" class="back-top">← Zurück zur Startseite</a>
+
+<div class="box">
+  <h1>Checkout</h1>
+  <div class="sub">Versandinformationen</div>
+
+  <form id="checkoutForm">
+    <input required name="firstname" placeholder="Vorname">
+    <input required name="lastname" placeholder="Nachname">
+    <input required name="street" placeholder="Straße & Hausnummer">
+    <input required name="zip" placeholder="Postleitzahl">
+    <input required name="city" placeholder="Stadt">
+    <input required name="country" placeholder="Land">
+    <input name="email" type="email" placeholder="Email (optional)">
+    <button type="submit">Weiter zur Zahlung</button>
+  </form>
+</div>
+
+<script>
+document.getElementById("checkoutForm").addEventListener("submit", e => {
+  e.preventDefault();
+
+  const data = Object.fromEntries(new FormData(e.target).entries());
+  localStorage.setItem("shipping", JSON.stringify(data));
+
+  window.location.href = "pay.html";
+});
+</script>
+
+</body>
+</html>
