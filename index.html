@@ -116,8 +116,15 @@ header {
   }
 }
 
+/* Desktop / Mobile öffnen */
 .cart-panel.open {
-  right: 0;
+  right: 0; /* Desktop */
+}
+
+@media (max-width: 767px) {
+  .cart-panel.open {
+    right: 10px; /* Mobile etwas nach links */
+  }
 }
 
 .cart-panel h3 {
