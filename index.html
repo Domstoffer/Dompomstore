@@ -99,12 +99,19 @@ header {
   top: 0;
   right: -100%;
   width: 85%;
+  max-width: 320px; /* kleiner für mobile */
   height: 100%;
   background: #fff;
   box-shadow: -10px 0 30px rgba(0,0,0,0.15);
   padding: 20px;
   transition: right 0.3s ease;
   z-index: 200;
+}
+
+@media (min-width: 768px) {
+  .cart-panel {
+    width: 400px; /* größer für Desktop */
+  }
 }
 
 .cart-panel.open {
@@ -117,8 +124,23 @@ header {
   margin-bottom: 20px;
 }
 
-.cart-panel p {
+#cartItems {
   font-size: 0.8rem;
+}
+
+.cart-item {
+  display: flex;
+  justify-content: space-between;
+  margin-bottom: 10px;
+  align-items: center;
+}
+
+.cart-item button {
+  background: none;
+  border: none;
+  color: red;
+  font-size: 0.8rem;
+  cursor: pointer;
 }
 
 /* OVERLAY */
@@ -152,57 +174,98 @@ header {
   </span>
 </header>
 
-<div class="container" id="productGrid">
-
-  <div class="product-box">
-    <img src="images/test cyp.png" onclick="location.href='produkt1.html'">
-    <div class="product-name">PK-01</div>
-  </div>
-
-  <div class="product-box">
-    <img src="https://picsum.photos/seed/a/500/500">
-    <div class="product-name">JC-10</div>
-  </div>
-
-  <div class="product-box">
-    <img src="https://picsum.photos/seed/b/500/500">
-    <div class="product-name">JC-11</div>
-  </div>
-
-  <div class="product-box">
-    <img src="https://picsum.photos/seed/c/500/500">
-    <div class="product-name">SL-03</div>
-  </div>
-
-</div>
+<div class="container" id="productGrid"></div>
 
 <!-- WARENKORB -->
 <div class="cart-panel" id="cartPanel">
   <h3>WARENKORB</h3>
-  <p>Dein Warenkorb ist leer</p>
+  <div id="cartItems">Dein Warenkorb ist leer</div>
+  <hr>
+  <div id="cartTotal" style="margin-top:10px; font-weight:500;">Gesamt: €0.00</div>
 </div>
 
 <div class="overlay" id="overlay"></div>
 
 <script>
-const grid = document.getElementById('productGrid');
-const toggleBtn = document.getElementById('gridToggle');
-const cartBtn = document.getElementById('cartBtn');
-const cartPanel = document.getElementById('cartPanel');
-const overlay = document.getElementById('overlay');
+// Produkte definieren
+const products = [
+  {name: "PK-01", price: 29.99, page: "produkt1.html", img: "images/test cyp.png"},
+  {name: "JC-10", price: 19.99, page: "produkt2.html", img: "https://picsum.photos/seed/a/500/500"},
+  {name: "JC-11", price: 24.99, page: "produkt3.html", img: "https://picsum.photos/seed/b/500/500"},
+  {name: "SL-03", price: 14.99, page: "produkt4.html", img: "https://picsum.photos/seed/c/500/500"}
+];
+
+// Grid dynamisch füllen
+const productGrid = document.getElementById('productGrid');
+productGrid.innerHTML = products.map((p, i) => `
+  <div class="product-box">
+    <img src="${p.img}" onclick="location.href='${p.page}'">
+    <div class="product-name">${p.name}</div>
+    <button onclick="addToCart(${i})" style="margin-top:5px;font-size:0.7rem;">In den Warenkorb</button>
+  </div>
+`).join("");
+
+// Warenkorb aus localStorage laden
+let cart = JSON.parse(localStorage.getItem('cart')) || [];
+
+function saveCart() {
+  localStorage.setItem('cart', JSON.stringify(cart));
+}
+
+// Warenkorb anzeigen
+function renderCart() {
+  const cartDiv = document.getElementById('cartItems');
+  const totalDiv = document.getElementById('cartTotal');
+
+  if (cart.length === 0) {
+    cartDiv.innerHTML = "Dein Warenkorb ist leer";
+    totalDiv.textContent = "Gesamt: €0.00";
+  } else {
+    cartDiv.innerHTML = cart.map((item, i) => `
+      <div class="cart-item">
+        <span>${item.name} (€${item.price.toFixed(2)})</span>
+        <button onclick="removeFromCart(${i})">✕</button>
+      </div>
+    `).join("");
+    const total = cart.reduce((sum, item) => sum + item.price, 0);
+    totalDiv.textContent = `Gesamt: €${total.toFixed(2)}`;
+  }
+}
+
+// Artikel hinzufügen
+function addToCart(index) {
+  cart.push(products[index]);
+  saveCart();
+  renderCart();
+}
+
+// Artikel entfernen
+function removeFromCart(index) {
+  cart.splice(index, 1);
+  saveCart();
+  renderCart();
+}
+
+// Initial render
+renderCart();
 
 /* GRID TOGGLE */
+const grid = document.getElementById('productGrid');
+const toggleBtn = document.getElementById('gridToggle');
 toggleBtn.addEventListener('click', () => {
   grid.classList.toggle('two-cols');
 });
 
-/* CART OPEN */
+/* CART OPEN / CLOSE */
+const cartBtn = document.getElementById('cartBtn');
+const cartPanel = document.getElementById('cartPanel');
+const overlay = document.getElementById('overlay');
+
 cartBtn.addEventListener('click', () => {
   cartPanel.classList.add('open');
   overlay.classList.add('show');
 });
 
-/* CART CLOSE */
 overlay.addEventListener('click', () => {
   cartPanel.classList.remove('open');
   overlay.classList.remove('show');
