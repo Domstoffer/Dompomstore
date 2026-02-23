@@ -8,17 +8,8 @@
 <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500&display=swap" rel="stylesheet">
 
 <style>
-* {
-  box-sizing: border-box;
-  margin: 0;
-  padding: 0;
-}
-
-body {
-  font-family: 'Montserrat', sans-serif;
-  background: #fff;
-  color: #000;
-}
+* { box-sizing: border-box; margin: 0; padding: 0; }
+body { font-family: 'Montserrat', sans-serif; background: #fff; color: #000; }
 
 /* HEADER */
 header {
@@ -49,7 +40,7 @@ header {
   position: absolute;
   right: 14px;
   cursor: pointer;
-  z-index: 250; /* Fix: immer klickbar */
+  z-index: 250; /* immer klickbar */
 }
 
 .cart-icon svg {
@@ -71,34 +62,18 @@ header {
   row-gap: 36px;
 }
 
-/* 2er GRID */
-.container.two-cols {
-  grid-template-columns: repeat(2, 1fr);
-}
+.container.two-cols { grid-template-columns: repeat(2, 1fr); }
 
-/* PRODUKT */
-.product-box {
-  text-align: center;
-}
+.product-box { text-align: center; }
 
-.product-box img {
-  width: 100%;
-  display: block;
-  cursor: pointer;
-}
-
-.product-name {
-  margin-top: 8px;
-  font-size: 0.7rem;
-  letter-spacing: 0.18em;
-  font-weight: 500;
-}
+.product-box img { width: 100%; display: block; cursor: pointer; }
+.product-name { margin-top: 8px; font-size: 0.7rem; letter-spacing: 0.18em; font-weight: 500; }
 
 /* WARENKORB SLIDE-IN */
 .cart-panel {
   position: fixed;
   top: 0;
-  right: -100%;
+  right: -85%; /* weiter nach links auf Handy */
   width: 75%;
   max-width: 300px;
   height: 100%;
@@ -110,47 +85,17 @@ header {
 }
 
 @media (min-width: 768px) {
-  .cart-panel {
-    width: 400px;
-    max-width: none;
-  }
+  .cart-panel { width: 400px; max-width: none; right: -100%; }
 }
 
-/* Desktop / Mobile öffnen */
-.cart-panel.open {
-  right: 0; /* Desktop */
-}
+.cart-panel.open { right: 0; }
 
-@media (max-width: 767px) {
-  .cart-panel.open {
-    right: 10px; /* Mobile etwas nach links */
-  }
-}
+.cart-panel h3 { font-size: 0.9rem; letter-spacing: 0.12em; margin-bottom: 20px; }
 
-.cart-panel h3 {
-  font-size: 0.9rem;
-  letter-spacing: 0.12em;
-  margin-bottom: 20px;
-}
+#cartItems { font-size: 0.8rem; }
 
-#cartItems {
-  font-size: 0.8rem;
-}
-
-.cart-item {
-  display: flex;
-  justify-content: space-between;
-  margin-bottom: 10px;
-  align-items: center;
-}
-
-.cart-item button {
-  background: none;
-  border: none;
-  color: red;
-  font-size: 0.8rem;
-  cursor: pointer;
-}
+.cart-item { display: flex; justify-content: space-between; margin-bottom: 10px; align-items: center; }
+.cart-item button { background: none; border: none; color: red; font-size: 0.8rem; cursor: pointer; }
 
 /* OVERLAY */
 .overlay {
@@ -162,11 +107,7 @@ header {
   transition: opacity 0.3s;
   z-index: 150;
 }
-
-.overlay.show {
-  opacity: 1;
-  pointer-events: auto;
-}
+.overlay.show { opacity: 1; pointer-events: auto; }
 </style>
 </head>
 
@@ -196,7 +137,7 @@ header {
 <div class="overlay" id="overlay"></div>
 
 <script>
-// Produkte definieren
+// Produkte
 const products = [
   {name: "PK-01", price: 29.99, page: "produkt1.html", img: "images/test cyp.png"},
   {name: "JC-10", price: 19.99, page: "produkt2.html", img: "https://picsum.photos/seed/a/500/500"},
@@ -204,7 +145,7 @@ const products = [
   {name: "SL-03", price: 14.99, page: "produkt4.html", img: "https://picsum.photos/seed/c/500/500"}
 ];
 
-// Grid dynamisch füllen
+// Grid füllen
 const productGrid = document.getElementById('productGrid');
 productGrid.innerHTML = products.map(p => `
   <div class="product-box">
@@ -216,9 +157,7 @@ productGrid.innerHTML = products.map(p => `
 // Warenkorb
 let cart = JSON.parse(localStorage.getItem('cart')) || [];
 
-function saveCart() {
-  localStorage.setItem('cart', JSON.stringify(cart));
-}
+function saveCart() { localStorage.setItem('cart', JSON.stringify(cart)); }
 
 function renderCart() {
   const cartDiv = document.getElementById('cartItems');
@@ -245,7 +184,7 @@ function removeFromCart(index) {
   renderCart();
 }
 
-// Grid Toggle Handy 3 -> 2 -> 1 Spalte
+// Grid Toggle
 const toggleBtn = document.getElementById('gridToggle');
 let gridState = 0;
 
@@ -256,9 +195,7 @@ toggleBtn.addEventListener('click', () => {
       gridState === 0 ? "repeat(3, 1fr)" :
       gridState === 1 ? "repeat(2, 1fr)" :
                         "repeat(1, 1fr)";
-  } else {
-    productGrid.classList.toggle('two-cols');
-  }
+  } else { productGrid.classList.toggle('two-cols'); }
 });
 
 // Warenkorb öffnen / schließen
@@ -277,7 +214,6 @@ overlay.addEventListener('click', () => {
   overlay.classList.remove('show');
 });
 
-// Initial render
 renderCart();
 </script>
 
