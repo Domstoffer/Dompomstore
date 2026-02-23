@@ -22,18 +22,32 @@ body {
 
 /* HEADER */
 header {
-  padding: 18px 16px;
-  text-align: center;
-  font-size: 0.95rem;
+  height: 52px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 0.85rem;
   font-weight: 500;
-  letter-spacing: 0.12em;
-  position: relative;
+  letter-spacing: 0.14em;
+  position: sticky;
+  top: 0;
+  background: #fff;
+  z-index: 100;
 }
 
+/* PLUS BUTTON */
+.grid-toggle {
+  position: absolute;
+  left: 14px;
+  font-size: 22px;
+  cursor: pointer;
+  user-select: none;
+}
+
+/* CART ICON */
 .cart-icon {
   position: absolute;
-  right: 16px;
-  top: 16px;
+  right: 14px;
   cursor: pointer;
 }
 
@@ -49,11 +63,16 @@ header {
 .container {
   max-width: 1200px;
   margin: 0 auto;
-  padding: 20px 14px 60px;
+  padding: 18px 14px 80px;
   display: grid;
   grid-template-columns: repeat(3, 1fr);
-  column-gap: 18px;
-  row-gap: 42px;
+  column-gap: 16px;
+  row-gap: 36px;
+}
+
+/* 2er GRID */
+.container.two-cols {
+  grid-template-columns: repeat(2, 1fr);
 }
 
 /* PRODUKT */
@@ -63,23 +82,59 @@ header {
 
 .product-box img {
   width: 100%;
-  height: auto;
   display: block;
   cursor: pointer;
 }
 
 .product-name {
-  margin-top: 10px;
+  margin-top: 8px;
   font-size: 0.7rem;
   letter-spacing: 0.18em;
   font-weight: 500;
 }
 
-/* RESPONSIVE */
-@media (max-width: 500px) {
-  .container {
-    grid-template-columns: repeat(3, 1fr);
-  }
+/* WARENKORB SLIDE-IN */
+.cart-panel {
+  position: fixed;
+  top: 0;
+  right: -100%;
+  width: 85%;
+  height: 100%;
+  background: #fff;
+  box-shadow: -10px 0 30px rgba(0,0,0,0.15);
+  padding: 20px;
+  transition: right 0.3s ease;
+  z-index: 200;
+}
+
+.cart-panel.open {
+  right: 0;
+}
+
+.cart-panel h3 {
+  font-size: 0.9rem;
+  letter-spacing: 0.12em;
+  margin-bottom: 20px;
+}
+
+.cart-panel p {
+  font-size: 0.8rem;
+}
+
+/* OVERLAY */
+.overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(0,0,0,0.3);
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 0.3s;
+  z-index: 150;
+}
+
+.overlay.show {
+  opacity: 1;
+  pointer-events: auto;
 }
 </style>
 </head>
@@ -87,8 +142,9 @@ header {
 <body>
 
 <header>
+  <span class="grid-toggle" id="gridToggle">＋</span>
   DOMPOMSTORE
-  <span class="cart-icon">
+  <span class="cart-icon" id="cartBtn">
     <svg xmlns="http://www.w3.org/2000/svg">
       <path d="M6 2l1 5h10l1-5z"/>
       <path d="M2 7h20v14H2z"/>
@@ -96,7 +152,7 @@ header {
   </span>
 </header>
 
-<div class="container">
+<div class="container" id="productGrid">
 
   <div class="product-box">
     <img src="images/test cyp.png" onclick="location.href='produkt1.html'">
@@ -104,12 +160,12 @@ header {
   </div>
 
   <div class="product-box">
-    <img src="https://picsum.photos/seed/a/500/500" onclick="location.href='produkt2.html'">
+    <img src="https://picsum.photos/seed/a/500/500">
     <div class="product-name">JC-10</div>
   </div>
 
   <div class="product-box">
-    <img src="https://picsum.photos/seed/b/500/500" onclick="location.href='produkt3.html'">
+    <img src="https://picsum.photos/seed/b/500/500">
     <div class="product-name">JC-11</div>
   </div>
 
@@ -118,17 +174,40 @@ header {
     <div class="product-name">SL-03</div>
   </div>
 
-  <div class="product-box">
-    <img src="https://picsum.photos/seed/d/500/500">
-    <div class="product-name">BL-01</div>
-  </div>
-
-  <div class="product-box">
-    <img src="https://picsum.photos/seed/e/500/500">
-    <div class="product-name">SG-03</div>
-  </div>
-
 </div>
+
+<!-- WARENKORB -->
+<div class="cart-panel" id="cartPanel">
+  <h3>WARENKORB</h3>
+  <p>Dein Warenkorb ist leer</p>
+</div>
+
+<div class="overlay" id="overlay"></div>
+
+<script>
+const grid = document.getElementById('productGrid');
+const toggleBtn = document.getElementById('gridToggle');
+const cartBtn = document.getElementById('cartBtn');
+const cartPanel = document.getElementById('cartPanel');
+const overlay = document.getElementById('overlay');
+
+/* GRID TOGGLE */
+toggleBtn.addEventListener('click', () => {
+  grid.classList.toggle('two-cols');
+});
+
+/* CART OPEN */
+cartBtn.addEventListener('click', () => {
+  cartPanel.classList.add('open');
+  overlay.classList.add('show');
+});
+
+/* CART CLOSE */
+overlay.addEventListener('click', () => {
+  cartPanel.classList.remove('open');
+  overlay.classList.remove('show');
+});
+</script>
 
 </body>
 </html>
