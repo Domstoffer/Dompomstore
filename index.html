@@ -49,6 +49,7 @@ header {
   position: absolute;
   right: 14px;
   cursor: pointer;
+  z-index: 250; /* Fix: immer klickbar */
 }
 
 .cart-icon svg {
@@ -98,7 +99,7 @@ header {
   position: fixed;
   top: 0;
   right: -100%;
-  width: 75%; /* kleiner auf Mobile */
+  width: 75%;
   max-width: 300px;
   height: 100%;
   background: #fff;
@@ -110,7 +111,7 @@ header {
 
 @media (min-width: 768px) {
   .cart-panel {
-    width: 400px; /* Desktop */
+    width: 400px;
     max-width: none;
   }
 }
@@ -188,9 +189,7 @@ header {
 <div class="overlay" id="overlay"></div>
 
 <script>
-// =======================
 // Produkte definieren
-// =======================
 const products = [
   {name: "PK-01", price: 29.99, page: "produkt1.html", img: "images/test cyp.png"},
   {name: "JC-10", price: 19.99, page: "produkt2.html", img: "https://picsum.photos/seed/a/500/500"},
@@ -198,9 +197,7 @@ const products = [
   {name: "SL-03", price: 14.99, page: "produkt4.html", img: "https://picsum.photos/seed/c/500/500"}
 ];
 
-// =======================
 // Grid dynamisch füllen
-// =======================
 const productGrid = document.getElementById('productGrid');
 productGrid.innerHTML = products.map(p => `
   <div class="product-box">
@@ -209,9 +206,7 @@ productGrid.innerHTML = products.map(p => `
   </div>
 `).join("");
 
-// =======================
 // Warenkorb
-// =======================
 let cart = JSON.parse(localStorage.getItem('cart')) || [];
 
 function saveCart() {
@@ -243,9 +238,7 @@ function removeFromCart(index) {
   renderCart();
 }
 
-// =======================
 // Grid Toggle Handy 3 -> 2 -> 1 Spalte
-// =======================
 const toggleBtn = document.getElementById('gridToggle');
 let gridState = 0;
 
@@ -261,15 +254,13 @@ toggleBtn.addEventListener('click', () => {
   }
 });
 
-// =======================
 // Warenkorb öffnen / schließen
-// =======================
 const cartBtn = document.getElementById('cartBtn');
 const cartPanel = document.getElementById('cartPanel');
 const overlay = document.getElementById('overlay');
 
 cartBtn.addEventListener('click', () => {
-  renderCart(); // immer aktuellen Warenkorb anzeigen
+  renderCart();
   cartPanel.classList.add('open');
   overlay.classList.add('show');
 });
