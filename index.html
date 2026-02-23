@@ -7,17 +7,19 @@
 <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;700&display=swap" rel="stylesheet">
 <style>
 * { box-sizing:border-box; margin:0; padding:0; }
-body { font-family:'Montserrat', sans-serif; background:#f4f4f9; color:#111; }
+body { font-family:'Montserrat', sans-serif; background:#ffffff; color:#111; }
 
 /* HEADER */
 header {
   padding:20px;
   text-align:center;
-  font-size:2.5rem;
-  font-weight:700;
+  font-size:1.8rem;
+  font-weight:500;
+  letter-spacing:0.2em;
   color:#222;
   position: relative;
 }
+
 .cart-icon { position: absolute; top:20px; right:40px; cursor:pointer; transition: transform 0.2s; }
 .cart-icon:hover { transform: scale(1.2); }
 .cart-icon svg { width:28px; height:28px; stroke:#000; fill:none; stroke-width:2; stroke-linecap:round; stroke-linejoin:round; }
@@ -79,57 +81,47 @@ header {
 
 /* PRODUKT GRID */
 .container {
-  max-width:1400px;
-  margin:40px auto;
-  padding:0 20px;
+  max-width:1200px;
+  margin:60px auto;
+  padding:0 40px;
   display:grid;
-  grid-template-columns: repeat(5, 1fr);
-  gap:28px;
+  grid-template-columns: repeat(3, 1fr);
+  gap:80px 60px;
 }
 
-/* PRODUKT BOX */
 .product-box {
   text-align:center;
-  user-select:none;
 }
 
 .product-box img {
   width:100%;
-  height:220px;
-  object-fit:cover;
-  display:block;
-  border-radius:15px;
-  background:#fff;
+  height:auto;
+  object-fit:contain;
   cursor:pointer;
-  transition: transform 0.25s ease, box-shadow 0.25s ease;
+  transition: opacity .2s ease;
 }
+
 .product-box img:hover {
-  transform: translateY(-6px);
-  box-shadow: 0 10px 28px rgba(0,0,0,0.15);
+ opacity:0.9;
 }
 
 .product-name {
-  font-size:0.95rem;
-  font-weight:700;
-  letter-spacing:0.08em;
-  text-transform:uppercase;
-  color:#111;
-  margin-top:12px;
+  font-size:1rem;
+  font-weight:500;
+  letter-spacing:0.1em;
+  margin-top:20px;
 }
-
-@media (max-width:1200px) { .container { grid-template-columns: repeat(4, 1fr); } }
-@media (max-width:900px)  { .container { grid-template-columns: repeat(3, 1fr); } }
-@media (max-width:600px)  { .container { grid-template-columns: repeat(2, 1fr); } }
-/* =========================
-   MOBILE OPTIMIERUNG
-========================= */
-
 @media (max-width:768px){
-
-  header{
-    font-size:1.6rem;
-    padding:18px 15px;
+  .container{
+    grid-template-columns: repeat(3, 1fr);
+    gap:40px 20px;
+    padding:0 20px;
   }
+
+header {
+  font-weight:500;
+  letter-spacing:0.2em;
+}
 
   .cart-icon{
     right:18px;
@@ -141,20 +133,6 @@ header {
     width:92%;
     top:70px;
     border-radius:18px;
-  }
-
-  .container{
-    margin:25px auto;
-    gap:18px;
-  }
-
-  .product-box img{
-    height:170px;
-  }
-
-  .product-name{
-    font-size:0.85rem;
-    margin-top:10px;
   }
 }
 .cart-icon{
