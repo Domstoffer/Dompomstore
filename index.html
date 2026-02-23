@@ -231,9 +231,7 @@ productGrid.innerHTML = products.map((p, i) => `
 // =======================
 let cart = JSON.parse(localStorage.getItem('cart')) || [];
 
-function saveCart() {
-  localStorage.setItem('cart', JSON.stringify(cart));
-}
+function saveCart() { localStorage.setItem('cart', JSON.stringify(cart)); }
 
 function renderCart() {
   const cartDiv = document.getElementById('cartItems');
@@ -254,35 +252,23 @@ function renderCart() {
   }
 }
 
-function addToCart(index) {
-  cart.push(products[index]);
-  saveCart();
-  renderCart();
-}
-
-function removeFromCart(index) {
-  cart.splice(index, 1);
-  saveCart();
-  renderCart();
-}
-
-// Initial render
+function addToCart(index) { cart.push(products[index]); saveCart(); renderCart(); }
+function removeFromCart(index) { cart.splice(index, 1); saveCart(); renderCart(); }
 renderCart();
 
 // =======================
-// Grid Toggle für Handy (3 -> 2 -> 1 Spalte)
+// Grid Toggle Handy 3 -> 2 -> 1 Spalte
 // =======================
 const toggleBtn = document.getElementById('gridToggle');
-let gridState = 0; // 0 = 3 cols, 1 = 2 cols, 2 = 1 col
+let gridState = 0; // 0=3,1=2,2=1 Spalte
 
 toggleBtn.addEventListener('click', () => {
-  if (window.innerWidth <= 767) { // nur Handy
+  if (window.innerWidth <= 767) {
     gridState = (gridState + 1) % 3;
     if (gridState === 0) productGrid.style.gridTemplateColumns = "repeat(3, 1fr)";
     if (gridState === 1) productGrid.style.gridTemplateColumns = "repeat(2, 1fr)";
     if (gridState === 2) productGrid.style.gridTemplateColumns = "repeat(1, 1fr)";
   } else {
-    // Desktop: toggle zwischen 2/3 Spalten wie bisher
     productGrid.classList.toggle('two-cols');
   }
 });
@@ -294,16 +280,8 @@ const cartBtn = document.getElementById('cartBtn');
 const cartPanel = document.getElementById('cartPanel');
 const overlay = document.getElementById('overlay');
 
-cartBtn.addEventListener('click', () => {
-  cartPanel.classList.add('open');
-  overlay.classList.add('show');
-  renderCart(); // sicherstellen, dass Inhalt aktuell ist
-});
-
-overlay.addEventListener('click', () => {
-  cartPanel.classList.remove('open');
-  overlay.classList.remove('show');
-});
+cartBtn.addEventListener('click', () => { cartPanel.classList.add('open'); overlay.classList.add('show'); renderCart(); });
+overlay.addEventListener('click', () => { cartPanel.classList.remove('open'); overlay.classList.remove('show'); });
 
 // =======================
 // Newsletter Popup beim Laden
@@ -343,14 +321,10 @@ window.addEventListener('load', () => {
 
       document.getElementById('subscribeBtn').addEventListener('click', () => {
         const email = document.getElementById('newsletterEmail').value;
-        if(email) {
-          alert(`Danke! ${email} wurde eingetragen.`);
-          localStorage.setItem('newsletterClosed', 'true');
-          document.body.removeChild(popup);
-        }
+        if(email) { alert(`Danke! ${email} wurde eingetragen.`); localStorage.setItem('newsletterClosed','true'); document.body.removeChild(popup); }
       });
     }
-  }, 500); // Popup nach 0.5 Sekunden
+  }, 500);
 });
 
 // Artikel hinzufügen
