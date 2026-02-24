@@ -60,21 +60,23 @@ header {
 }
 #cart-dropdown{
   position:fixed;
-  top:0;
-  right:-100%;
-  width:320px;
-  height:100vh;
+  top:70px;
+  right:-400px;
+  width:340px;
+  height:auto;
+  max-height:80vh;
   background:#ffffff;
-  padding:90px 30px 40px;
-  box-shadow:-20px 0 60px rgba(0,0,0,0.08);
-  transition:right .45s cubic-bezier(.77,0,.18,1);
+  padding:30px 25px;
+  border-radius:20px;
+  box-shadow:0 30px 80px rgba(0,0,0,0.08);
+  transition:right .4s cubic-bezier(.77,0,.18,1);
   z-index:2000;
   display:flex;
   flex-direction:column;
 }
 
 #cart-dropdown.show{
-  right:0;
+  right:30px;
 }
 .cart-overlay{
   position:fixed;
@@ -216,15 +218,15 @@ header {
   }
 
 #cart-dropdown{
-  width:85%;
-  top:70px;
-  height:calc(100vh - 70px);
-  border-radius:18px;
+  width:92%;
+  right:-100%;
+  top:80px;
+  border-radius:20px;
 }
 
-  #cart-dropdown.show{
-    right:0%;
-  }
+#cart-dropdown.show{
+  right:4%;
+}
 
   .product-box img{
     max-height:none;
@@ -402,7 +404,11 @@ overlay.onclick = () => {
   overlay.classList.remove("show");
 };
 
-loadCart();
+window.addEventListener("pageshow", function () {
+  loadCart();
+});
+
+loadCart();  // 
 
 document.querySelectorAll('.product-box img').forEach(img=>{
   img.addEventListener('click', ()=>{
