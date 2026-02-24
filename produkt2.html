@@ -45,13 +45,13 @@ header{
 
 .cart-count{
   position:absolute;
-  right:-8px;
-  top:-8px;
-  background:#000;
-  color:#fff;
+  right:-4px;
+  top:-6px;
+  background:none;     /* kein Hintergrund */
+  color:#000;          /* schwarze Zahl */
   font-size:12px;
-  padding:3px 6px;
-  border-radius:50%;
+  font-weight:600;
+  padding:0;
 }
 
 .cart-icon svg{
@@ -281,9 +281,9 @@ header{
   <div class="cart-footer">
     <div class="cart-total">
       <span>Total</span>
-      <span id="cart-total-price">0 $</span>
+      <span id="cart-total-price">0 USDC</span>
     </div>
-    <button class="checkout-btn">Checkout</button>
+    <button class="checkout-btn" onclick="goToCheckout()">Checkout</button>
   </div>
 
 </div>
@@ -386,7 +386,7 @@ function updateCart(save=true){
           <span>(${item.size})</span>
         </div>
         <div>
-          <span>${item.price} $</span>
+          <span>${item.price.toFixed(2)} USDC</span>
           <span class="remove-item" onclick="removeItem(${index})">×</span>
         </div>
       `;
@@ -395,7 +395,7 @@ function updateCart(save=true){
     });
   }
 
-  totalPriceEl.innerText = total + " $";
+  totalPriceEl.innerText = total.toFixed(2) + " USDC";
   cartCount.innerText = cart.length;
 
   if(save){
@@ -450,6 +450,14 @@ document.addEventListener("click",(e)=>{
 });
 
 loadCart();
+function goToCheckout(){
+  if(cart.length === 0){
+    alert("Warenkorb ist leer");
+    return;
+  }
+
+  window.location.href = "checkout.html";
+}
 </script>
 
 </body>
