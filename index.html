@@ -30,34 +30,29 @@ header {
   align-items:center;
   justify-content:center;
 }
-
 .cart-icon svg{
-  width:24px;
-  height:24px;
+  width:22px;
+  height:22px;
   color:#111;
-  transition:opacity .2s ease;
 }
 
-.cart-icon:hover svg{
-  opacity:0.6;
-}
-
-.cart-badge{
+.cart-count{
   position:absolute;
-  top:-6px;
-  right:-6px;
-  background:#111;
+  top:-4px;
+  right:-4px;
+  background:#000;
   color:#fff;
-  font-size:11px;
-  font-weight:600;
+  font-size:10px;
+  width:18px;
+  height:18px;
   border-radius:50%;
-  min-width:20px;
-  height:20px;
-  padding:0 6px;
   display:flex;
   align-items:center;
   justify-content:center;
 }
+
+
+/* CART DRAWER */
 #cart-dropdown{
   position:fixed;
   top:0;
@@ -75,14 +70,63 @@ header {
 #cart-dropdown.show{
   right:0;
 }
+.cart-title{
+  font-size:18px;
+  margin-bottom:20px;
+}
+
+#cart-items{
+  margin-bottom:20px;
+}
+
+.cart-item{
+  display:flex;
+  justify-content:space-between;
+  align-items:center;
+  margin-bottom:15px;
+  font-size:14px;
+}
+
+.cart-left{
+  display:flex;
+  gap:10px;
+}
+
+.remove-item{
+  cursor:pointer;
+  font-weight:bold;
+}
+
+.cart-footer{
+  position:absolute;
+  bottom:30px;
+  left:20px;
+  right:20px;
+}
+
+.cart-total{
+  display:flex;
+  justify-content:space-between;
+  margin-bottom:15px;
+  font-weight:600;
+}
+
+.checkout-btn{
+  width:100%;
+  padding:12px;
+  background:#000;
+  color:#fff;
+  border:none;
+  cursor:pointer;
+}
+
 .cart-overlay{
   position:fixed;
   top:0;
   left:0;
   width:100%;
   height:100%;
-  background:rgba(0,0,0,0.15);
-  backdrop-filter:blur(2px);
+  background:rgba(0,0,0,0.2);
   opacity:0;
   pointer-events:none;
   transition:.3s;
@@ -93,74 +137,16 @@ header {
   pointer-events:all;
 }
 
-.cart-title{
-  font-size:18px;
-  font-weight:400;
-  letter-spacing:0.12em;
-  margin-bottom:40px;
-}
-
-.cart-item{
-  display:flex;
-  justify-content:space-between;
-  align-items:center;
-  padding:12px 0;
-  border-bottom:1px solid rgba(0,0,0,0.05);
-  font-size:14px;
-}
-
-.cart-left{
-  display:flex;
-  flex-direction:column;
-  gap:3px;
-}
-
-.remove-item{
-  cursor:pointer;
-  opacity:.5;
-  transition:.2s;
-}
-
-.remove-item:hover{
-  opacity:1;
-}
-
-.cart-footer{
-  margin-top:auto;
-}
-
-.cart-total{
-  display:flex;
-  justify-content:space-between;
-  margin:25px 0;
-  font-weight:500;
-  letter-spacing:0.1em;
-}
-
-.checkout-btn{
-  width:100%;
-  padding:14px;
-  background:#000;
-  color:#fff;
-  border:none;
-  font-weight:500;
-  letter-spacing:0.15em;
-  cursor:pointer;
-  transition:.3s;
-}
-
-.checkout-btn:hover{
-  background:#111;
-}
-
 /* PRODUKT GRID */
-.container {
-  max-width:1300px;
-  margin:100px auto;
-  padding:0 40px;
+.container{
+  max-width:1200px;
+  margin:90px auto 120px auto;
+  padding:0 30px;
+
   display:grid;
   grid-template-columns: repeat(3, 1fr);
-  gap:90px 60px;
+  column-gap:40px;
+  row-gap:70px;
 }
 
 .product-box{
@@ -168,8 +154,7 @@ header {
   flex-direction:column;
   align-items:center;
   text-align:center;
-  background:transparent;
-  padding:20px 10px;
+  padding:0;
 }
 
 .product-box:hover{
@@ -178,11 +163,10 @@ header {
 }
 
 .product-box img{
-  width:90%;
+  width:100%;
+  max-width:240px;
   height:auto;
   object-fit:contain;
-  cursor:pointer;
-  transition:none;
 }
 
 .product-box img:hover{
@@ -191,15 +175,16 @@ header {
 }
 
 .product-name{
-  font-size:0.9rem;
-  font-weight:500;
-  letter-spacing:0.25em;
-  margin-top:20px;
+  font-size:16px;
+  letter-spacing:3px;
+  margin-top:18px;
 }
 @media (max-width:768px){
+
   .container{
     grid-template-columns: repeat(2, 1fr);
-    gap:80px 20px;
+    column-gap:25px;
+    row-gap:60px;
     padding:0 20px;
   }
 
@@ -214,13 +199,20 @@ header {
     transform:translateY(-50%);
   }
 
+  #cart-dropdown{
+    width:100%;
+    right:-100%;
+    top:0;
+    height:100%;
+    border-radius:0;
+  }
 
-#cart-dropdown.show{
-  right:4%;
-}
+  #cart-dropdown.show{
+    right:0;
+  }
 
   .product-box img{
-    max-height:none;
+    max-width:160px;
   }
 }
 
@@ -262,21 +254,14 @@ header {
 <header>
   <div id="layout-toggle" class="layout-btn">+</div>
   Dompomstore
- <span class="cart-icon" id="cart-icon">
-  <div id="cart-count" class="cart-badge" style="display:none;">0</div>
+<div class="cart-icon" id="cart-icon">
+  <span class="cart-count" id="cart-count" style="display:none;">0</span>
 
-  <svg xmlns="http://www.w3.org/2000/svg"
-       viewBox="0 0 24 24"
-       fill="none"
-       stroke="currentColor"
-       stroke-width="1.6"
-       stroke-linecap="round"
-       stroke-linejoin="round">
-    <path d="M3 3h2l.4 2M7 13h10l4-8H5.4"/>
-    <circle cx="9" cy="19" r="1.5"/>
-    <circle cx="17" cy="19" r="1.5"/>
+  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+    <path d="M6 2l1 5h10l1-5z"/>
+    <path d="M2 7h20v14H2z"/>
   </svg>
-</span>
+</div>
 
 <div id="cart-dropdown">
 
