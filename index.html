@@ -58,70 +58,88 @@ header {
   align-items:center;
   justify-content:center;
 }
-#cart-dropdown {
-  display:none;
-  position:absolute;
-  top:75px;
-  right:30px;
-  width:360px;
-  background:#ffffff;
-  border-radius:20px;
-  box-shadow:0 25px 60px rgba(0,0,0,0.08);
-  padding:25px;
+#cart-dropdown{
+  position:fixed;
+  top:0;
+  right:-100%;
+  width:340px;
+  height:100%;
+  background:#fff;
+  padding:30px 20px;
+  box-shadow:-10px 0 30px rgba(0,0,0,0.1);
+  transition:.4s ease;
+  text-align:left;
   z-index:1000;
 }
-#cart-dropdown.show { display:block; }
-#cart-dropdown h3 {
-  font-size:0.9rem;
-  letter-spacing:0.2em;
-  font-weight:500;
+
+#cart-dropdown.show{
+  right:0;
+}
+
+.cart-title{
+  font-size:18px;
   margin-bottom:20px;
-  text-transform:uppercase;
-  border:none;
 }
-#cart-items {
-  list-style:none;
-  max-height:220px;
-  overflow-y:auto;
-  margin-bottom:12px;
-  padding-left:0;
-}
-#cart-items li {
+
+.cart-item{
   display:flex;
   justify-content:space-between;
   align-items:center;
-  font-size:0.9rem;
-  padding:14px 0;
-  border-bottom:1px solid rgba(0,0,0,0.05);
+  margin-bottom:15px;
+  font-size:14px;
 }
-#cart-items li:last-child { border-bottom:none; }
-#cart-items button {
-  background:none;
-  border:none;
-  color:#999;
+
+.cart-left{
+  display:flex;
+  gap:10px;
+}
+
+.remove-item{
   cursor:pointer;
-  font-size:1rem;
-  transition:color .2s ease;
+  font-weight:bold;
 }
 
-#cart-items button:hover {
-  color:#111;
+.cart-footer{
+  position:absolute;
+  bottom:30px;
+  left:20px;
+  right:20px;
 }
 
-#checkout-btn {
+.cart-total{
+  display:flex;
+  justify-content:space-between;
+  margin-bottom:15px;
+  font-weight:600;
+}
+
+.checkout-btn{
   width:100%;
-  padding:14px;
-  background:#111;
+  padding:12px;
+  background:#000;
   color:#fff;
   border:none;
-  border-radius:14px;
-  font-weight:500;
-  letter-spacing:0.1em;
   cursor:pointer;
-  transition:all .3s ease;
 }
 
-#checkout-btn:hover {
+.cart-overlay{
+  position:fixed;
+  top:0;
+  left:0;
+  width:100%;
+  height:100%;
+  background:rgba(0,0,0,0.2);
+  opacity:0;
+  pointer-events:none;
+  transition:.3s;
+}
+
+.cart-overlay.show{
+  opacity:1;
+  pointer-events:all;
+}
+
+.checkout-btn:hover {
   background:#000;
   transform:translateY(-2px);
 }
@@ -255,17 +273,28 @@ header {
 </span>
 
 <div id="cart-dropdown">
-    <h3>Warenkorb</h3>
-    <ul id="cart-items"><li>Der Warenkorb ist leer</li></ul>
-    <button id="checkout-btn">Checkout</button>
+
+  <h2 class="cart-title">Warenkorb</h2>
+
+  <div id="cart-items"></div>
+
+  <div class="cart-footer">
+    <div class="cart-total">
+      <span>Total</span>
+      <span id="cart-total-price">0 $</span>
+    </div>
+    <button class="checkout-btn">Checkout</button>
   </div>
+
+</div>
+
+<div class="cart-overlay" id="cart-overlay"></div>
 </header>
 
-<div class="container">
-  <div class="product-box" data-price="25">
-    <img src="images/test cyp.png" alt="TEST CYP" data-link="produkt1.html">
-    <div class="product-name">TEST CYP</div>
-  </div>
+<div class="product-box" data-price="49">
+  <img src="images/DB-01.jpg" alt="DB-01" data-link="produkt1.html">
+  <div class="product-name">DB-01</div>
+</div>
 
   <div class="product-box" data-price="19">
     <img src="https://picsum.photos/seed/p02/400/400" alt="PRODUKT 02" data-link="produkt2.html">
@@ -289,69 +318,75 @@ header {
 </div>
 
 <script>
-let cart = [];
-const cartIcon = document.getElementById('cart-icon');
-const cartDropdown = document.getElementById('cart-dropdown');
-const cartItems = document.getElementById('cart-items');
-const checkoutBtn = document.getElementById('checkout-btn');
-const cartCount = document.getElementById('cart-count');
+let cart=[];
+const cartCount=document.getElementById("cart-count");
+const cartDrawer = document.getElementById("cart-dropdown");
+const overlay = document.getElementById("cart-overlay");
+const checkoutBtn = document.querySelector(".checkout-btn");
 
-function loadCart() {
-  const stored = localStorage.getItem('cart');
-  cart = stored ? JSON.parse(stored) : [];
-  cart.forEach(item => { if(!item.quantity) item.quantity = 1; });
-  updateCartDropdown();
+function loadCart(){
+  const stored=localStorage.getItem("cart");
+  cart=stored?JSON.parse(stored):[];
+  updateCart(false);
 }
 
-function updateCartDropdown() {
-  cartItems.innerHTML = '';
+function updateCart(save=true){
 
-  let totalItems = 0;
+  const cartItems = document.getElementById("cart-items");
+  const totalPriceEl = document.getElementById("cart-total-price");
+
+  cartItems.innerHTML = "";
+  let total = 0;
 
   if(cart.length === 0){
-    cartItems.innerHTML = '<li>Der Warenkorb ist leer</li>';
-    cartCount.style.display = "none";
-    localStorage.setItem('cart', JSON.stringify(cart));
-    return;
+    cartItems.innerHTML = "<p style='font-size:14px;'>Warenkorb leer</p>";
+  } else {
+
+    cart.forEach((item,index)=>{
+
+      total += item.price;
+
+      const div = document.createElement("div");
+      div.classList.add("cart-item");
+
+      div.innerHTML = `
+        <div class="cart-left">
+          <span>${item.name}</span>
+          <span>(${item.size || ""})</span>
+        </div>
+        <div>
+          <span>${item.price} $</span>
+          <span class="remove-item" onclick="removeItem(${index})">×</span>
+        </div>
+      `;
+
+      cartItems.appendChild(div);
+    });
   }
 
-  cart.forEach((item, index) => {
-    totalItems += item.quantity;
+  totalPriceEl.innerText = total + " $";
+  cartCount.style.display = cart.length > 0 ? "flex" : "none";
+  cartCount.innerText = cart.length;
 
-    const li = document.createElement('li');
-    li.innerHTML = `
-      ${item.name} x${item.quantity}
-      <button class="remove-btn" data-index="${index}">×</button>
-    `;
-    cartItems.appendChild(li);
-  });
-
-  cartCount.style.display = "flex";
-  cartCount.textContent = totalItems;
-
-  localStorage.setItem('cart', JSON.stringify(cart));
+  if(save){
+    localStorage.setItem("cart", JSON.stringify(cart));
+  }
 }
 
-cartItems.addEventListener('click', e => {
-  if(e.target.classList.contains('remove-btn')){
-    loadCart();
-    cart.splice(e.target.dataset.index, 1);
-    updateCartDropdown();
-    e.stopPropagation();
-  }
-});
+function removeItem(index){
+  cart.splice(index,1);
+  updateCart();
+}
 
-cartIcon.addEventListener('click', e=>{
-  e.stopPropagation();
-  loadCart();
-  cartDropdown.classList.toggle('show');
-});
+document.getElementById("cart-icon").onclick = () => {
+  cartDrawer.classList.toggle("show");
+  overlay.classList.toggle("show");
+};
 
-document.addEventListener('click', e=>{
-  if(!cartDropdown.contains(e.target) && e.target!==cartIcon){
-    cartDropdown.classList.remove('show');
-  }
-});
+overlay.onclick = () => {
+  cartDrawer.classList.remove("show");
+  overlay.classList.remove("show");
+};
 
 loadCart();
 
@@ -361,14 +396,18 @@ document.querySelectorAll('.product-box img').forEach(img=>{
   });
 });
 
-checkoutBtn.addEventListener('click', ()=>{
-  loadCart();
-  if(cart.length === 0){
-    alert('Dein Warenkorb ist leer!');
-    return;
-  }
-  window.location.href = 'checkout.html';
-});
+if(checkoutBtn){
+  checkoutBtn.addEventListener('click', ()=>{
+    loadCart();
+
+    if(cart.length === 0){
+      alert('Dein Warenkorb ist leer!');
+      return;
+    }
+
+    window.location.href = 'checkout.html';
+  });
+}
 const container = document.querySelector('.container');
 const layoutBtn = document.getElementById('layout-toggle');
 
