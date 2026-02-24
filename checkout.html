@@ -1,3 +1,5 @@
+So?
+
 <!DOCTYPE html>
 <html lang="de">
 <head>
@@ -22,75 +24,76 @@ body{
 
 /* HEADER */
 header{
-  padding:18px 0;
+  padding:20px 0;
   text-align:center;
-  font-size:1.4rem;
+  font-size:1.1rem;
   font-weight:500;
-  letter-spacing:0.25em;
+  letter-spacing:0.35em;
   position:relative;
 }
 
 .back-link{
   position:absolute;
-  left:25px;
+  left:20px;
   top:50%;
   transform:translateY(-50%);
-  font-size:12px;
-  letter-spacing:0.1em;
+  font-size:11px;
+  letter-spacing:0.15em;
   text-decoration:none;
   color:#111;
 }
 
 /* CONTAINER */
 .checkout-container{
-  max-width:480px;
-  margin:100px auto 120px auto;
-  padding:0 30px;
+  max-width:520px;
+  margin:80px auto 120px auto;
+  padding:0 24px;
 }
 
 .checkout-title{
   text-align:center;
-  font-size:18px;
-  letter-spacing:0.2em;
-  margin-bottom:40px;
+  font-size:16px;
+  letter-spacing:0.35em;
+  margin:60px 0 35px 0;
 }
 
 /* ORDER SUMMARY */
 .order-summary{
-  margin-bottom:50px;
+  margin-bottom:60px;
   text-align:center;
 }
 
 .order-summary-title{
-  font-size:13px;
-  letter-spacing:0.15em;
-  margin-bottom:20px;
+  font-size:12px;
+  letter-spacing:0.3em;
+  margin-bottom:25px;
 }
 
 .order-item{
-  font-size:14px;
-  margin-bottom:8px;
+  font-size:15px;
+  margin-bottom:12px;
 }
 
 .order-total{
-  margin-top:20px;
-  font-weight:500;
-  letter-spacing:0.1em;
+  margin-top:25px;
+  font-weight:600;
+  letter-spacing:0.2em;
+  font-size:16px;
 }
 
 /* FORM */
 form{
   display:flex;
   flex-direction:column;
-  gap:18px;
+  gap:28px;
 }
 
 input{
   border:none;
-  border-bottom:1px solid rgba(0,0,0,0.2);
-  padding:12px 4px;
-  font-size:14px;
-  letter-spacing:0.05em;
+  border-bottom:1px solid rgba(0,0,0,0.25);
+  padding:16px 2px;
+  font-size:15px;
+  letter-spacing:0.08em;
   outline:none;
   background:transparent;
 }
@@ -101,13 +104,14 @@ input:focus{
 
 /* BUTTON */
 button{
-  margin-top:30px;
-  padding:14px;
+  margin-top:40px;
+  padding:18px;
   border:none;
   background:#000;
   color:#fff;
-  letter-spacing:0.15em;
+  letter-spacing:0.25em;
   font-weight:500;
+  font-size:13px;
   cursor:pointer;
   transition:.3s;
 }
@@ -116,10 +120,19 @@ button:hover{
   background:#111;
 }
 
-/* MOBILE */
-@media(max-width:768px){
+/* DESKTOP OPTIMIERUNG */
+@media(min-width:900px){
+
+  header{
+    font-size:1.4rem;
+  }
+
   .checkout-container{
-    margin:80px auto;
+    margin:120px auto;
+  }
+
+  .checkout-title{
+    font-size:18px;
   }
 }
 </style>
@@ -156,27 +169,24 @@ button:hover{
 const cart = JSON.parse(localStorage.getItem("cart")) || [];
 const summaryEl = document.getElementById("orderSummary");
 
-/* Leeren Warenkorb abfangen */
 if(cart.length === 0){
   window.location.href = "index.html";
 }
 
-/* Bestellübersicht aufbauen */
 let total = 0;
 let itemsHTML = "";
 
 cart.forEach(item=>{
   total += item.price;
-  itemsHTML += `<div class="order-item">${item.name} – ${item.price} $</div>`;
+  itemsHTML += `<div class="order-item">${item.name} – ${item.price} USDC</div>`;
 });
 
 summaryEl.innerHTML = `
   <div class="order-summary-title">BESTELLUNG</div>
   ${itemsHTML}
-  <div class="order-total">GESAMT: ${total} $</div>
+  <div class="order-total">GESAMT: ${total} USDC</div>
 `;
 
-/* Formular */
 document.getElementById("checkoutForm").addEventListener("submit", e => {
   e.preventDefault();
 
