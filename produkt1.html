@@ -114,25 +114,6 @@ header{
   margin-bottom:30px;
 }
 
-/* SIZE */
-.sizes{
-  display:flex;
-  justify-content:center;
-  gap:15px;
-  margin-bottom:40px;
-}
-
-.size{
-  border:1px solid #111;
-  padding:8px 14px;
-  cursor:pointer;
-  font-size:14px;
-}
-
-.size.active{
-  background:#111;
-  color:#fff;
-}
 
 /* PLUS BUTTON */
 .add-btn{
@@ -144,6 +125,51 @@ header{
 
 .add-btn:hover{
   opacity:.6;
+}
+/* ADD DROPDOWN */
+.add-wrapper{
+  position:relative;
+  display:inline-block;
+}
+
+.add-btn{
+  color:#000; /* Plus jetzt schwarz */
+}
+
+.size-dropdown{
+  position:absolute;
+  bottom:60px;
+  left:50%;
+  transform:translate(-50%, 10px);
+  background:#fff;
+  border:1px solid #000;
+  min-width:80px;
+  z-index:10;
+
+  opacity:0;
+  pointer-events:none;
+  transition:all .25s ease;
+}
+
+.size-dropdown.show{
+  opacity:1;
+  transform:translate(-50%, 0);
+  pointer-events:all;
+}
+
+.size-dropdown div{
+  padding:10px;
+  cursor:pointer;
+  border-bottom:1px solid #eee;
+}
+
+.size-dropdown div:last-child{
+  border-bottom:none;
+}
+
+.size-dropdown div:hover{
+  background:#000;
+  color:#fff;
 }
 
 /* CART DRAWER */
@@ -222,14 +248,15 @@ header{
   <div class="product-title">PK-01</div>
   <div class="product-price">100 US-DOLLAR</div>
 
-  <div class="sizes">
-    <div class="size" onclick="selectSize(this)">S</div>
-    <div class="size" onclick="selectSize(this)">M</div>
-    <div class="size" onclick="selectSize(this)">L</div>
+
+<div class="add-wrapper">
+  <button class="add-btn" id="addBtn">+</button>
+
+  <div class="size-dropdown" id="sizeDropdown">
+    <div onclick="addWithSize('S')">S</div>
+    <div onclick="addWithSize('M')">M</div>
+    <div onclick="addWithSize('L')">L</div>
   </div>
-
-  <button class="add-btn" onclick="addToCart()">+</button>
-
 </div>
 
 <script>
@@ -264,14 +291,6 @@ imageTrack.addEventListener("touchend", e=>{
   }
 });
 
-/* SIZE */
-let selectedSize=null;
-function selectSize(el){
-  document.querySelectorAll(".size").forEach(s=>s.classList.remove("active"));
-  el.classList.add("active");
-  selectedSize=el.innerText;
-}
-
 /* CART */
 let cart=[];
 const cartCount=document.getElementById("cart-count");
@@ -298,19 +317,6 @@ function updateCart(save=true){
   if(save)localStorage.setItem("cart",JSON.stringify(cart));
 }
 
-function addToCart(){
-  if(!selectedSize){
-    alert("Bitte Größe wählen");
-    return;
-  }
-  cart.push({
-    name:"PK-01",
-    price:100,
-    size:selectedSize
-  });
-  updateCart();
-}
-
 const cartDrawer = document.getElementById("cart-dropdown");
 const overlay = document.getElementById("cart-overlay");
 
@@ -323,6 +329,35 @@ overlay.onclick = () => {
   cartDrawer.classList.remove("show");
   overlay.classList.remove("show");
 };
+/* ADD DROPDOWN LOGIC */
+
+const addBtn = document.getElementById("addBtn");
+const sizeDropdown = document.getElementById("sizeDropdown");
+
+addBtn.onclick = () => {
+  sizeDropdown.style.display =
+    sizeDropdown.style.display === "block" ? "none" : "block";
+};
+
+function addWithSize(size){
+  cart.push({
+    name:"PK-01",
+    price:100,
+    size:size
+  });
+
+  updateCart();
+  sizeDropdown.style.display = "none";
+
+  cartCount.style.transform="scale(1.3)";
+  setTimeout(()=>cartCount.style.transform="scale(1)",200);
+}
+
+document.addEventListener("click",(e)=>{
+  if(!e.target.closest(".add-wrapper")){
+    sizeDropdown.style.display="none";
+  }
+});
 
 loadCart();
 </script>
