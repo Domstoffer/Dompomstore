@@ -44,7 +44,7 @@ header{
 /* CONTAINER */
 .checkout-container{
   max-width:520px;
-  margin:80px auto 120px auto;
+  margin:60px auto 100px auto;
   padding:0 24px;
 }
 
@@ -52,30 +52,41 @@ header{
   text-align:center;
   font-size:16px;
   letter-spacing:0.35em;
-  margin:60px 0 35px 0;
+  margin:40px 0 30px 0;
 }
 
 /* ORDER SUMMARY */
 .order-summary{
-  margin-bottom:60px;
-  text-align:center;
+  margin:40px 0 50px 0;
+  border-top:1px solid rgba(0,0,0,0.1);
+  border-bottom:1px solid rgba(0,0,0,0.1);
 }
 
-.order-summary-title{
+.order-summary-header{
+  display:flex;
+  justify-content:space-between;
+  align-items:center;
+  padding:18px 0;
   font-size:12px;
-  letter-spacing:0.3em;
-  margin-bottom:25px;
+  letter-spacing:0.35em;
+  cursor:pointer;
+}
+
+.order-summary-content{
+  overflow:hidden;
+  max-height:0;
+  transition:max-height .4s ease;
 }
 
 .order-item{
   font-size:15px;
-  margin-bottom:12px;
+  margin-bottom:14px;
 }
 
 .order-total{
-  margin-top:25px;
-  font-weight:600;
-  letter-spacing:0.2em;
+  margin:20px 0 25px 0;
+  font-weight:700;
+  letter-spacing:0.25em;
   font-size:16px;
 }
 
@@ -146,7 +157,16 @@ button:hover{
 <div class="checkout-container">
 
   <!-- BESTELLÜBERSICHT -->
-  <div id="orderSummary" class="order-summary"></div>
+  <div class="order-summary">
+
+  <div class="order-summary-header" onclick="toggleSummary()">
+    <span>BESTELLUNG</span>
+    <span id="summaryToggle">+</span>
+  </div>
+
+  <div id="summaryContent" class="order-summary-content"></div>
+
+</div>
 
   <div class="checkout-title">VERSANDINFORMATIONEN</div>
 
@@ -165,7 +185,7 @@ button:hover{
 
 <script>
 const cart = JSON.parse(localStorage.getItem("cart")) || [];
-const summaryEl = document.getElementById("orderSummary");
+const summaryContent = document.getElementById("summaryContent");
 
 if(cart.length === 0){
   window.location.href = "index.html";
@@ -179,11 +199,23 @@ cart.forEach(item=>{
   itemsHTML += `<div class="order-item">${item.name} – ${item.price} USDC</div>`;
 });
 
-summaryEl.innerHTML = `
-  <div class="order-summary-title">BESTELLUNG</div>
+summaryContent.innerHTML = `
   ${itemsHTML}
   <div class="order-total">GESAMT: ${total} USDC</div>
 `;
+
+function toggleSummary(){
+  const content = document.getElementById("summaryContent");
+  const toggle = document.getElementById("summaryToggle");
+
+  if(content.style.maxHeight && content.style.maxHeight !== "0px"){
+    content.style.maxHeight = "0px";
+    toggle.innerText = "+";
+  } else {
+    content.style.maxHeight = content.scrollHeight + "px";
+    toggle.innerText = "−";
+  }
+}
 
 document.getElementById("checkoutForm").addEventListener("submit", e => {
   e.preventDefault();
@@ -192,6 +224,10 @@ document.getElementById("checkoutForm").addEventListener("submit", e => {
   localStorage.setItem("shipping", JSON.stringify(data));
 
   window.location.href = "pay.html";
+});
+
+window.addEventListener("load", () => {
+  toggleSummary();
 });
 </script>
 
