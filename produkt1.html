@@ -114,6 +114,27 @@ header{
   margin-bottom:30px;
 }
 
+.product-info{
+  max-height:0;
+  overflow:hidden;
+  opacity:0;
+  transform:translateY(-10px);
+  transition:
+    max-height .45s cubic-bezier(.4,.0,.2,1),
+    opacity .35s ease,
+    transform .35s ease;
+  margin-top:0;
+  font-size:14px;
+  line-height:1.7;
+  letter-spacing:.05em;
+}
+
+.product-info.show{
+  max-height:300px;
+  opacity:1;
+  transform:translateY(0);
+  margin-top:25px;
+}
 
 /* PLUS BUTTON */
 .add-btn{
@@ -317,6 +338,12 @@ header{
     <div onclick="addWithSize('M')">M</div>
     <div onclick="addWithSize('L')">L</div>
   </div>
+</div>
+
+<div class="product-info" id="productInfo">
+  <p>
+    Beste Badehose ever.
+  </p>
 </div>
 
 <script>
