@@ -2,7 +2,7 @@
 <html lang="de">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
 <title>Shop Index</title>
 <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;700&display=swap" rel="stylesheet">
 <style>
@@ -34,8 +34,7 @@ header {
 .cart-icon svg{
   width:24px;
   height:24px;
-  stroke:#111;
-  stroke-width:2;
+  color:#111;
   transition:opacity .2s ease;
 }
 
@@ -241,14 +240,21 @@ header {
   Dompomstore
  <span class="cart-icon" id="cart-icon">
   <div id="cart-count" class="cart-badge" style="display:none;">0</div>
-  <svg xmlns="http://www.w3.org/2000/svg">
-    <path d="M6 2l1 5h10l1-5z"/>
-    <path d="M2 7h20v14H2z"/>
-    <path d="M16 11a4 4 0 0 1-8 0"/>
+
+  <svg xmlns="http://www.w3.org/2000/svg"
+       viewBox="0 0 24 24"
+       fill="none"
+       stroke="currentColor"
+       stroke-width="1.6"
+       stroke-linecap="round"
+       stroke-linejoin="round">
+    <path d="M3 3h2l.4 2M7 13h10l4-8H5.4"/>
+    <circle cx="9" cy="19" r="1.5"/>
+    <circle cx="17" cy="19" r="1.5"/>
   </svg>
 </span>
 
-  <div id="cart-dropdown">
+<div id="cart-dropdown">
     <h3>Warenkorb</h3>
     <ul id="cart-items"><li>Der Warenkorb ist leer</li></ul>
     <button id="checkout-btn">Checkout</button>
