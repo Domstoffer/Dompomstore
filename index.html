@@ -62,73 +62,28 @@ header {
   position:fixed;
   top:0;
   right:-100%;
-  width:340px;
-  height:100%;
-  background:#fff;
-  padding:30px 20px;
-  box-shadow:-10px 0 30px rgba(0,0,0,0.1);
-  transition:.4s ease;
-  text-align:left;
-  z-index:1000;
+  width:320px;
+  height:100vh;
+  background:#ffffff;
+  padding:90px 30px 40px;
+  box-shadow:-20px 0 60px rgba(0,0,0,0.08);
+  transition:right .45s cubic-bezier(.77,0,.18,1);
+  z-index:2000;
+  display:flex;
+  flex-direction:column;
 }
 
 #cart-dropdown.show{
   right:0;
 }
-
-.cart-title{
-  font-size:18px;
-  margin-bottom:20px;
-}
-
-.cart-item{
-  display:flex;
-  justify-content:space-between;
-  align-items:center;
-  margin-bottom:15px;
-  font-size:14px;
-}
-
-.cart-left{
-  display:flex;
-  gap:10px;
-}
-
-.remove-item{
-  cursor:pointer;
-  font-weight:bold;
-}
-
-.cart-footer{
-  position:absolute;
-  bottom:30px;
-  left:20px;
-  right:20px;
-}
-
-.cart-total{
-  display:flex;
-  justify-content:space-between;
-  margin-bottom:15px;
-  font-weight:600;
-}
-
-.checkout-btn{
-  width:100%;
-  padding:12px;
-  background:#000;
-  color:#fff;
-  border:none;
-  cursor:pointer;
-}
-
 .cart-overlay{
   position:fixed;
   top:0;
   left:0;
   width:100%;
   height:100%;
-  background:rgba(0,0,0,0.2);
+  background:rgba(0,0,0,0.15);
+  backdrop-filter:blur(2px);
   opacity:0;
   pointer-events:none;
   transition:.3s;
@@ -139,11 +94,65 @@ header {
   pointer-events:all;
 }
 
-.checkout-btn:hover {
-  background:#000;
-  transform:translateY(-2px);
+.cart-title{
+  font-size:18px;
+  font-weight:400;
+  letter-spacing:0.12em;
+  margin-bottom:40px;
 }
 
+.cart-item{
+  display:flex;
+  justify-content:space-between;
+  align-items:center;
+  padding:12px 0;
+  border-bottom:1px solid rgba(0,0,0,0.05);
+  font-size:14px;
+}
+
+.cart-left{
+  display:flex;
+  flex-direction:column;
+  gap:3px;
+}
+
+.remove-item{
+  cursor:pointer;
+  opacity:.5;
+  transition:.2s;
+}
+
+.remove-item:hover{
+  opacity:1;
+}
+
+.cart-footer{
+  margin-top:auto;
+}
+
+.cart-total{
+  display:flex;
+  justify-content:space-between;
+  margin:25px 0;
+  font-weight:500;
+  letter-spacing:0.1em;
+}
+
+.checkout-btn{
+  width:100%;
+  padding:14px;
+  background:#000;
+  color:#fff;
+  border:none;
+  font-weight:500;
+  letter-spacing:0.15em;
+  cursor:pointer;
+  transition:.3s;
+}
+
+.checkout-btn:hover{
+  background:#111;
+}
 
 /* PRODUKT GRID */
 .container {
@@ -206,11 +215,15 @@ header {
     transform:translateY(-50%);
   }
 
-  #cart-dropdown{
-    right:4%;
-    width:92%;
-    top:70px;
-    border-radius:18px;
+#cart-dropdown{
+  width:85%;
+  top:70px;
+  height:calc(100vh - 70px);
+  border-radius:18px;
+}
+
+  #cart-dropdown.show{
+    right:0%;
   }
 
   .product-box img{
@@ -290,6 +303,7 @@ header {
 
 <div class="cart-overlay" id="cart-overlay"></div>
 </header>
+<div class="container">
 
 <div class="product-box" data-price="49">
   <img src="images/DB-01.jpg" alt="DB-01" data-link="produkt1.html">
