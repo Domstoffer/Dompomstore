@@ -24,26 +24,26 @@ header{
 .cart-icon{
   position:absolute;
   right:20px;
-  top:20px;
+  top:50%;
+  transform:translateY(-50%);
+  display:flex;
+  align-items:center;
+  gap:6px;
   cursor:pointer;
 }
 
 .cart-icon svg{
-  width:26px;
-  height:26px;
+  width:22px;   /* etwas kleiner */
+  height:22px;
   stroke:#000;
   fill:none;
-  stroke-width:2;
+  stroke-width:1.5;
 }
 
 .cart-count{
-  position:absolute;
-  right:-4px;
-  top:-6px;
-  background:none;
-  color:#000;
-  font-size:12px;
+  font-size:13px;   /* kleiner */
   font-weight:600;
+  color:#000;
 }
 
 

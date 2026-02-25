@@ -39,27 +39,26 @@ header{
 .cart-icon{
   position:absolute;
   right:20px;
-  top:20px;
+  top:50%;
+  transform:translateY(-50%);
+  display:flex;
+  align-items:center;
+  gap:6px;
   cursor:pointer;
 }
 
-.cart-count{
-  position:absolute;
-  right:-4px;
-  top:-6px;
-  background:none;     /* kein Hintergrund */
-  color:#000;          /* schwarze Zahl */
-  font-size:12px;
-  font-weight:600;
-  padding:0;
-}
-
 .cart-icon svg{
-  width:26px;
-  height:26px;
+  width:22px;   /* etwas kleiner */
+  height:22px;
   stroke:#000;
   fill:none;
-  stroke-width:2;
+  stroke-width:1.5;
+}
+
+.cart-count{
+  font-size:13px;
+  font-weight:600;
+  color:#000;
 }
 
 /* PRODUKT */
@@ -136,62 +135,79 @@ header{
   margin-top:25px;
 }
 
-/* PLUS BUTTON */
+/* ===== YEEZY STYLE ACTION SYSTEM ===== */
+
+.action-wrapper{
+  position:relative;
+  margin-top:40px;
+}
+
 .add-btn{
-  font-size:40px;
+  font-size:42px;
   border:none;
   background:none;
   cursor:pointer;
-}
-
-.add-btn:hover{
-  opacity:.6;
-}
-/* ADD DROPDOWN */
-.add-wrapper{
+  transition:.3s ease;
   position:relative;
-  display:inline-block;
+  z-index:2;
 }
 
-.add-btn{
-  color:#000; /* Plus jetzt schwarz */
+.add-btn.active{
+  transform:translateY(-40px);
 }
 
-.size-dropdown{
-  position:absolute;
-  bottom:60px;
-  left:50%;
-  transform:translate(-50%, 10px);
-  background:#fff;
-  border:1px solid #000;
-  min-width:80px;
-  z-index:10;
-
+.action-panel{
+  margin-top:20px;
   opacity:0;
+  transform:translateY(-10px);
   pointer-events:none;
-  transition:all .25s ease;
+  transition:.35s ease;
 }
 
-.size-dropdown.show{
+.action-panel.show{
   opacity:1;
-  transform:translate(-50%, 0);
+  transform:translateY(0);
   pointer-events:all;
 }
 
-.size-dropdown div{
-  padding:10px;
+.size-row{
+  display:flex;
+  justify-content:center;
+  gap:60px;
+  font-size:20px;
+  letter-spacing:.2em;
+  margin-bottom:30px;
+}
+
+.size-row span{
   cursor:pointer;
-  border-bottom:1px solid #eee;
 }
 
-.size-dropdown div:last-child{
-  border-bottom:none;
+.size-row span:hover{
+  opacity:.5;
 }
 
-.size-dropdown div:hover{
-  background:#000;
-  color:#fff;
+.info-toggle{
+  font-size:18px;
+  letter-spacing:.2em;
+  cursor:pointer;
+  margin-bottom:15px;
 }
+
+.product-info{
+  max-height:0;
+  overflow:hidden;
+  opacity:0;
+  transition:.4s ease;
+  font-size:14px;
+  letter-spacing:.05em;
+}
+
+.product-info.show{
+  max-height:200px;
+  opacity:1;
+}
+
 
 /* CART DRAWER */
 #cart-dropdown{
@@ -330,21 +346,27 @@ header{
   <div class="product-price">49usdc</div>
 
 
-<div class="add-wrapper">
+<div class="action-wrapper">
+
   <button class="add-btn" id="addBtn">+</button>
 
-  <div class="size-dropdown" id="sizeDropdown">
-    <div onclick="addWithSize('S')">S</div>
-    <div onclick="addWithSize('M')">M</div>
-    <div onclick="addWithSize('L')">L</div>
+  <div class="action-panel" id="actionPanel">
+
+    <div class="size-row">
+      <span onclick="addWithSize('S')">S</span>
+      <span onclick="addWithSize('M')">M</span>
+      <span onclick="addWithSize('L')">L</span>
+    </div>
+
+    <div class="info-toggle" id="infoToggle">INFORMATION</div>
+
+    <div class="product-info" id="productInfo">
+      Beste Badehose ever.
+    </div>
+
   </div>
 </div>
 
-<div class="product-info" id="productInfo">
-  <p>
-    Beste Badehose ever.
-  </p>
-</div>
 
 <script>
 
@@ -449,11 +471,30 @@ overlay.onclick = () => {
 /* ADD DROPDOWN LOGIC */
 
 const addBtn = document.getElementById("addBtn");
-const sizeDropdown = document.getElementById("sizeDropdown");
+const actionPanel = document.getElementById("actionPanel");
+const infoToggle = document.getElementById("infoToggle");
+const productInfo = document.getElementById("productInfo");
 
-addBtn.onclick = (e) => {
-  e.stopPropagation();
-  sizeDropdown.classList.toggle("show");
+let actionOpen = false;
+
+addBtn.onclick = () => {
+
+  actionOpen = !actionOpen;
+
+  if(actionOpen){
+    addBtn.innerText = "×";
+    addBtn.classList.add("active");
+    actionPanel.classList.add("show");
+  } else {
+    addBtn.innerText = "+";
+    addBtn.classList.remove("active");
+    actionPanel.classList.remove("show");
+    productInfo.classList.remove("show");
+  }
+};
+
+infoToggle.onclick = () => {
+  productInfo.classList.toggle("show");
 };
 
 function addWithSize(size){
@@ -464,17 +505,10 @@ function addWithSize(size){
   });
 
   updateCart();
-  sizeDropdown.classList.remove("show");
-
+ 
   cartCount.style.transform="scale(1.3)";
   setTimeout(()=>cartCount.style.transform="scale(1)",200);
 }
-
-document.addEventListener("click",(e)=>{
-  if(!e.target.closest(".add-wrapper")){
-    sizeDropdown.classList.remove("show");
-  }
-});
 
 loadCart();
 function goToCheckout(){

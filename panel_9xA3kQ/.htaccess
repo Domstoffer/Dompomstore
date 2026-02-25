@@ -1,0 +1,25 @@
+# 🔒 Directory Listing deaktivieren
+Options -Indexes
+
+# 🔒 Sensible Dateien blockieren
+<Files "bestellungen.enc">
+  Require all denied
+</Files>
+
+<Files "rate_limit.json">
+  Require all denied
+</Files>
+
+<Files "debug.txt">
+  Require all denied
+</Files>
+
+# 🔒 Zugriff auf versteckte Dateien verhindern
+<FilesMatch "^\.">
+  Require all denied
+</FilesMatch>
+
+# 🛡️ Security Header
+Header set X-Content-Type-Options "nosniff"
+Header set X-Frame-Options "SAMEORIGIN"
+Header set X-XSS-Protection "1; mode=block"
