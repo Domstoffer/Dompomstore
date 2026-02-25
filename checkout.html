@@ -230,13 +230,44 @@ function toggleSummary(){
   }
 }
 
-document.getElementById("checkoutForm").addEventListener("submit", e => {
+document.getElementById("checkoutForm").addEventListener("submit", async e => {
   e.preventDefault();
 
   const data = Object.fromEntries(new FormData(e.target).entries());
   localStorage.setItem("shipping", JSON.stringify(data));
 
-  window.location.href = "pay.html";
+  const cart = JSON.parse(localStorage.getItem("cart") || "[]");
+
+  if(cart.length === 0){
+    alert("Warenkorb leer");
+    return;
+  }
+
+  let total = 0;
+  cart.forEach(item => total += item.price);
+
+  try {
+    const response = await fetch("http://localhost:3000/api/create-order", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json"
+      },
+      body: JSON.stringify({
+  cart,
+  total,
+  shipping: data  
+    })
+  });
+
+    const order = await response.json();
+
+    localStorage.setItem("currentOrder", JSON.stringify(order));
+
+    window.location.href = "pay.html";
+
+  } catch (err) {
+    alert("Server nicht erreichbar");
+  }
 });
 
 window.addEventListener("load", () => {

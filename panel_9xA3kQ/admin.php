@@ -3,6 +3,7 @@ ini_set('display_errors', 1);
 error_reporting(E_ALL);
 
 session_start();
+file_put_contents("debug.txt", file_get_contents("php://input") . PHP_EOL, FILE_APPEND);
 
 /* ===============================
    🔐 CONFIG
@@ -87,10 +88,10 @@ if (
         }
     }
 
-    $data['id']     = bin2hex(random_bytes(6));
-    $data['status'] = 'Neu';
-    $data['note']   = '';
-    $data['ip']     = $ip;
+$data['id']     = bin2hex(random_bytes(6));
+$data['status'] = $data['status'] ?? 'Neu';
+$data['note']   = '';
+$data['ip']     = $ip;
 
     $orders[] = $data;
 
@@ -216,6 +217,34 @@ if (file_exists($ordersFile)) {
         }
     }
 }
+// ===============================
+// 🗑 ORDER DELETE
+// ===============================
+if (isset($_GET['delete']) && isset($_SESSION['admin'])) {
+
+    $deleteId = $_GET['delete'];
+
+    $orders = array_filter($orders, function($order) use ($deleteId) {
+        return $order['id'] !== $deleteId;
+    });
+
+    $orders = array_values($orders);
+
+    $iv = random_bytes(16);
+
+    $enc = openssl_encrypt(
+        json_encode($orders, JSON_PRETTY_PRINT),
+        'AES-256-CBC',
+        SECRET_KEY,
+        OPENSSL_RAW_DATA,
+        $iv
+    );
+
+    file_put_contents($ordersFile, base64_encode($iv . $enc));
+
+    header("Location: admin.php");
+    exit;
+}
 
 $remaining = SESSION_LIFETIME - (time() - $_SESSION['admin_time']);
 ?>
@@ -227,76 +256,119 @@ $remaining = SESSION_LIFETIME - (time() - $_SESSION['admin_time']);
 
 <style>
 body{
-  font-family:Arial;
-  background:#f4f6f9;
-  padding:30px
+  font-family:'Montserrat', sans-serif;
+  background:#f8f9fb;
+  padding:40px;
+  color:#111;
 }
 
 .top{
   display:flex;
   justify-content:space-between;
   align-items:center;
-  margin-bottom:25px
+  margin-bottom:40px;
+}
+
+h1{
+  font-size:18px;
+  letter-spacing:0.25em;
+  font-weight:600;
 }
 
 .logout{
-  background:#111;
+  background:#000;
   color:#fff;
-  padding:10px 14px;
-  border-radius:8px;
-  text-decoration:none
+  padding:10px 16px;
+  border-radius:6px;
+  text-decoration:none;
+  font-size:12px;
+  letter-spacing:0.15em;
+  transition:.2s;
+}
+
+.logout:hover{
+  background:#222;
 }
 
 .order{
   background:#fff;
-  border-radius:16px;
-  padding:20px;
-  margin-bottom:18px;
-  box-shadow:0 8px 25px rgba(0,0,0,.08);
+  border:1px solid #eee;
+  border-radius:14px;
+  padding:24px;
+  margin-bottom:20px;
+  transition:.2s ease;
+}
+
+.order:hover{
+  box-shadow:0 10px 30px rgba(0,0,0,.05);
 }
 
 .header{
   display:flex;
   justify-content:space-between;
-  cursor:pointer;
   align-items:center;
+  cursor:pointer;
 }
 
 .name{
-  font-size:18px;
-  font-weight:700;
+  font-size:16px;
+  font-weight:600;
+  letter-spacing:0.05em;
 }
 
 .badge{
-  background:#e3f2fd;
-  padding:6px 10px;
-  border-radius:8px;
-  font-size:13px;
+  padding:6px 12px;
+  border-radius:20px;
+  font-size:11px;
+  letter-spacing:0.15em;
   font-weight:600;
 }
 
+.badge.neu{
+  background:#f3f3f3;
+  color:#555;
+}
+
+.badge.bezahlt{
+  background:#e6f7ec;
+  color:#1c7c3a;
+}
+
+.badge.versandt{
+  background:#e6f0ff;
+  color:#1a4ed8;
+}
+
+.badge.storniert{
+  background:#fdecec;
+  color:#b42323;
+}
+
 .details{
-  margin-top:18px;
+  margin-top:20px;
   display:none;
   font-size:14px;
-  line-height:1.6;
+  line-height:1.7;
+  border-top:1px solid #eee;
+  padding-top:18px;
 }
 
 .section{
-  margin-bottom:14px;
-  padding:12px;
-  background:#fafafa;
-  border-radius:10px;
+  margin-bottom:18px;
 }
 
 .section strong{
   display:block;
   margin-bottom:6px;
+  font-size:12px;
+  letter-spacing:0.15em;
+  color:#777;
+  text-transform:uppercase;
 }
 
 .countdown{
-  color:#d32f2f;
-  font-weight:600
+  font-size:12px;
+  opacity:0.6;
 }
 </style>
 
@@ -329,58 +401,67 @@ function toggle(el){
 
 <div class="order">
 
-<div class="header" onclick="toggle(this)">
-<div class="name">
-<?=htmlspecialchars($o['shipping']['firstname'].' '.$o['shipping']['lastname'])?>
-</div>
+  <div class="header" onclick="toggle(this)">
 
-<div class="badge">
-<?=htmlspecialchars($o['status'])?>
-</div>
-</div>
+    <div class="name">
+      <?=htmlspecialchars($o['shipping']['firstname'].' '.$o['shipping']['lastname'])?>
+    </div>
 
-<div class="details">
+    <?php
+    $status = $o['status'] ?? 'Neu';
+    $statusClass = strtolower($status);
+    ?>
 
-<div class="section">
-<strong>🆔 Order Infos</strong>
-Order ID: <?=htmlspecialchars($o['id'])?><br>
-Datum: <?=date('d.m.Y H:i', intval(($o['timestamp'] ?? 0) / 1000))?><br>
-IP: <?=htmlspecialchars($o['ip'])?><br>
-Währung: <?=htmlspecialchars($o['currency'])?>
-</div>
+    <div class="badge <?=$statusClass?>">
+      <?=htmlspecialchars($status)?>
+    </div>
 
-<div class="section">
-<strong>🚚 Versandadresse</strong>
-<?=htmlspecialchars($o['shipping']['firstname'].' '.$o['shipping']['lastname'])?><br>
-<?=htmlspecialchars($o['shipping']['street'])?><br>
-<?=htmlspecialchars($o['shipping']['zip'].' '.$o['shipping']['city'])?><br>
-<?=htmlspecialchars($o['shipping']['country'] ?? '')?>
-</div>
+    <a href="?delete=<?=htmlspecialchars($o['id'])?>"
+       onclick="event.stopPropagation(); return confirm('Bestellung wirklich löschen?')"
+       style="margin-left:12px; font-size:13px; color:#b42323; text-decoration:none;">
+       ✕
+    </a>
 
+  </div>
 
+  <div class="details">
 
-<div class="section">
-<strong>🛒 Artikel</strong>
-<?php 
-$total = 0;
+    <div class="section">
+      <strong>🆔 Order Infos</strong>
+      Order ID: <?=htmlspecialchars($o['id'])?><br>
+      Datum: <?=date('d.m.Y H:i', intval(($o['timestamp'] ?? 0) / 1000))?><br>
+      IP: <?=htmlspecialchars($o['ip'])?><br>
+      Währung: <?=htmlspecialchars($o['currency'])?>
+    </div>
 
-if(!empty($o['cart']) && is_array($o['cart'])):
-foreach($o['cart'] as $i):
+    <div class="section">
+      <strong>🚚 Versandadresse</strong>
+      <?=htmlspecialchars($o['shipping']['firstname'].' '.$o['shipping']['lastname'])?><br>
+      <?=htmlspecialchars($o['shipping']['street'])?><br>
+      <?=htmlspecialchars($o['shipping']['zip'].' '.$o['shipping']['city'])?><br>
+      <?=htmlspecialchars($o['shipping']['country'] ?? '')?>
+    </div>
 
-  $price = isset($i['price']) ? floatval(str_replace(',','.',$i['price'])) : 0;
-  $qty   = isset($i['quantity']) ? intval($i['quantity']) : 1;
+    <div class="section">
+      <strong>🛒 Artikel</strong>
+      <?php 
+      $total = 0;
+      if(!empty($o['cart']) && is_array($o['cart'])):
+        foreach($o['cart'] as $i):
+          $price = isset($i['price']) ? floatval(str_replace(',','.',$i['price'])) : 0;
+          $qty   = isset($i['quantity']) ? intval($i['quantity']) : 1;
+          $sum = $price * $qty;
+          $total += $sum;
+      ?>
+        - <?=htmlspecialchars($i['name'] ?? 'Unbekannt')?> 
+        (<?= $qty ?> × <?= number_format($price,2) ?>)<br>
+      <?php endforeach; endif; ?>
+      <br>
+      <strong>Gesamt: <?= number_format($total,2) ?> <?=htmlspecialchars($o['currency'] ?? '')?></strong>
+    </div>
 
-  $sum = $price * $qty;
-  $total += $sum;
-?>
-- <?=htmlspecialchars($i['name'] ?? 'Unbekannt')?> 
-(<?= $qty ?> × <?= number_format($price,2) ?>)<br>
-<?php endforeach; endif; ?>
-<br>
-<strong>Gesamt: <?= number_format($total,2) ?> <?=htmlspecialchars($o['currency'] ?? '')?></strong>
-</div>
+  </div>
 
-</div>
 </div>
 
 <?php endforeach; endif; ?>

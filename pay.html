@@ -146,12 +146,14 @@ button:hover{
     <img id="qr" width="180" height="180">
   </div>
 
-  <div class="hint">
+<div style="margin-top:10px;font-size:12px;opacity:.6" id="orderIdDisplay"></div>
+  
+<div class="hint">
     Bitte sende den exakten Betrag in USDC (Solana)<br>
-    Danach „ICH HABE BEZAHLT“ klicken
+    Danach „warten wird überprüft“ klicken
   </div>
 
-  <button id="paidBtn">ICH HABE BEZAHLT</button>
+  
 
 </div>
 
@@ -163,7 +165,6 @@ const summary = document.getElementById("summary");
 const totalDiv = document.getElementById("total");
 const walletDiv = document.getElementById("wallet");
 const qrImg = document.getElementById("qr");
-const paidBtn = document.getElementById("paidBtn");
 
 function parsePrice(value) {
   if (typeof value === "number") return value;
@@ -192,63 +193,62 @@ if (cart.length === 0) {
       <hr style="border:none;border-top:1px solid #eee;margin:8px 0">
     `;
   });
-
-  totalDiv.textContent = `Gesamtbetrag: ${total.toFixed(2)} USDC`;
 }
 
-const wallet = "HIER_DEINE_SOLANA_WALLET";
-walletDiv.textContent = wallet;
-qrImg.src = `https://api.qrserver.com/v1/create-qr-code/?size=200x200&data=${wallet}`;
+const order = JSON.parse(localStorage.getItem("currentOrder"));
+
+if(!order){
+  alert("Keine Bestellung gefunden");
+  window.location.href = "checkout.html";
+}
+
+// Wallet vom Server
+walletDiv.textContent = order.wallet;
+
+// QR Code vom Server
+qrImg.src = `https://api.qrserver.com/v1/create-qr-code/?size=200x200&data=${order.wallet}`;
+
+// Gesamtbetrag vom Server (wichtig!)
+totalDiv.textContent = `Gesamtbetrag: ${order.amount} USDC`;
 
 walletDiv.onclick = () => {
-  navigator.clipboard.writeText(wallet);
+  navigator.clipboard.writeText(order.wallet);
   alert("Wallet-Adresse kopiert");
 };
 
-paidBtn.onclick = async () => {
+/* ========================= */
+/* AUTOMATISCHE PRÜFUNG */
+/* ========================= */
 
-  if (cart.length === 0) {
-    alert("Warenkorb leer.");
-    return;
-  }
+const orderId = order.orderId;
+document.getElementById("orderIdDisplay").textContent =
+  "Order ID: " + orderId;
 
-  if (!shipping.firstname || !shipping.lastname || !shipping.street) {
-    alert("Versanddaten fehlen.");
-    return;
-  }
-
-  const order = {
-    timestamp: Date.now(),
-    cart: cart,
-    shipping: shipping,
-    total: total,
-    currency: "USDC",
-    website: ""
-  };
-
+async function checkPayment() {
   try {
-    const response = await fetch("/panel_9xA3kQ/admin.php", {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json"
-      },
-      body: JSON.stringify(order)
-    });
+    const res = await fetch(`http://localhost:3000/api/check-payment/${orderId}`);
+    const data = await res.json();
 
-    if (!response.ok) {
-      alert("Fehler beim Senden der Bestellung.");
-      return;
-    }
+   if (data.status === "paid") {
 
-    localStorage.removeItem("cart");
-    localStorage.removeItem("shipping");
+  // Bestellung für Thankyou speichern
+  localStorage.setItem("lastOrderCart", localStorage.getItem("cart"));
 
-    location.href = "thankyou.html";
+  // Jetzt Warenkorb & Daten löschen
+  localStorage.removeItem("cart");
+  localStorage.removeItem("shipping");
+  localStorage.removeItem("currentOrder");
 
-  } catch (error) {
-    alert("Netzwerkfehler.");
+  window.location.href = "thankyou.html";
+}
+  } catch (err) {
+    console.log("Status check error");
   }
-};
+}
+
+// Alle 10 Sekunden prüfen
+setInterval(checkPayment, 10000);
+
 </script>
 
 </body>

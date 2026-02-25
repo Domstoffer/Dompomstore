@@ -1,173 +1,193 @@
-
-
 <!DOCTYPE html>
 <html lang="de">
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Danke – Bestellung erfolgreich</title>
-<link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;700&display=swap" rel="stylesheet">
+<title>Bestellung erfolgreich – Dompomstore</title>
+
+<link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;600&display=swap" rel="stylesheet">
 
 <style>
-body {
-  margin: 0;
-  font-family: 'Montserrat', sans-serif;
-  background: linear-gradient(135deg, #f9f9f9, #f1f3f6);
-  color: #111;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  min-height: 100vh;
-  padding: 20px;
+*{
+  box-sizing:border-box;
+  margin:0;
+  padding:0;
 }
 
-.container {
-  background: #fff;
-  padding: 45px 30px;
-  border-radius: 22px;
-  max-width: 520px;
-  width: 100%;
-  box-shadow: 0 12px 40px rgba(0,0,0,0.12);
-  text-align: center;
-  animation: fadeIn 0.6s ease;
+body{
+  font-family:'Montserrat',sans-serif;
+  background:#fff;
+  color:#111;
 }
 
-.success-icon { font-size: 46px; margin-bottom: 6px; }
-
-h1 { font-size: 28px; font-weight: 700; margin-bottom: 6px; }
-
-.subline {
-  width: 60px;
-  height: 3px;
-  background: linear-gradient(90deg, #111, #555);
-  border-radius: 5px;
-  margin: 10px auto 18px;
+/* HEADER */
+header{
+  position:relative;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  padding:18px 0;
+  font-size:1rem;
+  font-weight:500;
+  letter-spacing:0.3em;
 }
 
-p { font-size: 14px; color: #555; margin-bottom: 25px; }
+.container{
+  max-width:520px;
+  margin:80px auto 120px auto;
+  padding:0 24px;
+  text-align:center;
+}
 
-.box { text-align: left; margin-bottom: 30px; padding: 18px 14px; background: #fafafa; border-radius: 14px; border: 1px solid #eee; }
+.title{
+  font-size:16px;
+  letter-spacing:0.35em;
+  margin-bottom:30px;
+}
 
-.box-header { display: flex; flex-direction: column; align-items: center; margin-bottom: 12px; }
-.box-header h3 { font-size: 16px; margin: 6px 0 0; }
+.check{
+  font-size:40px;
+  margin-bottom:20px;
+}
 
-.bag-svg { width: 36px; height: 36px; stroke: #000; fill: none; stroke-width: 2; stroke-linecap: round; stroke-linejoin: round; }
+.text{
+  font-size:14px;
+  line-height:1.8;
+  margin-bottom:40px;
+  opacity:0.8;
+}
 
-.box ul { list-style: none; padding: 0; margin: 0; }
-.box li { font-size: 14px; padding: 8px 0; border-bottom: 1px dashed #e5e5e5; }
-.box li:last-child { border-bottom: none; }
+.order-box{
+  border-top:1px solid rgba(0,0,0,0.1);
+  border-bottom:1px solid rgba(0,0,0,0.1);
+  padding:25px 0;
+  margin-bottom:40px;
+  text-align:left;
+}
 
-.item-row { display: flex; justify-content: space-between; }
-.item-meta { font-size: 12px; color: #777; }
-.total { font-weight: 700; margin-top: 12px; display: flex; justify-content: space-between; font-size: 15px; }
+.order-item{
+  display:flex;
+  justify-content:space-between;
+  margin-bottom:12px;
+  font-size:14px;
+}
 
-.btn { display: block; background: linear-gradient(135deg, #111, #2a2a2a); color: #fff; font-weight: 700; text-transform: uppercase; padding: 15px; border-radius: 14px; text-decoration: none; transition: 0.25s ease; margin-bottom: 12px; }
-.btn:hover { transform: translateY(-1px); box-shadow: 0 8px 24px rgba(0,0,0,0.18); }
-.btn-telegram { background: linear-gradient(135deg, #0088cc, #006699); }
+.total{
+  display:flex;
+  justify-content:space-between;
+  font-weight:600;
+  margin-top:20px;
+  letter-spacing:0.15em;
+}
 
-@keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
+.btn{
+  width:100%;
+  padding:18px;
+  border:none;
+  background:#000;
+  color:#fff;
+  letter-spacing:0.25em;
+  font-size:13px;
+  cursor:pointer;
+  transition:.3s;
+  margin-bottom:14px;
+}
+
+.btn:hover{
+  background:#111;
+}
+
+.btn-outline{
+  background:#fff;
+  color:#000;
+  border:1px solid #000;
+}
+
+.btn-outline:hover{
+  background:#000;
+  color:#fff;
+}
 </style>
 </head>
 
 <body>
 
+<header>
+  <span>DOMPOMSTORE</span>
+</header>
+
 <div class="container">
-  <div class="success-icon">✅</div>
 
-  <h1>Bestellung erfolgreich!</h1>
-  <div class="subline"></div>
+  <div class="check">✓</div>
 
-  <p>Vielen Dank für dein Vertrauen.<br>Hier sind alle Details deiner Bestellung:</p>
+  <div class="title">BESTELLUNG ERFOLGREICH</div>
 
-  <div class="box">
-    <div class="box-header">
-      <svg class="bag-svg" xmlns="http://www.w3.org/2000/svg">
-        <path d="M6 2l1 5h10l1-5z"/>
-        <path d="M2 7h20v14H2z"/>
-        <path d="M16 11a4 4 0 0 1-8 0"/>
-      </svg>
-      <h3>Bestellte Artikel</h3>
-    </div>
+  <div class="text">
+    Vielen Dank für deine Bestellung.<br>
+    Deine Zahlung wurde bestätigt und deine Bestellung wird bearbeitet.
+  </div>
 
-    <ul id="order-items"><li>Keine Bestellung gefunden</li></ul>
-    <div class="total">
-      <span>Gesamtbetrag</span>
-      <span id="order-total">0.00 €</span>
+  <div class="order-box" id="orderBox">
+    <div class="order-item">
+      <span>Keine Bestellung gefunden</span>
+      <span></span>
     </div>
   </div>
 
-  <a href="index.html" class="btn" id="home-btn">Startseite</a>
-  <a href="https://t.me/dompomstore" target="_blank" class="btn btn-telegram" id="telegram-btn">Telegram Support</a>
+  <a href="index.html" class="btn" onclick="clearData()">ZUR STARTSEITE</a>
+
+<a href="https://t.me/dompomstore"
+   target="_blank"
+   class="btn btn-outline"
+   onclick="clearData()">
+   TELEGRAM SUPPORT
+</a>
+
 </div>
 
 <script>
-function getURLParam(name) {
-  const params = new URLSearchParams(window.location.search);
-  return params.get(name);
-}
+const orderBox = document.getElementById("orderBox");
 
-const orderItemsEl = document.getElementById('order-items');
-const orderTotalEl = document.getElementById('order-total');
+// Statt cart → lastOrderCart verwenden
+const cart = JSON.parse(localStorage.getItem("lastOrderCart") || "[]");
 
-let cart = [];
-const ordersParam = getURLParam('orders');
+orderBox.innerHTML = "";
 
-if (ordersParam) {
-  try { cart = JSON.parse(decodeURIComponent(ordersParam)); } catch(e){ cart = []; }
-} else {
-  cart = JSON.parse(localStorage.getItem('cart') || '[]');
-}
-
-orderItemsEl.innerHTML = '';
 let total = 0;
 
-if(cart.length === 0) {
-  orderItemsEl.innerHTML = '<li>Keine Bestellung gefunden</li>';
+if(cart.length === 0){
+  orderBox.innerHTML = `
+    <div class="order-item">
+      <span>Keine Daten verfügbar</span>
+      <span></span>
+    </div>
+  `;
 } else {
-  let currency = ''; // Währung speichern
-  orderItemsEl.innerHTML = ''; // vorherige Liste leeren
-  let total = 0;
+  cart.forEach(item=>{
+    const price = parseFloat(item.price) || 0;
+    const qty = parseInt(item.quantity) || 1;
+    const sum = price * qty;
+    total += sum;
 
-  cart.forEach(item => {
-    // Einzelpreis extrahieren
-    let match = item.price.match(/\d+(\.\d+)?/);
-    let priceNum = match ? parseFloat(match[0]) : 0;
-
-    // Währung extrahieren (nur einmal)
-    if(!currency) {
-      currency = item.price.replace(/[\d\s\/]/g,'').trim();
-    }
-
-    const quantity = parseInt(item.quantity) || 1;
-    const itemTotal = priceNum * quantity;
-    total += itemTotal;
-
-    const li = document.createElement('li');
-    li.innerHTML = `
-      <div class="item-row">
-        <strong>${item.name}</strong>
-        <strong>${itemTotal.toFixed(2)} ${currency}</strong>
-      </div>
-      <div class="item-meta">
-        ${quantity} × ${priceNum.toFixed(2)} ${currency}
+    orderBox.innerHTML += `
+      <div class="order-item">
+        <span>${item.name} × ${qty}</span>
+        <span>${sum.toFixed(2)} USDC</span>
       </div>
     `;
-    orderItemsEl.appendChild(li);
   });
 
-  // Gesamtbetrag korrekt anzeigen
-  orderTotalEl.textContent = total.toFixed(2) + ' ' + currency;
+  orderBox.innerHTML += `
+    <div class="total">
+      <span>GESAMT</span>
+      <span>${total.toFixed(2)} USDC</span>
+    </div>
+  `;
 }
 
-function clearCartAndGo(url) {
-  localStorage.removeItem('cart');
-  localStorage.removeItem('shipping');
-  localStorage.removeItem('currency');
-  window.location.href = url;
+function clearData(){
+  localStorage.removeItem("lastOrderCart");
 }
-
-document.getElementById('home-btn').addEventListener('click', () => clearCartAndGo('index.html'));
-document.getElementById('telegram-btn').addEventListener('click', () => clearCartAndGo('https://t.me/dompomstore'));
 </script>
 
 </body>
