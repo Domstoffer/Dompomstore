@@ -586,7 +586,7 @@
       <!-- SCROLLABLE RIGHT CONTENT -->
       <div class="vanguard-right">
         <h1 class="huge-title">New <i>Arrivals</i></h1>
-        <div class="container grid-2" id="main-container">
+        <div class="container grid-two" id="productsGrid">
           
 
     <div class="product-box" data-price="49" data-link="produkt1.html">
@@ -711,22 +711,7 @@
       });
     });
 
-    // LAYOUT TOGGLE
-    const container = document.getElementById('main-container');
-    const layoutBtn = document.getElementById('layout-toggle');
-    let layoutMode = localStorage.getItem('layoutMode') || "mode-2";
     
-    function applyLayout(mode) {
-      container.classList.remove("mode-2", "mode-3");
-      container.classList.add(mode);
-    }
-    applyLayout(layoutMode);
-    
-    layoutBtn.addEventListener('click', () => {
-      layoutMode = layoutMode === "mode-2" ? "mode-3" : "mode-2";
-      localStorage.setItem('layoutMode', layoutMode);
-      applyLayout(layoutMode);
-    });
 
     // CHECKOUT
     if (checkoutBtn) {
@@ -740,19 +725,25 @@
       });
     }
   
-    const toggle = document.getElementById("gridToggle");
-    const grid = document.getElementById("main-container");
-    if (toggle && grid) {
-      toggle.addEventListener("click", () => {
-        if(grid.classList.contains("grid-2")) {
-          grid.classList.remove("grid-2");
-          grid.classList.add("grid-1");
+    
+  
+    const toggleButton = document.getElementById("gridToggle");
+    const productsGrid = document.getElementById("productsGrid");
+    
+    if (toggleButton && productsGrid) {
+      let isSingleColumn = false;
+      toggleButton.addEventListener("click", () => {
+        if(isSingleColumn){
+          productsGrid.classList.remove("grid-one");
+          productsGrid.classList.add("grid-two");
         } else {
-          grid.classList.remove("grid-1");
-          grid.classList.add("grid-2");
+          productsGrid.classList.remove("grid-two");
+          productsGrid.classList.add("grid-one");
         }
+        isSingleColumn = !isSingleColumn;
       });
     }
+
   </script>
 </body>
 

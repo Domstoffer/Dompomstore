@@ -499,3 +499,35 @@ body.dark-mode .grid-toggle-btn {
       padding-bottom: 20px !important;
   }
 }
+
+/* FIXED GRID TOGGLE CLASSES */
+@media (max-width: 768px) {
+  .grid-two {
+      display: grid !important;
+      grid-template-columns: 1fr 1fr !important;
+      gap: 16px !important;
+      padding: 16px !important;
+  }
+  
+  .grid-one {
+      display: grid !important;
+      grid-template-columns: 1fr !important;
+      gap: 24px !important;
+      padding: 16px !important;
+  }
+  
+  .grid-one .product-box {
+      width: 100% !important;
+      padding-bottom: 20px !important;
+  }
+
+  .grid-one .image-wrapper {
+      aspect-ratio: auto !important;
+  }
+
+  .grid-one img {
+      width: 100% !important;
+      height: auto !important;
+      border-radius: 12px !important;
+  }
+}
