@@ -449,3 +449,53 @@ body.dark-mode .cart-count {
   background: #ffffff !important;
   color: #000000 !important;
 }
+
+/* GRID TOGGLE SYSTEM */
+.grid-toggle-btn {
+  background: transparent !important;
+  border: none !important;
+  color: var(--text) !important;
+  font-size: 28px !important;
+  font-weight: 300 !important;
+  font-family: inherit !important;
+  cursor: pointer !important;
+  padding: 0 !important;
+  display: flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  width: 30px !important;
+  height: 30px !important;
+  z-index: 10 !important;
+}
+
+body.dark-mode .grid-toggle-btn {
+  color: #fff !important;
+}
+
+@media (max-width: 768px) {
+  .vanguard-left > div:first-child {
+      display: flex !important;
+      justify-content: space-between !important;
+      align-items: center !important;
+      width: 100% !important;
+  }
+
+  .container.grid-1, .products-grid.grid-1 {
+      grid-template-columns: 1fr !important;
+      gap: 20px !important;
+  }
+
+  .container.grid-1 .image-wrapper {
+      border-radius: 10px !important;
+      aspect-ratio: auto !important;
+  }
+
+  .container.grid-1 img {
+      width: 100% !important;
+      height: auto !important;
+  }
+
+  .container.grid-1 .product-box {
+      padding-bottom: 20px !important;
+  }
+}

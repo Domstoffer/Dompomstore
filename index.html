@@ -565,6 +565,7 @@
       <!-- FIXED LEFT MENU -->
       <div class="vanguard-left">
         <div>
+          <button id="gridToggle" class="grid-toggle-btn">+</button>
           <div class="brand-logo"><a href="index.html">DOM</a><a href="hidden.html" class="secret-link" style="cursor:pointer; opacity:0.3; transition:0.3s;" onmouseover="this.style.opacity=1" onmouseout="this.style.opacity=0.3">P</a><a href="index.html">OMSTORE</a></div>
           <div class="nav-menu">
             <div class="cart-icon" id="cart-icon">
@@ -574,7 +575,7 @@
         </svg>
         <span class="cart-count" id="cart-count">0</span>
       </div>
-            <a class="nav-item" id="layout-toggle">Toggle Grid</a>
+            
           </div>
         </div>
         <div style="font-size:10px; letter-spacing:0.1em; opacity:0.3; text-transform:uppercase;">
@@ -585,7 +586,7 @@
       <!-- SCROLLABLE RIGHT CONTENT -->
       <div class="vanguard-right">
         <h1 class="huge-title">New <i>Arrivals</i></h1>
-        <div class="container" id="main-container">
+        <div class="container grid-2" id="main-container">
           
 
     <div class="product-box" data-price="49" data-link="produkt1.html">
@@ -738,6 +739,21 @@
         window.location.href = 'checkout.html';
       });
     }
+  
+    const toggle = document.getElementById("gridToggle");
+    const grid = document.getElementById("main-container");
+    if (toggle && grid) {
+      toggle.addEventListener("click", () => {
+        if(grid.classList.contains("grid-2")) {
+          grid.classList.remove("grid-2");
+          grid.classList.add("grid-1");
+        } else {
+          grid.classList.remove("grid-1");
+          grid.classList.add("grid-2");
+        }
+      });
+    }
   </script>
 </body>
+
 </html>
