@@ -546,3 +546,21 @@ body.dark-mode .grid-toggle-btn {
         border-radius: 12px !important;
     }
 }
+/* PRODUCT PAGE SPECIFIC HEADER */
+.store-header {
+  display: flex !important;
+  justify-content: space-between !important;
+  align-items: center !important;
+  padding: 16px !important;
+  background: rgba(255, 255, 255, 0.95) !important;
+  backdrop-filter: blur(12px) !important;
+  -webkit-backdrop-filter: blur(12px) !important;
+  position: sticky !important;
+  top: 0 !important;
+  z-index: 100 !important;
+  border-bottom: 1px solid var(--border) !important;
+}
+
+body.dark-mode .store-header {
+  background: rgba(0, 0, 0, 0.95) !important;
+}

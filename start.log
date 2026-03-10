@@ -2184,3 +2184,168 @@ Failed to decrypt shipping for order 1773161060010479: Error: Decryption Failed.
     at async Promise.all (index 1)
     at async Statement.<anonymous> (/Users/dompom/Desktop/Dompomstore /dompomstore-backend/server.js:373:22)
 [PGP Debug] Payload successfully decrypted.
+[PGP Debug] Reading private key...
+[PGP Debug] Reading private key...
+[PGP Debug] Private key is decrypted? true
+[PGP Debug] Reading encrypted message...
+[PGP Debug] Private key is decrypted? true
+[PGP Debug] Reading encrypted message...
+[PGP Debug] Decrypting the message payload...
+[PGP Debug] Decrypting the message payload...
+Failed to decrypt PGP payload on server: Error: Error decrypting message: No decryption key packets found
+    at Object.wrapError (/Users/dompom/Desktop/Dompomstore /dompomstore-backend/node_modules/openpgp/dist/node/openpgp.min.cjs:2:19503)
+    at exports.decrypt (/Users/dompom/Desktop/Dompomstore /dompomstore-backend/node_modules/openpgp/dist/node/openpgp.min.cjs:14:105515)
+    at async PGPService.decryptOrderData (/Users/dompom/Desktop/Dompomstore /dompomstore-backend/pgpService.js:102:41)
+    at async /Users/dompom/Desktop/Dompomstore /dompomstore-backend/server.js:359:36
+    at async Promise.all (index 1)
+    at async Statement.<anonymous> (/Users/dompom/Desktop/Dompomstore /dompomstore-backend/server.js:373:22) {
+  [cause]: Error: No decryption key packets found
+      at qa.getDecryptionKeys (/Users/dompom/Desktop/Dompomstore /dompomstore-backend/node_modules/openpgp/dist/node/openpgp.min.cjs:3:152109)
+      at async /Users/dompom/Desktop/Dompomstore /dompomstore-backend/node_modules/openpgp/dist/node/openpgp.min.cjs:3:158755
+      at async Promise.all (index 0)
+      at async /Users/dompom/Desktop/Dompomstore /dompomstore-backend/node_modules/openpgp/dist/node/openpgp.min.cjs:3:158699
+      at async Promise.all (index 0)
+      at async Xa.decryptSessionKeys (/Users/dompom/Desktop/Dompomstore /dompomstore-backend/node_modules/openpgp/dist/node/openpgp.min.cjs:3:158656)
+      at async Xa.decrypt (/Users/dompom/Desktop/Dompomstore /dompomstore-backend/node_modules/openpgp/dist/node/openpgp.min.cjs:3:157505)
+      at async exports.decrypt (/Users/dompom/Desktop/Dompomstore /dompomstore-backend/node_modules/openpgp/dist/node/openpgp.min.cjs:14:104944)
+      at async PGPService.decryptOrderData (/Users/dompom/Desktop/Dompomstore /dompomstore-backend/pgpService.js:102:41)
+      at async /Users/dompom/Desktop/Dompomstore /dompomstore-backend/server.js:359:36
+}
+Failed to decrypt shipping for order 1773161060010479: Error: Decryption Failed. Invalid Key or Corrupted Payload.
+    at PGPService.decryptOrderData (/Users/dompom/Desktop/Dompomstore /dompomstore-backend/pgpService.js:111:19)
+    at async /Users/dompom/Desktop/Dompomstore /dompomstore-backend/server.js:359:36
+    at async Promise.all (index 1)
+    at async Statement.<anonymous> (/Users/dompom/Desktop/Dompomstore /dompomstore-backend/server.js:373:22)
+[PGP Debug] Payload successfully decrypted.
+[PGP Debug] Reading private key...
+[PGP Debug] Reading private key...
+[PGP Debug] Private key is decrypted? true
+[PGP Debug] Reading encrypted message...
+[PGP Debug] Private key is decrypted? true
+[PGP Debug] Reading encrypted message...
+[PGP Debug] Decrypting the message payload...
+[PGP Debug] Decrypting the message payload...
+Failed to decrypt PGP payload on server: Error: Error decrypting message: No decryption key packets found
+    at Object.wrapError (/Users/dompom/Desktop/Dompomstore /dompomstore-backend/node_modules/openpgp/dist/node/openpgp.min.cjs:2:19503)
+    at exports.decrypt (/Users/dompom/Desktop/Dompomstore /dompomstore-backend/node_modules/openpgp/dist/node/openpgp.min.cjs:14:105515)
+    at async PGPService.decryptOrderData (/Users/dompom/Desktop/Dompomstore /dompomstore-backend/pgpService.js:102:41)
+    at async /Users/dompom/Desktop/Dompomstore /dompomstore-backend/server.js:359:36
+    at async Promise.all (index 1)
+    at async Statement.<anonymous> (/Users/dompom/Desktop/Dompomstore /dompomstore-backend/server.js:373:22) {
+  [cause]: Error: No decryption key packets found
+      at qa.getDecryptionKeys (/Users/dompom/Desktop/Dompomstore /dompomstore-backend/node_modules/openpgp/dist/node/openpgp.min.cjs:3:152109)
+      at async /Users/dompom/Desktop/Dompomstore /dompomstore-backend/node_modules/openpgp/dist/node/openpgp.min.cjs:3:158755
+      at async Promise.all (index 0)
+      at async /Users/dompom/Desktop/Dompomstore /dompomstore-backend/node_modules/openpgp/dist/node/openpgp.min.cjs:3:158699
+      at async Promise.all (index 0)
+      at async Xa.decryptSessionKeys (/Users/dompom/Desktop/Dompomstore /dompomstore-backend/node_modules/openpgp/dist/node/openpgp.min.cjs:3:158656)
+      at async Xa.decrypt (/Users/dompom/Desktop/Dompomstore /dompomstore-backend/node_modules/openpgp/dist/node/openpgp.min.cjs:3:157505)
+      at async exports.decrypt (/Users/dompom/Desktop/Dompomstore /dompomstore-backend/node_modules/openpgp/dist/node/openpgp.min.cjs:14:104944)
+      at async PGPService.decryptOrderData (/Users/dompom/Desktop/Dompomstore /dompomstore-backend/pgpService.js:102:41)
+      at async /Users/dompom/Desktop/Dompomstore /dompomstore-backend/server.js:359:36
+}
+Failed to decrypt shipping for order 1773161060010479: Error: Decryption Failed. Invalid Key or Corrupted Payload.
+    at PGPService.decryptOrderData (/Users/dompom/Desktop/Dompomstore /dompomstore-backend/pgpService.js:111:19)
+    at async /Users/dompom/Desktop/Dompomstore /dompomstore-backend/server.js:359:36
+    at async Promise.all (index 1)
+    at async Statement.<anonymous> (/Users/dompom/Desktop/Dompomstore /dompomstore-backend/server.js:373:22)
+[PGP Debug] Payload successfully decrypted.
+[PGP Debug] Reading private key...
+[PGP Debug] Reading private key...
+[PGP Debug] Private key is decrypted? true
+[PGP Debug] Reading encrypted message...
+[PGP Debug] Private key is decrypted? true
+[PGP Debug] Reading encrypted message...
+[PGP Debug] Decrypting the message payload...
+[PGP Debug] Decrypting the message payload...
+Failed to decrypt PGP payload on server: Error: Error decrypting message: No decryption key packets found
+    at Object.wrapError (/Users/dompom/Desktop/Dompomstore /dompomstore-backend/node_modules/openpgp/dist/node/openpgp.min.cjs:2:19503)
+    at exports.decrypt (/Users/dompom/Desktop/Dompomstore /dompomstore-backend/node_modules/openpgp/dist/node/openpgp.min.cjs:14:105515)
+    at async PGPService.decryptOrderData (/Users/dompom/Desktop/Dompomstore /dompomstore-backend/pgpService.js:102:41)
+    at async /Users/dompom/Desktop/Dompomstore /dompomstore-backend/server.js:359:36
+    at async Promise.all (index 1)
+    at async Statement.<anonymous> (/Users/dompom/Desktop/Dompomstore /dompomstore-backend/server.js:373:22) {
+  [cause]: Error: No decryption key packets found
+      at qa.getDecryptionKeys (/Users/dompom/Desktop/Dompomstore /dompomstore-backend/node_modules/openpgp/dist/node/openpgp.min.cjs:3:152109)
+      at async /Users/dompom/Desktop/Dompomstore /dompomstore-backend/node_modules/openpgp/dist/node/openpgp.min.cjs:3:158755
+      at async Promise.all (index 0)
+      at async /Users/dompom/Desktop/Dompomstore /dompomstore-backend/node_modules/openpgp/dist/node/openpgp.min.cjs:3:158699
+      at async Promise.all (index 0)
+      at async Xa.decryptSessionKeys (/Users/dompom/Desktop/Dompomstore /dompomstore-backend/node_modules/openpgp/dist/node/openpgp.min.cjs:3:158656)
+      at async Xa.decrypt (/Users/dompom/Desktop/Dompomstore /dompomstore-backend/node_modules/openpgp/dist/node/openpgp.min.cjs:3:157505)
+      at async exports.decrypt (/Users/dompom/Desktop/Dompomstore /dompomstore-backend/node_modules/openpgp/dist/node/openpgp.min.cjs:14:104944)
+      at async PGPService.decryptOrderData (/Users/dompom/Desktop/Dompomstore /dompomstore-backend/pgpService.js:102:41)
+      at async /Users/dompom/Desktop/Dompomstore /dompomstore-backend/server.js:359:36
+}
+Failed to decrypt shipping for order 1773161060010479: Error: Decryption Failed. Invalid Key or Corrupted Payload.
+    at PGPService.decryptOrderData (/Users/dompom/Desktop/Dompomstore /dompomstore-backend/pgpService.js:111:19)
+    at async /Users/dompom/Desktop/Dompomstore /dompomstore-backend/server.js:359:36
+    at async Promise.all (index 1)
+    at async Statement.<anonymous> (/Users/dompom/Desktop/Dompomstore /dompomstore-backend/server.js:373:22)
+[PGP Debug] Payload successfully decrypted.
+[PGP Debug] Reading private key...
+[PGP Debug] Reading private key...
+[PGP Debug] Private key is decrypted? true
+[PGP Debug] Reading encrypted message...
+[PGP Debug] Private key is decrypted? true
+[PGP Debug] Reading encrypted message...
+[PGP Debug] Decrypting the message payload...
+[PGP Debug] Decrypting the message payload...
+Failed to decrypt PGP payload on server: Error: Error decrypting message: No decryption key packets found
+    at Object.wrapError (/Users/dompom/Desktop/Dompomstore /dompomstore-backend/node_modules/openpgp/dist/node/openpgp.min.cjs:2:19503)
+    at exports.decrypt (/Users/dompom/Desktop/Dompomstore /dompomstore-backend/node_modules/openpgp/dist/node/openpgp.min.cjs:14:105515)
+    at async PGPService.decryptOrderData (/Users/dompom/Desktop/Dompomstore /dompomstore-backend/pgpService.js:102:41)
+    at async /Users/dompom/Desktop/Dompomstore /dompomstore-backend/server.js:359:36
+    at async Promise.all (index 1)
+    at async Statement.<anonymous> (/Users/dompom/Desktop/Dompomstore /dompomstore-backend/server.js:373:22) {
+  [cause]: Error: No decryption key packets found
+      at qa.getDecryptionKeys (/Users/dompom/Desktop/Dompomstore /dompomstore-backend/node_modules/openpgp/dist/node/openpgp.min.cjs:3:152109)
+      at async /Users/dompom/Desktop/Dompomstore /dompomstore-backend/node_modules/openpgp/dist/node/openpgp.min.cjs:3:158755
+      at async Promise.all (index 0)
+      at async /Users/dompom/Desktop/Dompomstore /dompomstore-backend/node_modules/openpgp/dist/node/openpgp.min.cjs:3:158699
+      at async Promise.all (index 0)
+      at async Xa.decryptSessionKeys (/Users/dompom/Desktop/Dompomstore /dompomstore-backend/node_modules/openpgp/dist/node/openpgp.min.cjs:3:158656)
+      at async Xa.decrypt (/Users/dompom/Desktop/Dompomstore /dompomstore-backend/node_modules/openpgp/dist/node/openpgp.min.cjs:3:157505)
+      at async exports.decrypt (/Users/dompom/Desktop/Dompomstore /dompomstore-backend/node_modules/openpgp/dist/node/openpgp.min.cjs:14:104944)
+      at async PGPService.decryptOrderData (/Users/dompom/Desktop/Dompomstore /dompomstore-backend/pgpService.js:102:41)
+      at async /Users/dompom/Desktop/Dompomstore /dompomstore-backend/server.js:359:36
+}
+Failed to decrypt shipping for order 1773161060010479: Error: Decryption Failed. Invalid Key or Corrupted Payload.
+    at PGPService.decryptOrderData (/Users/dompom/Desktop/Dompomstore /dompomstore-backend/pgpService.js:111:19)
+    at async /Users/dompom/Desktop/Dompomstore /dompomstore-backend/server.js:359:36
+    at async Promise.all (index 1)
+    at async Statement.<anonymous> (/Users/dompom/Desktop/Dompomstore /dompomstore-backend/server.js:373:22)
+[PGP Debug] Payload successfully decrypted.
+[PGP Debug] Reading private key...
+[PGP Debug] Reading private key...
+[PGP Debug] Private key is decrypted? true
+[PGP Debug] Reading encrypted message...
+[PGP Debug] Private key is decrypted? true
+[PGP Debug] Reading encrypted message...
+[PGP Debug] Decrypting the message payload...
+[PGP Debug] Decrypting the message payload...
+Failed to decrypt PGP payload on server: Error: Error decrypting message: No decryption key packets found
+    at Object.wrapError (/Users/dompom/Desktop/Dompomstore /dompomstore-backend/node_modules/openpgp/dist/node/openpgp.min.cjs:2:19503)
+    at exports.decrypt (/Users/dompom/Desktop/Dompomstore /dompomstore-backend/node_modules/openpgp/dist/node/openpgp.min.cjs:14:105515)
+    at async PGPService.decryptOrderData (/Users/dompom/Desktop/Dompomstore /dompomstore-backend/pgpService.js:102:41)
+    at async /Users/dompom/Desktop/Dompomstore /dompomstore-backend/server.js:359:36
+    at async Promise.all (index 1)
+    at async Statement.<anonymous> (/Users/dompom/Desktop/Dompomstore /dompomstore-backend/server.js:373:22) {
+  [cause]: Error: No decryption key packets found
+      at qa.getDecryptionKeys (/Users/dompom/Desktop/Dompomstore /dompomstore-backend/node_modules/openpgp/dist/node/openpgp.min.cjs:3:152109)
+      at async /Users/dompom/Desktop/Dompomstore /dompomstore-backend/node_modules/openpgp/dist/node/openpgp.min.cjs:3:158755
+      at async Promise.all (index 0)
+      at async /Users/dompom/Desktop/Dompomstore /dompomstore-backend/node_modules/openpgp/dist/node/openpgp.min.cjs:3:158699
+      at async Promise.all (index 0)
+      at async Xa.decryptSessionKeys (/Users/dompom/Desktop/Dompomstore /dompomstore-backend/node_modules/openpgp/dist/node/openpgp.min.cjs:3:158656)
+      at async Xa.decrypt (/Users/dompom/Desktop/Dompomstore /dompomstore-backend/node_modules/openpgp/dist/node/openpgp.min.cjs:3:157505)
+      at async exports.decrypt (/Users/dompom/Desktop/Dompomstore /dompomstore-backend/node_modules/openpgp/dist/node/openpgp.min.cjs:14:104944)
+      at async PGPService.decryptOrderData (/Users/dompom/Desktop/Dompomstore /dompomstore-backend/pgpService.js:102:41)
+      at async /Users/dompom/Desktop/Dompomstore /dompomstore-backend/server.js:359:36
+}
+Failed to decrypt shipping for order 1773161060010479: Error: Decryption Failed. Invalid Key or Corrupted Payload.
+    at PGPService.decryptOrderData (/Users/dompom/Desktop/Dompomstore /dompomstore-backend/pgpService.js:111:19)
+    at async /Users/dompom/Desktop/Dompomstore /dompomstore-backend/server.js:359:36
+    at async Promise.all (index 1)
+    at async Statement.<anonymous> (/Users/dompom/Desktop/Dompomstore /dompomstore-backend/server.js:373:22)
+[PGP Debug] Payload successfully decrypted.
