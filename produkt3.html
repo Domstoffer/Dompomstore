@@ -694,19 +694,23 @@
 
   <header class="store-header">
 
-<a href="index.html" class="logo" style="text-decoration:none; color:inherit;">
+<h1 class="logo">
 DOM<span class="secret-link" onclick="window.location.href='hidden.html'" style="cursor:pointer; opacity:0.3; transition:0.3s;" onmouseover="this.style.opacity=1" onmouseout="this.style.opacity=0.3">P</span>OMSTORE
-</a>
+</h1>
 
-<div class="cart-icon" id="cart-icon">
-  <svg class="cart-svg" viewBox="0 0 24 24" style="width:20px;height:20px;fill:currentColor;">
-    <path d="M7 4h-2l-1 2h2l3.6 7.59-1.35 2.44C7.52 16.37 8.48 18 10 18h9v-2h-8.42c-.14 0-.25-.11-.25-.25l.03-.12L11.1 14h6.45c.75 0 1.41-.41 1.75-1.03L22 7H6"></path>
-  </svg>
-  <span class="cart-count" id="cart-count">0</span>
+<div class="cart-icon" id="cartButton">
+
+<svg viewBox="0 0 24 24" width="24" height="24">
+<path d="M7 4h-2l-1 2h2l3.6 7.59-1.35 2.44C7.52 16.37 8.48 18 10 18h9v-2h-8.42c-.14 0-.25-.11-.25-.25l.03-.12L11.1 14h6.45c.75 0 1.41-.41 1.75-1.03L22 7H6"></path>
+</svg>
+
+<span class="cart-count" id="cartCount">0</span>
+
 </div>
 
+</header>
 
-    <div id="cart-dropdown">
+<div id="cart-dropdown">
       <div class="cart-header">
         <h2 class="cart-title">Warenkorb</h2>
         <button class="close-cart" id="close-cart">✕</button>
@@ -722,7 +726,7 @@ DOM<span class="secret-link" onclick="window.location.href='hidden.html'" style=
     </div>
 
     <div class="cart-overlay" id="cart-overlay"></div>
-  </header>
+  
 
   <div class="split-layout">
     <div class="image-side">
@@ -767,7 +771,7 @@ DOM<span class="secret-link" onclick="window.location.href='hidden.html'" style=
     // ----------------------------------------
 
     let cart = [];
-    const cartCount = document.getElementById("cart-count");
+    const cartCount = document.getElementById("cartCount");
     const cartDrawer = document.getElementById("cart-dropdown");
     const overlay = document.getElementById("cart-overlay");
     const closeCartBtn = document.getElementById("close-cart");

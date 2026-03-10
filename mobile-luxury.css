@@ -564,3 +564,36 @@ body.dark-mode .grid-toggle-btn {
 body.dark-mode .store-header {
   background: rgba(0, 0, 0, 0.95) !important;
 }
+
+/* EXACT HOMEPAGE HEADER ALIGNMENT */
+.store-header{
+display:flex;
+justify-content:space-between;
+align-items:center;
+padding:16px;
+}
+
+.logo{
+font-size:18px;
+letter-spacing:4px;
+}
+
+.cart-icon{
+position:relative;
+cursor:pointer;
+}
+
+.cart-count{
+position:absolute;
+top:-6px;
+right:-6px;
+background:black;
+color:white;
+font-size:11px;
+width:18px;
+height:18px;
+border-radius:50%;
+display:flex;
+align-items:center;
+justify-content:center;
+}
