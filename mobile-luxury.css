@@ -1,0 +1,281 @@
+/* mobile-luxury.css - Premium Mobile UX Overhaul */
+
+:root {
+    --nav-height: 60px;
+    --safe-bottom: env(safe-area-inset-bottom, 20px);
+}
+
+body {
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+    touch-action: pan-y;
+    overflow-x: hidden;
+}
+
+/* =======================================
+   MOBILE-FIRST GLOBAL OVERRIDES (Up to 768px)
+======================================= */
+@media (max-width: 768px) {
+
+    /* --- 1. HEADER OVERHAUL --- */
+    .vanguard-left {
+        position: sticky !important;
+        top: 0 !important;
+        left: 0 !important;
+        width: 100% !important;
+        height: var(--nav-height) !important;
+        padding: 0 20px !important;
+        display: flex !important;
+        flex-direction: row !important;
+        align-items: center !important;
+        justify-content: space-between !important;
+        z-index: 100 !important;
+        background: rgba(255, 255, 255, 0.85) !important;
+        backdrop-filter: blur(12px) !important;
+        -webkit-backdrop-filter: blur(12px) !important;
+        border-right: none !important;
+        border-bottom: 1px solid var(--border) !important;
+    }
+
+    body.dark-mode .vanguard-left {
+        background: rgba(0, 0, 0, 0.85) !important;
+    }
+
+    /* Absolute Center Logo */
+    .brand-logo {
+        position: absolute !important;
+        left: 50% !important;
+        top: 50% !important;
+        transform: translate(-50%, -50%) !important;
+        font-size: 1.1rem !important;
+        margin: 0 !important;
+    }
+
+    /* Right-Align Cart in Header */
+    .vanguard-left>div:first-child {
+        width: 100%;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+    }
+
+    .nav-menu {
+        margin: 0 !important;
+        flex-direction: row !important;
+        justify-content: flex-end !important;
+        width: 100% !important;
+    }
+
+    #layout-toggle {
+        display: none !important;
+    }
+
+    .vanguard-left::after {
+        display: none !important;
+    }
+
+    .vanguard-left>div:last-child {
+        display: none !important;
+    }
+
+    /* --- 2. MAIN LAYOUT & TYPOGRAPHY --- */
+    .vanguard-right {
+        padding: 20px 16px 100px 16px !important;
+        width: 100% !important;
+        margin: 0 !important;
+        animation: slideUp 0.8s cubic-bezier(0.16, 1, 0.3, 1) forwards !important;
+    }
+
+    .huge-title {
+        font-size: 1.8rem !important;
+        margin-top: 10px !important;
+        margin-bottom: 30px !important;
+        text-align: center !important;
+    }
+
+    /* --- 3. 2-COLUMN LUXURY PRODUCT GRID --- */
+    .container {
+        display: grid !important;
+        grid-template-columns: repeat(2, 1fr) !important;
+        gap: 16px !important;
+        padding: 0 !important;
+        overflow: visible !important;
+    }
+
+    .product-box {
+        margin: 0 !important;
+        width: 100% !important;
+        background: transparent !important;
+        border-radius: 0 !important;
+        padding-bottom: 10px !important;
+    }
+
+    .image-wrapper {
+        aspect-ratio: 1 / 1 !important;
+        border-radius: 8px !important;
+        background: var(--accent) !important;
+        margin-bottom: 12px !important;
+    }
+
+    .product-info-grid {
+        padding: 0 4px !important;
+        text-align: left !important;
+        align-items: flex-start !important;
+    }
+
+    .product-name {
+        font-size: 13px !important;
+        font-weight: 500 !important;
+        letter-spacing: 0.1em !important;
+    }
+
+    .product-price {
+        font-size: 12px !important;
+        color: #888 !important;
+        margin-top: 4px !important;
+        opacity: 1 !important;
+    }
+
+    /* --- 4. SLIDE-UP BOTTOM SHEET CART --- */
+    #cart-dropdown {
+        top: auto !important;
+        bottom: -100% !important;
+        right: 0 !important;
+        left: 0 !important;
+        width: 100% !important;
+        height: auto !important;
+        max-height: 85vh !important;
+        border-radius: 20px 20px 0 0 !important;
+        padding: 30px 20px calc(20px + var(--safe-bottom)) !important;
+        background: var(--bg) !important;
+        transition: bottom 0.4s cubic-bezier(0.16, 1, 0.3, 1) !important;
+        border: none !important;
+        box-shadow: 0 -10px 40px rgba(0, 0, 0, 0.15) !important;
+    }
+
+    body.dark-mode #cart-dropdown {
+        box-shadow: 0 -10px 40px rgba(0, 0, 0, 0.8) !important;
+        background: #111 !important;
+    }
+
+    #cart-dropdown.show {
+        bottom: 0 !important;
+    }
+
+    .cart-title {
+        font-size: 18px !important;
+        text-align: center !important;
+        margin-bottom: 25px !important;
+    }
+
+    .cart-item {
+        padding: 15px 0 !important;
+    }
+
+    .remove-item {
+        font-size: 16px !important;
+        padding: 10px !important;
+        margin-right: -10px !important;
+    }
+
+    .checkout-btn {
+        border-radius: 12px !important;
+        padding: 18px !important;
+        font-size: 13px !important;
+        font-weight: 600 !important;
+        margin-top: 20px !important;
+    }
+
+    /* --- 5. PRODUCT PAGES OVERRIDES --- */
+    .product-page {
+        flex-direction: column !important;
+    }
+
+    .img-side {
+        width: 100vw !important;
+        height: 100vw !important;
+        margin: 0 -16px 24px -16px !important;
+        padding: 0 !important;
+    }
+
+    .img-side img {
+        border-radius: 0 !important;
+        aspect-ratio: 1/1 !important;
+    }
+
+    .info-side {
+        padding: 0 0 100px 0 !important;
+    }
+
+    .mobile-size-pills {
+        display: flex !important;
+        gap: 10px !important;
+        flex-wrap: wrap !important;
+        margin-bottom: 24px !important;
+    }
+
+    .size-pill {
+        flex: 1;
+        min-width: 60px;
+        padding: 12px 0;
+        text-align: center;
+        border: 1px solid var(--border);
+        border-radius: 8px;
+        font-size: 13px;
+        letter-spacing: 0.1em;
+        font-family: inherit;
+        color: var(--text);
+        background: transparent;
+        transition: all 0.2s;
+    }
+
+    .size-pill.selected {
+        background: var(--text);
+        color: var(--bg);
+        border-color: var(--text);
+    }
+
+    .add-to-cart {
+        position: fixed !important;
+        bottom: var(--safe-bottom) !important;
+        left: 16px !important;
+        width: calc(100% - 32px) !important;
+        border-radius: 12px !important;
+        padding: 18px !important;
+        font-size: 14px !important;
+        font-weight: 600 !important;
+        box-shadow: 0 10px 20px rgba(0, 0, 0, 0.1) !important;
+        z-index: 100 !important;
+    }
+
+    body.dark-mode .add-to-cart {
+        background: #fff !important;
+        color: #000 !important;
+    }
+
+    /* --- 6. CHECKOUT FORM IMPROVEMENTS --- */
+    .checkout-container {
+        flex-direction: column !important;
+        padding: 20px 16px !important;
+        gap: 30px !important;
+    }
+
+    .form-container,
+    .summary-box {
+        width: 100% !important;
+        padding: 20px !important;
+        border-radius: 16px !important;
+    }
+
+    .form-group input {
+        font-size: 16px !important;
+        padding: 16px !important;
+        border-radius: 8px !important;
+        width: 100% !important;
+    }
+
+    .form-row {
+        flex-direction: column !important;
+        gap: 16px !important;
+    }
+}
