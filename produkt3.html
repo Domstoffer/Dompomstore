@@ -67,37 +67,13 @@
       opacity: 1;
     }
 
-    .cart-icon {
-      position: relative;
-      display: flex;
-      align-items: center;
-      cursor: pointer;
-    }
+    
 
-    .cart-icon svg {
-      width: 20px;
-      height: 20px;
-      stroke: #000;
-      fill: none;
-      stroke-width: 1.5;
-      transition: transform 0.2s;
-    }
+    
 
-    .cart-icon:hover svg {
-      transform: scale(1.05);
-    }
+    
 
-    .cart-count {
-      position: absolute;
-      top: -6px;
-      right: -10px;
-      background: #000;
-      color: #fff;
-      font-size: 10px;
-      font-weight: bold;
-      padding: 2px 6px;
-      border-radius: 10px;
-    }
+    
 
     /* CART DRAWER */
     /* CART DRAWER */
@@ -563,24 +539,9 @@
       touch-action: manipulation !important;
     }
 
-.cart-icon {
-      position: absolute;
-      right: 20px;
-      top: 50%;
-      transform: translateY(-50%);
-      cursor: pointer;
-    }
 
-    .cart-count {
-      position: absolute;
-      top: -6px;
-      right: -6px;
-      background: black;
-      color: white;
-      font-size: 10px;
-      padding: 2px 6px;
-      border-radius: 50%;
-    }
+
+    
 </style>
   
 
@@ -683,7 +644,27 @@
         font-size: 20px !important;
       }
     }
-  </style>
+  
+    .cart-icon {
+      position: absolute;
+      right: 20px;
+      top: 50%;
+      transform: translateY(-50%);
+      cursor: pointer;
+    }
+
+    .cart-count {
+      position: absolute;
+      top: -6px;
+      right: -6px;
+      background: black;
+      color: white;
+      font-size: 10px;
+      padding: 2px 6px;
+      border-radius: 50%;
+    }
+
+</style>
 
   <link rel="stylesheet" href="mobile-luxury.css">
 </head>
