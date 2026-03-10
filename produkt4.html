@@ -770,21 +770,82 @@ DOM<span class="secret-link" onclick="window.location.href='hidden.html'" style=
     const PRODUCT_PRICE = 22;
     // ----------------------------------------
 
-    let cart = [];
-    const cartCount = document.getElementById("cartCount");
+    
     const cartDrawer = document.getElementById("cart-dropdown");
     const overlay = document.getElementById("cart-overlay");
     const closeCartBtn = document.getElementById("close-cart");
 
-    function loadCart() {
-      const stored = localStorage.getItem("cart");
-      cart = stored ? JSON.parse(stored) : [];
-      updateCart(false);
+    function updateCartCounter() {
+      let cart = JSON.parse(localStorage.getItem("cart")) || [];
+      const cc = document.getElementById("cartCount");
+      if (cc) {
+        cc.textContent = cart.length;
+        cc.style.display = cart.length > 0 ? "flex" : "none";
+      }
     }
 
-    function updateCart(save = true) {
+    function openCartDrawer() {
+      updateCartUI();
+      if(cartDrawer) cartDrawer.classList.add("show");
+      if(overlay) overlay.classList.add("show");
+    }
+
+    document.getElementById("cartButton").onclick = function() {
+      openCartDrawer();
+    }
+
+    if(closeCartBtn) {
+      closeCartBtn.onclick = () => {
+        cartDrawer.classList.remove("show");
+        overlay.classList.remove("show");
+      };
+    }
+    if(overlay) {
+      overlay.onclick = () => {
+        cartDrawer.classList.remove("show");
+        overlay.classList.remove("show");
+      };
+    }
+
+    document.addEventListener("DOMContentLoaded", function() {
+      updateCartCounter();
+    });
+
+    window.addEventListener("pageshow", function () {
+      updateCartCounter();
+    });
+
+    // The user's exact specification merged with size selection
+    function addToCart() {
+      const sizeList = document.querySelectorAll('.size-pill');
+      let selectedSize = null;
+      if (sizeList.length > 0) {
+        sizeList.forEach(p => { if (p.classList.contains('selected')) selectedSize = p.innerText; });
+        if (!selectedSize) { alert('Bitte wähle eine Größe'); return; }
+      } else {
+        const legacySizes = document.querySelectorAll('.size-btn');
+        legacySizes.forEach(p => { if (p.classList.contains('selected')) selectedSize = p.innerText; });
+      }
+
+      let product = { name: PRODUCT_NAME, price: PRODUCT_PRICE, size: selectedSize || "One Size", qty: 1 };
+      let cart = JSON.parse(localStorage.getItem("cart")) || [];
+      
+      const existingItem = cart.find(i => i.name === PRODUCT_NAME && i.size === (selectedSize || "One Size"));
+      if (!existingItem) {
+        cart.push(product);
+        localStorage.setItem("cart", JSON.stringify(cart));
+      }
+      
+      updateCartCounter();
+      openCartDrawer();
+    }
+
+    function updateCartUI() {
+      let cart = JSON.parse(localStorage.getItem("cart")) || [];
       const cartItems = document.getElementById("cart-items");
       const totalPriceEl = document.getElementById("cart-total-price");
+
+      if(!cartItems || !totalPriceEl) return;
 
       cartItems.innerHTML = "";
       let total = 0;
@@ -797,101 +858,53 @@ DOM<span class="secret-link" onclick="window.location.href='hidden.html'" style=
           const div = document.createElement("div");
           div.classList.add("cart-item");
           div.innerHTML = `
-        <div class="cart-left">
-          <span class="cart-item-name">${item.name}</span>
-          <span class="cart-item-size">Size: ${item.size || "One Size"}</span>
-        </div>
-        <div style="display:flex; align-items:center;">
-          <span style="font-weight: 500;">${item.price} USDC</span>
-          <span class="remove-item" onclick="removeItem(${index})">×</span>
-        </div>
-      `;
+            <div class="cart-left">
+              <span class="cart-item-name">${item.name}</span>
+              <span class="cart-item-size">Size: ${item.size || "One Size"}</span>
+            </div>
+            <div style="display:flex; align-items:center;">
+              <span style="font-weight: 500;">${item.price} USDC</span>
+              <span class="remove-item" onclick="removeItem(${index})" style="cursor:pointer; margin-left:10px;">×</span>
+            </div>
+          `;
           cartItems.appendChild(div);
         });
       }
 
       totalPriceEl.innerText = total + " USDC";
-      cartCount.style.display = cart.length > 0 ? "flex" : "none";
-      cartCount.innerText = cart.length;
-
-      if (save) localStorage.setItem("cart", JSON.stringify(cart));
     }
 
     function removeItem(index) {
+      let cart = JSON.parse(localStorage.getItem("cart")) || [];
       cart.splice(index, 1);
-      updateCart();
+      localStorage.setItem("cart", JSON.stringify(cart));
+      updateCartUI();
+      updateCartCounter();
     }
 
-    document.getElementById("cart-icon").onclick = () => {
-      cartDrawer.classList.toggle("show");
-      overlay.classList.toggle("show");
-    };
-
-    closeCartBtn.onclick = () => {
-      cartDrawer.classList.remove("show");
-      overlay.classList.remove("show");
-    };
-
-    overlay.onclick = () => {
-      cartDrawer.classList.remove("show");
-      overlay.classList.remove("show");
-    };
-
-    window.addEventListener("pageshow", function () {
-      loadCart();
-    });
-
     let selectedSize = null;
-
     function selectSize(size, el) {
       selectedSize = size;
-      document.querySelectorAll('.size-btn').forEach(btn => btn.classList.remove('selected'));
+      document.querySelectorAll('.size-btn, .size-pill').forEach(btn => btn.classList.remove('selected'));
       el.classList.add('selected');
     }
 
-    
-    function addToCart() {
-      const sizeList = document.querySelectorAll('.size-pill');
-      let selectedSize = null;
-      sizeList.forEach(p => { if (p.classList.contains('selected')) selectedSize = p.innerText; });
-      if (!selectedSize) { alert('Bitte wähle eine Größe'); return; }
-      
-      const existingItem = cart.find(i => i.name === PRODUCT_NAME && i.size === selectedSize);
-      if (existingItem) {
-        // Just open the cart, it's already there
-      } else {
-        cart.push({ name: PRODUCT_NAME, price: PRODUCT_PRICE, size: selectedSize, qty: 1 });
-      }
-      
-      updateCart();
-      document.getElementById('cart-dropdown').classList.add('show');
-      document.getElementById('cart-overlay').classList.add('show');
-    }
-    
-
-    function toggleAccordion(id) {
-      const content = document.getElementById(`content-${id}`);
-      const icon = document.getElementById(`icon-${id}`);
-
-      if (content.classList.contains('open')) {
-        content.classList.remove('open');
-        icon.innerText = "+";
-      } else {
-        content.classList.add('open');
-        icon.innerText = "-";
-      }
+    const checkoutBtn = document.getElementById('goToCheckoutBtn');
+    if(checkoutBtn){
+      checkoutBtn.addEventListener('click', () => {
+        let cart = JSON.parse(localStorage.getItem("cart")) || [];
+        if (cart.length === 0) {
+          alert('Dein Warenkorb ist leer!');
+          return;
+        }
+        window.location.href = 'checkout.html';
+      });
     }
 
-    document.getElementById('goToCheckoutBtn').addEventListener('click', () => {
-      if (cart.length === 0) {
-        alert('Dein Warenkorb ist leer!');
-        return;
-      }
-      window.location.href = 'checkout.html';
-    });
+    // Initialize UI silently
+    updateCartUI();
 
-    loadCart();
-  
+
     const descToggle = document.querySelector(".desc-toggle");
     const descContent = document.querySelector(".desc-content");
     if (descToggle && descContent) {
