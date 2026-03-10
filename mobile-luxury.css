@@ -12,6 +12,25 @@ body {
     overflow-x: hidden;
 }
 
+/* Fix Brand Logo everywhere */
+.logo,
+.brand-logo {
+    font-family: 'Syncopate', sans-serif !important;
+    font-weight: 600 !important;
+    letter-spacing: 4px !important;
+    text-transform: uppercase !important;
+    text-decoration: none !important;
+}
+
+/* Make sure the cart overlay behaves well */
+.cart-overlay {
+    z-index: 998 !important;
+}
+
+#cart-dropdown {
+    z-index: 999 !important;
+}
+
 /* =======================================
    MOBILE-FIRST GLOBAL OVERRIDES (Up to 768px)
 ======================================= */
@@ -24,31 +43,40 @@ body {
         left: 0 !important;
         width: 100% !important;
         height: var(--nav-height) !important;
-        padding: 0 20px !important;
+        padding: 0 16px !important;
         display: flex !important;
         flex-direction: row !important;
         align-items: center !important;
         justify-content: space-between !important;
         z-index: 100 !important;
-        background: rgba(255, 255, 255, 0.85) !important;
+        background: rgba(255, 255, 255, 0.95) !important;
         backdrop-filter: blur(12px) !important;
         -webkit-backdrop-filter: blur(12px) !important;
         border-right: none !important;
         border-bottom: 1px solid var(--border) !important;
     }
 
-    body.dark-mode .vanguard-left {
-        background: rgba(0, 0, 0, 0.85) !important;
+    header {
+        height: var(--nav-height) !important;
+        padding: 0 16px !important;
+    }
+
+    body.dark-mode .vanguard-left,
+    body.dark-mode header {
+        background: rgba(0, 0, 0, 0.95) !important;
     }
 
     /* Absolute Center Logo */
-    .brand-logo {
+    .brand-logo,
+    .logo {
         position: absolute !important;
         left: 50% !important;
         top: 50% !important;
         transform: translate(-50%, -50%) !important;
-        font-size: 1.1rem !important;
+        font-size: 1rem !important;
         margin: 0 !important;
+        letter-spacing: 4px !important;
+        white-space: nowrap !important;
     }
 
     /* Right-Align Cart in Header */
@@ -80,26 +108,29 @@ body {
 
     /* --- 2. MAIN LAYOUT & TYPOGRAPHY --- */
     .vanguard-right {
-        padding: 20px 16px 100px 16px !important;
+        padding: 16px !important;
         width: 100% !important;
         margin: 0 !important;
-        animation: slideUp 0.8s cubic-bezier(0.16, 1, 0.3, 1) forwards !important;
+        animation: none !important;
     }
 
     .huge-title {
-        font-size: 1.8rem !important;
-        margin-top: 10px !important;
-        margin-bottom: 30px !important;
+        font-size: 1.5rem !important;
+        margin-top: 5px !important;
+        margin-bottom: 20px !important;
         text-align: center !important;
     }
 
     /* --- 3. 2-COLUMN LUXURY PRODUCT GRID --- */
-    .container {
+    .container,
+    .products-grid {
         display: grid !important;
-        grid-template-columns: repeat(2, 1fr) !important;
+        grid-template-columns: 1fr 1fr !important;
         gap: 16px !important;
         padding: 0 !important;
         overflow: visible !important;
+        flex-direction: unset !important;
+        scroll-snap-type: none !important;
     }
 
     .product-box {
@@ -108,11 +139,12 @@ body {
         background: transparent !important;
         border-radius: 0 !important;
         padding-bottom: 10px !important;
+        min-width: 0 !important;
     }
 
     .image-wrapper {
         aspect-ratio: 1 / 1 !important;
-        border-radius: 8px !important;
+        border-radius: 12px !important;
         background: var(--accent) !important;
         margin-bottom: 12px !important;
     }
@@ -126,50 +158,72 @@ body {
     .product-name {
         font-size: 13px !important;
         font-weight: 500 !important;
-        letter-spacing: 0.1em !important;
+        letter-spacing: 0.05em !important;
     }
 
     .product-price {
-        font-size: 12px !important;
+        font-size: 13px !important;
         color: #888 !important;
         margin-top: 4px !important;
         opacity: 1 !important;
     }
 
     /* --- 4. SLIDE-UP BOTTOM SHEET CART --- */
-    #cart-dropdown {
+    #cart-dropdown,
+    .cart-drawer {
         top: auto !important;
         bottom: -100% !important;
         right: 0 !important;
         left: 0 !important;
         width: 100% !important;
         height: auto !important;
-        max-height: 85vh !important;
-        border-radius: 20px 20px 0 0 !important;
-        padding: 30px 20px calc(20px + var(--safe-bottom)) !important;
+        max-height: 80vh !important;
+        border-top-left-radius: 20px !important;
+        border-top-right-radius: 20px !important;
+        border-bottom-left-radius: 0 !important;
+        border-bottom-right-radius: 0 !important;
+        padding: 20px 0 0 0 !important;
         background: var(--bg) !important;
         transition: bottom 0.4s cubic-bezier(0.16, 1, 0.3, 1) !important;
         border: none !important;
         box-shadow: 0 -10px 40px rgba(0, 0, 0, 0.15) !important;
+        display: flex !important;
+        flex-direction: column !important;
+        overflow: hidden !important;
     }
 
-    body.dark-mode #cart-dropdown {
+    body.dark-mode #cart-dropdown,
+    body.dark-mode .cart-drawer {
         box-shadow: 0 -10px 40px rgba(0, 0, 0, 0.8) !important;
         background: #111 !important;
     }
 
-    #cart-dropdown.show {
+    #cart-dropdown.show,
+    .cart-drawer.show {
         bottom: 0 !important;
     }
 
+    .cart-header {
+        padding: 0 20px 20px 20px !important;
+    }
+
     .cart-title {
-        font-size: 18px !important;
+        font-size: 16px !important;
         text-align: center !important;
-        margin-bottom: 25px !important;
+        margin: 0 !important;
+    }
+
+    #cart-items {
+        padding: 0 20px !important;
+        overflow-y: auto !important;
+        flex: 1 !important;
     }
 
     .cart-item {
-        padding: 15px 0 !important;
+        padding: 12px 0 !important;
+        display: flex !important;
+        justify-content: space-between !important;
+        align-items: center !important;
     }
 
     .remove-item {
@@ -178,61 +232,106 @@ body {
         margin-right: -10px !important;
     }
 
-    .checkout-btn {
+    .cart-footer {
+        padding: 20px !important;
+        padding-bottom: calc(20px + var(--safe-bottom)) !important;
+        background: var(--bg) !important;
+        border-top: 1px solid var(--border) !important;
+    }
+
+    body.dark-mode .cart-footer {
+        background: #111 !important;
+    }
+
+    .checkout-btn,
+    .checkout-button {
         border-radius: 12px !important;
         padding: 18px !important;
-        font-size: 13px !important;
+        font-size: 16px !important;
         font-weight: 600 !important;
-        margin-top: 20px !important;
+        margin-top: 15px !important;
+        height: 60px !important;
+        width: 100% !important;
+        display: flex !important;
+        align-items: center !important;
+        justify-content: center !important;
     }
 
-    /* --- 5. PRODUCT PAGES OVERRIDES --- */
-    .product-page {
+    /* --- 5. PRODUCT PAGES OVERRIDES (NO SCROLLING) --- */
+    .split-layout,
+    .product-container {
         flex-direction: column !important;
+        padding: 16px !important;
+        margin-top: 0 !important;
     }
 
-    .img-side {
+    .image-side {
         width: 100vw !important;
-        height: 100vw !important;
-        margin: 0 -16px 24px -16px !important;
+        height: auto !important;
+        margin: 0 -16px 16px -16px !important;
         padding: 0 !important;
+        position: relative !important;
+        top: 0 !important;
+        border: none !important;
     }
 
-    .img-side img {
-        border-radius: 0 !important;
-        aspect-ratio: 1/1 !important;
+    .image-track {
+        width: 100% !important;
+        height: auto !important;
+    }
+
+    .image-track img,
+    .product-image {
+        border-radius: 12px !important;
+        width: 100% !important;
+        height: auto !important;
+        padding: 0 16px !important;
+        object-fit: contain !important;
     }
 
     .info-side {
+        width: 100% !important;
         padding: 0 0 100px 0 !important;
+    }
+
+    .product-title {
+        font-size: 1.5rem !important;
+        margin-bottom: 8px !important;
+    }
+
+    .product-price {
+        font-size: 1.2rem !important;
+        margin-bottom: 20px !important;
+    }
+
+    .size-label {
+        margin-bottom: 12px !important;
+    }
+
+    .size-row {
+        gap: 8px !important;
+        margin-bottom: 24px !important;
     }
 
     .mobile-size-pills {
         display: flex !important;
-        gap: 10px !important;
-        flex-wrap: wrap !important;
+        gap: 8px !important;
+        flex-wrap: nowrap !important;
         margin-bottom: 24px !important;
     }
 
-    .size-pill {
-        flex: 1;
-        min-width: 60px;
-        padding: 12px 0;
-        text-align: center;
-        border: 1px solid var(--border);
-        border-radius: 8px;
-        font-size: 13px;
-        letter-spacing: 0.1em;
-        font-family: inherit;
-        color: var(--text);
-        background: transparent;
-        transition: all 0.2s;
+    .size-pill,
+    .size-btn {
+        flex: 1 !important;
+        min-width: 0 !important;
+        padding: 12px 0 !important;
+        text-align: center !important;
+        border-radius: 12px !important;
+        font-size: 14px !important;
     }
 
-    .size-pill.selected {
-        background: var(--text);
-        color: var(--bg);
-        border-color: var(--text);
+    .info-accordion {
+        margin-bottom: 20px !important;
     }
 
     .add-to-cart {
@@ -241,11 +340,16 @@ body {
         left: 16px !important;
         width: calc(100% - 32px) !important;
         border-radius: 12px !important;
-        padding: 18px !important;
-        font-size: 14px !important;
+        height: 56px !important;
+        padding: 0 !important;
+        font-size: 16px !important;
         font-weight: 600 !important;
-        box-shadow: 0 10px 20px rgba(0, 0, 0, 0.1) !important;
+        box-shadow: 0 -10px 20px rgba(0, 0, 0, 0.05) !important;
         z-index: 100 !important;
+        display: flex !important;
+        align-items: center !important;
+        justify-content: center !important;
+        margin-bottom: 10px !important;
     }
 
     body.dark-mode .add-to-cart {
@@ -256,21 +360,21 @@ body {
     /* --- 6. CHECKOUT FORM IMPROVEMENTS --- */
     .checkout-container {
         flex-direction: column !important;
-        padding: 20px 16px !important;
-        gap: 30px !important;
+        padding: 16px !important;
+        gap: 20px !important;
     }
 
     .form-container,
     .summary-box {
         width: 100% !important;
-        padding: 20px !important;
+        padding: 16px !important;
         border-radius: 16px !important;
     }
 
     .form-group input {
         font-size: 16px !important;
         padding: 16px !important;
-        border-radius: 8px !important;
+        border-radius: 12px !important;
         width: 100% !important;
     }
 
