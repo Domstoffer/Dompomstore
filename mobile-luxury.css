@@ -662,3 +662,27 @@ font-size:20px;
 letter-spacing:4px;
 font-weight:600;
 }
+
+/* EXACT DESCRIPTION TOGGLE CENTER FIX */
+.description-toggle{
+display:flex;
+justify-content:center;
+align-items:center;
+margin:40px 0;
+font-size:32px;
+cursor:pointer;
+}
+
+.description-content{
+max-height:0;
+overflow:hidden;
+transition:max-height 0.35s ease;
+text-align:center;
+padding:0 25px;
+color:#444;
+}
+
+.description-content.open{
+max-height:200px;
+margin-top:20px;
+}

@@ -747,14 +747,11 @@
       
 
       <div class="description-toggle" onclick="toggleDescription()">
-+
+<span id="toggle-icon">+</span>
 </div>
 
 <div id="product-description" class="description-content">
-High quality Dompom shorts.
-Premium fabric.
-Comfortable fit.
-Limited release.
+High quality Dompom shorts. Premium fabric. Comfortable fit. Limited release.
 </div>
   
 
@@ -905,7 +902,15 @@ Limited release.
 
     function toggleDescription(){
 const desc = document.getElementById("product-description");
-if (desc) desc.classList.toggle("open");
+const icon = document.getElementById("toggle-icon");
+
+if(desc) desc.classList.toggle("open");
+
+if(desc && desc.classList.contains("open")){
+if(icon) icon.innerText = "-";
+}else{
+if(icon) icon.innerText = "+";
+}
 }
     }
     
