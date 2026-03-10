@@ -3,3 +3,9 @@ node_modules/
 panel_9xA3kQ/bestellungen.enc
 panel_9xA3kQ/rate_limit.json
 panel_9xA3kQ/debug.txt
+# Secure Environment and Data Files
+.env
+.env.txt
+store.db
+server.log
+.keys/

@@ -1,0 +1,77 @@
+/* PREMIUM DARK MODE INJECTION FOR PRIVATE STORE */
+body {
+  background: #0a0a0a !important;
+  background-color: #0a0a0a !important;
+  color: #ffffff !important;
+}
+header, #main-header, .header-bg {
+  background: rgba(10, 10, 10, 0.85) !important;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.05) !important;
+}
+.logo, .logo-link { color: #fff !important; }
+svg { stroke: #fff !important; }
+.cart-drawer, #cart-dropdown, .order-box, .wallet-card, .summary-box, .thank-box, .form-container {
+  background: #111 !important;
+  color: #fff !important;
+  border-color: rgba(255,255,255,0.05) !important;
+}
+.cart-header, .cart-footer, .cart-item, .summary-total, .checkout-title, .cart-preview-item {
+  border-color: rgba(255,255,255,0.1) !important;
+  color: #fff !important;
+}
+.amount-right .val, .thank-title, .product-title, .title {
+  color: #fff !important;
+}
+.close-cart { color: #fff !important; opacity: 0.5 !important; }
+.remove-btn, .remove-item { color: #ff4d4d !important; opacity: 1 !important; }
+.checkout-btn, .add-btn, .submit-btn, .telegram-btn, .buy-btn, .cart-btn, .add-to-cart {
+  background: #fff !important;
+  color: #000 !important;
+}
+.checkout-btn:hover, .add-btn:hover, .submit-btn:hover, .add-to-cart:hover {
+  background: #e0e0e0 !important;
+}
+.image-wrapper { 
+  border-color: rgba(255,255,255,0.05) !important; 
+}
+.size-btn { 
+  color: #fff !important; 
+  border-color: rgba(255,255,255,0.2) !important; 
+}
+.size-btn.selected, .size-btn:hover { 
+  background: #fff !important; 
+  color: #000 !important; 
+}
+.token-tab {
+  background: #222 !important;
+  color: #888 !important;
+  border-color: rgba(255,255,255,0.1) !important;
+}
+.token-tab.active, .token-tab:hover {
+  background: #fff !important;
+  color: #0a0a0a !important;
+}
+.form-control, input {
+  background: #111 !important;
+  color: #fff !important;
+  border: 1px solid rgba(255,255,255,0.2) !important;
+}
+.form-control:focus, input:focus {
+  background: #000 !important;
+  border-color: #fff !important;
+}
+.chain-badge {
+  background: #eee !important;
+  color: #000 !important;
+}
+.eur-price-display, .cart-item-size, .cart-item-price, .form-group label, .summary-item, .desc-text {
+  color: #aaa !important;
+}
+.desc-title, .section-title {
+  color: #ccc !important;
+  border-color: rgba(255,255,255,0.1) !important;
+}
+h1, h2, h3, h4, h5, h6, .product-name, .val {
+  color: #fff !important;
+}
+a.back-link, .back { color: #fff !important; }

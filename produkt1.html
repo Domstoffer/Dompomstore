@@ -1,525 +1,889 @@
 <!DOCTYPE html>
 <html lang="de">
+
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>PK-01</title>
-<link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;600&display=swap" rel="stylesheet">
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+  <title>Product – Dompomstore</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link
+    href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600&family=Syncopate:wght@400;700&display=swap"
+    rel="stylesheet">
+  <style>
+    /* PREMIUM MINIMAL THEME */
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
 
-<style>
-*{margin:0;padding:0;box-sizing:border-box}
-body{
-  font-family:'Montserrat',sans-serif;
-  background:#ffffff;
-  color:#111;
-  text-align:center;
-  animation:fadeIn .6s ease;
-}
+    body {
+      font-family: 'Inter', sans-serif;
+      background: #ffffff;
+      color: #000000;
+      -webkit-font-smoothing: antialiased;
+    }
 
-@keyframes fadeIn{
-  from{opacity:0;transform:translateY(10px)}
-  to{opacity:1;transform:translateY(0)}
-}
+    /* HEADER */
+    header {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 18px 25px;
+      background: #ffffff;
+      z-index: 100;
+      border-bottom: 1px solid rgba(0, 0, 0, 0.05);
+    }
 
-/* HEADER */
-header{
-  padding:20px;
-  position:relative;
-}
+    .logo {
+      font-family: 'Syncopate', sans-serif;
+      font-size: 1.1rem;
+      font-weight: 700;
+      letter-spacing: 0.25em;
+      text-transform: uppercase;
+      color: #000;
+      position: absolute;
+      left: 50%;
+      transform: translateX(-50%);
+      text-decoration: none;
+    }
 
-.back{
-  position:absolute;
-  left:20px;
-  top:22px;
-  text-decoration:none;
-  color:#111;
-  font-size:22px;
-}
+    .back-link {
+      font-size: 11px;
+      letter-spacing: 0.15em;
+      text-decoration: none;
+      color: #000;
+      opacity: 0.5;
+      transition: opacity 0.3s;
+      text-transform: uppercase;
+    }
 
-.cart-icon{
-  position:absolute;
-  right:20px;
-  top:50%;
-  transform:translateY(-50%);
-  display:flex;
-  align-items:center;
-  gap:6px;
-  cursor:pointer;
-}
+    .back-link:hover {
+      opacity: 1;
+    }
 
-.cart-icon svg{
-  width:22px;   /* etwas kleiner */
-  height:22px;
-  stroke:#000;
-  fill:none;
-  stroke-width:1.5;
-}
+    .cart-icon {
+      position: relative;
+      display: flex;
+      align-items: center;
+      cursor: pointer;
+    }
 
-.cart-count{
-  font-size:13px;
-  font-weight:600;
-  color:#000;
-}
+    .cart-icon svg {
+      width: 20px;
+      height: 20px;
+      stroke: #000;
+      fill: none;
+      stroke-width: 1.5;
+      transition: transform 0.2s;
+    }
 
-/* PRODUKT */
-.product-container{
-  padding:40px 20px;
-}
+    .cart-icon:hover svg {
+      transform: scale(1.05);
+    }
 
-.product-image{
-  max-width:420px;
-  margin:auto;
-  overflow:hidden;
-}
+    .cart-count {
+      position: absolute;
+      top: -6px;
+      right: -10px;
+      background: #000;
+      color: #fff;
+      font-size: 10px;
+      font-weight: bold;
+      padding: 2px 6px;
+      border-radius: 10px;
+    }
 
-.image-track{
-  display:flex;
-  transition:transform .5s cubic-bezier(.4,.2,.2,1);
-}
+    /* CART DRAWER */
+    #cart-dropdown {
+      position: fixed;
+      top: 0;
+      right: -100%;
+      width: 320px;
+      height: 100%;
+      background: #ffffff;
+      color: #111;
+      padding: 0;
+      box-shadow: -5px 0 20px rgba(0, 0, 0, 0.05);
+      transition: right 0.4s cubic-bezier(0.8, 0, 0.2, 1);
+      z-index: 1000;
+      display: flex;
+      flex-direction: column;
+    }
 
-.image-track img{
-  width:100%;
-  flex-shrink:0;
-  user-select:none;
-  pointer-events:none;
-}
+    #cart-dropdown.show {
+      right: 0;
+    }
 
-.dots{
-  margin:15px 0 40px 0;
-}
+    .cart-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 24px;
+      border-bottom: 1px solid rgba(0, 0, 0, 0.1);
+    }
 
-.dots span{
-  display:inline-block;
-  width:6px;
-  height:6px;
-  background:#ccc;
-  border-radius:50%;
-  margin:0 4px;
-  cursor:pointer;
-}
+    .cart-header h2 {
+      font-family: 'Syncopate', sans-serif;
+      font-size: 1rem;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+    }
 
-.dots span.active{
-  background:#000;
-}
+    .close-cart {
+      background: none;
+      border: none;
+      font-size: 1.5rem;
+      cursor: pointer;
+      color: #000;
+      opacity: 0.5;
+      transition: opacity 0.2s;
+    }
 
-.product-title{
-  font-size:22px;
-  margin-bottom:20px;
-}
+    #cart-items {
+      flex-grow: 1;
+      overflow-y: auto;
+    }
 
-.product-price{
-  font-size:24px;
-  letter-spacing:2px;
-  margin-bottom:30px;
-}
+    .cart-item {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 16px 24px;
+      border-bottom: 1px solid rgba(0, 0, 0, 0.05);
+    }
 
-.product-info{
-  max-height:0;
-  overflow:hidden;
-  opacity:0;
-  transform:translateY(-10px);
-  transition:
-    max-height .45s cubic-bezier(.4,.0,.2,1),
-    opacity .35s ease,
-    transform .35s ease;
-  margin-top:0;
-  font-size:14px;
-  line-height:1.7;
-  letter-spacing:.05em;
-}
+    .cart-left {
+      display: flex;
+      flex-direction: column;
+      gap: 4px;
+    }
 
-.product-info.show{
-  max-height:300px;
-  opacity:1;
-  transform:translateY(0);
-  margin-top:25px;
-}
+    .cart-item-name {
+      font-size: 13px;
+      font-weight: 500;
+      margin-bottom: 4px;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+    }
 
-/* ===== YEEZY STYLE ACTION SYSTEM ===== */
+    .cart-item-size {
+      color: #777;
+      font-size: 12px;
+    }
 
-.action-wrapper{
-  position:relative;
-  margin-top:40px;
-}
+    .remove-item {
+      cursor: pointer;
+      font-weight: bold;
+      color: #999;
+      transition: color 0.2s ease;
+      font-size: 18px;
+      margin-left: 15px;
+    }
 
-.add-btn{
-  font-size:42px;
-  border:none;
-  background:none;
-  cursor:pointer;
-  transition:.3s ease;
-  position:relative;
-  z-index:2;
-}
+    .remove-item:hover {
+      color: #000;
+    }
 
-.add-btn.active{
-  transform:translateY(-40px);
-}
+    .cart-footer {
+      padding: 24px;
+      border-top: 1px solid rgba(0, 0, 0, 0.1);
+    }
 
-.action-panel{
-  margin-top:20px;
-  opacity:0;
-  transform:translateY(-10px);
-  pointer-events:none;
-  transition:.35s ease;
-}
+    .cart-total {
+      display: flex;
+      justify-content: space-between;
+      font-size: 14px;
+      font-weight: 600;
+      margin-bottom: 20px;
+      letter-spacing: 0.05em;
+    }
 
-.action-panel.show{
-  opacity:1;
-  transform:translateY(0);
-  pointer-events:all;
-}
+    .checkout-btn {
+      display: block;
+      width: 100%;
+      padding: 18px;
+      background: #000;
+      color: #fff;
+      text-align: center;
+      text-decoration: none;
+      font-family: 'Inter', sans-serif;
+      font-size: 13px;
+      font-weight: 600;
+      letter-spacing: 0.15em;
+      text-transform: uppercase;
+      transition: background 0.3s;
+      border: none;
+      cursor: pointer;
+    }
 
-.size-row{
-  display:flex;
-  justify-content:center;
-  gap:60px;
-  font-size:20px;
-  letter-spacing:.2em;
-  margin-bottom:30px;
-}
+    .checkout-btn:hover {
+      background: #222;
+    }
 
-.size-row span{
-  cursor:pointer;
-}
+    .cart-overlay {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: rgba(0, 0, 0, 0.3);
+      backdrop-filter: blur(3px);
+      opacity: 0;
+      pointer-events: none;
+      transition: .4s;
+      z-index: 999;
+    }
 
-.size-row span:hover{
-  opacity:.5;
-}
+    .cart-overlay.show {
+      opacity: 1;
+      pointer-events: all;
+    }
 
-.info-toggle{
-  font-size:18px;
-  letter-spacing:.2em;
-  cursor:pointer;
-  margin-bottom:15px;
-}
+    /* SPLIT LAYOUT */
+    .split-layout {
+      display: flex;
+      min-height: 100vh;
+      margin-top: 50px;
+      /* Header spacing */
+    }
 
-.product-info{
-  max-height:0;
-  overflow:hidden;
-  opacity:0;
-  transition:.4s ease;
-  font-size:14px;
-  letter-spacing:.05em;
-}
+    .image-side {
+      width: 55vw;
+      height: calc(100vh - 50px);
+      position: sticky;
+      top: 50px;
+      background: #ffffff;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      
+    }
 
-.product-info.show{
-  max-height:200px;
-  opacity:1;
-}
+    .image-track {
+      width: 100%;
+      height: 100%;
+    }
+
+    .image-track img {
+      width: 100%;
+      height: 100%;
+      object-fit: contain;
+      padding: 80px;
+    }
+
+    .info-side {
+      width: 45vw;
+      padding: 100px;
+      justify-content: center;
+      display: flex;
+      flex-direction: column;
+    }
+
+    .product-title {
+      font-family: 'Syncopate', sans-serif;
+      font-size: 2.8rem;
+      letter-spacing: 0.05em;
+      margin-bottom: 12px;
+      line-height: 1.1;
+      color: #000;
+      text-transform: uppercase;
+    }
+
+    .product-price {
+      font-size: 1.4rem;
+      font-weight: 300;
+      color: #000;
+      margin-bottom: 60px;
+      letter-spacing: 0.05em;
+    }
+
+    .size-label {
+      font-size: 10px;
+      font-weight: 600;
+      letter-spacing: 0.15em;
+      text-transform: uppercase;
+      margin-bottom: 16px;
+      color: #777;
+    }
+
+    .size-row {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 12px;
+      margin-bottom: 40px;
+    }
+
+    .size-btn {
+      padding: 14px 0;
+      border: 1px solid rgba(0, 0, 0, 0.1);
+      background: transparent;
+      color: #000;
+      font-family: 'Inter', sans-serif;
+      font-size: 13px;
+      cursor: pointer;
+      transition: all 0.2s;
+    }
+
+    .size-btn:hover {
+      border-color: #000;
+    }
+
+    .size-btn.selected {
+      background: #000;
+      color: #fff;
+      border-color: #000;
+      font-weight: 600;
+    }
+
+    .add-to-cart {
+      width: 100%;
+      background: #000;
+      color: #fff;
+      border: none;
+      padding: 26px 0;
+      font-family: 'Inter', sans-serif;
+      font-size: 13px;
+      font-weight: 600;
+      letter-spacing: 0.15em;
+      text-transform: uppercase;
+      cursor: pointer;
+      transition: transform 0.2s, background 0.3s;
+      margin-bottom: 60px;
+    }
+
+    .add-to-cart:hover {
+      background: #222;
+      transform: translateY(-2px);
+    }
+
+    .info-accordion {
+      border-top: 1px solid rgba(0, 0, 0, 0.1);
+    }
+
+    .accordion-header {
+      padding: 24px 0;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      cursor: pointer;
+      font-size: 11px;
+      font-weight: 600;
+      letter-spacing: 0.15em;
+      text-transform: uppercase;
+    }
+
+    .accordion-content {
+      max-height: 0;
+      overflow: hidden;
+      transition: max-height 0.5s ease;
+      font-size: 14px;
+      line-height: 1.8;
+      color: #777;
+    }
+
+    .accordion-content p {
+      padding-bottom: 24px;
+    }
+
+    .accordion-content.open {
+      max-height: 500px;
+    }
+
+    @media (max-width: 900px) {
+      .split-layout {
+        flex-direction: column;
+      }
+
+      .image-side {
+        width: 100%;
+        height: 60vh;
+        border-right: none;
+        border-bottom: 1px solid rgba(0, 0, 0, 0.05);
+      }
+
+      .info-side {
+        width: 100%;
+        padding: 40px 24px 100px 24px;
+      }
+
+      .product-title {
+        font-size: 1.8rem;
+      }
+
+      .cart-drawer {
+        width: 100%;
+        right: -100%;
+      }
+    }
+  
+    /* --- MOBILE UX PREMIUM FIXES --- */
+    /* CART RESPONSIVE FIX */
+    #cart-dropdown {
+      width: 100%;
+      max-width: 100vw;
+    }
+
+    /* INPUT IOS FIX (Prevent Auto-Zoom) */
+    input, select, textarea {
+      font-size: 16px !important;
+    }
+
+    @media (max-width: 500px) {
+      /* PRODUCT CAROUSEL FIX */
+      .container {
+        display: flex !important;
+        flex-direction: row !important;
+        overflow-x: auto !important;
+        scroll-snap-type: x mandatory !important;
+        gap: 15px !important;
+        padding-bottom: 20px !important; /* scrollbar padding */
+        -webkit-overflow-scrolling: touch;
+      }
+      
+      .container::-webkit-scrollbar {
+        display: none; /* Hide scrollbar for clean UI */
+      }
+      
+      .product-box {
+        min-width: 90% !important;
+        scroll-snap-align: center !important;
+        flex: 0 0 auto !important;
+      }
+      
+      /* STICKY CTA Product Pages */
+      .add-to-cart {
+        position: fixed !important;
+        bottom: 0 !important;
+        left: 0 !important;
+        width: 100% !important;
+        margin-bottom: 0 !important;
+        padding-bottom: calc(26px + env(safe-area-inset-bottom)) !important;
+        z-index: 1000 !important;
+      }
+      
+      /* Ensure info-side doesn't overlap the fixed CTA */
+      .info-side {
+        padding-bottom: 120px !important; 
+      }
+    }
 
 
-/* CART DRAWER */
-#cart-dropdown{
-  position:fixed;
-  top:0;
-  right:-100%;
-  width:320px;
-  height:100%;
-  background:#fff;
-  padding:30px 20px;
-  box-shadow:-10px 0 30px rgba(0,0,0,0.1);
-  transition:.4s ease;
-  text-align:left;
-  z-index:1000;
-}
+    /* --- LUXURY MOBILE REDESIGN --- */
+    
+    /* BOTTOM SHEET CART */
+    #cart-dropdown {
+      top: auto !important;
+      bottom: -100% !important;
+      right: 0 !important;
+      left: 0 !important;
+      width: 100% !important;
+      max-width: 100vw !important;
+      height: 80vh !important;
+      border-radius: 25px 25px 0 0 !important;
+      border-top: 1px solid var(--border) !important;
+      border-left: none !important;
+      transition: bottom 0.5s cubic-bezier(0.16, 1, 0.3, 1) !important;
+      box-shadow: 0 -10px 40px rgba(0,0,0,0.1) !important;
+    }
+    #cart-dropdown.show {
+      bottom: 0 !important;
+    }
 
-#cart-dropdown.show{
-  right:0;
-}
-.cart-title{
-  font-size:18px;
-  margin-bottom:20px;
-}
+    /* LUXURY TYPOGRAPHY */
+    body {
+      font-family: 'Inter', sans-serif !important;
+    }
+    h1, h2, h3, .brand-logo, .huge-title, .cart-title, .step-indicator {
+      font-family: 'Syncopate', sans-serif !important;
+    }
 
-#cart-items{
-  margin-bottom:20px;
-}
+    @media (max-width: 768px) {
+      /* FULLSCREEN HERO (Index only) */
+      .mobile-hero {
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
+        text-align: center;
+        height: 100vh;
+        width: 100vw;
+        position: relative;
+        left: 50%;
+        transform: translateX(-50%);
+        background: var(--bg);
+        z-index: 5;
+        border-bottom: 1px solid var(--border);
+        margin-bottom: 40px;
+      }
+      .mobile-hero-title {
+        font-family: 'Syncopate', sans-serif;
+        font-size: 2.5rem;
+        letter-spacing: 0.1em;
+        text-transform: uppercase;
+        margin-bottom: 10px;
+      }
+      .mobile-hero-subtitle {
+        font-family: 'Inter', sans-serif;
+        font-size: 11px;
+        letter-spacing: 0.15em;
+        text-transform: uppercase;
+        opacity: 0.5;
+        margin-bottom: 40px;
+      }
+      .mobile-hero-btn {
+        padding: 18px 40px;
+        background: var(--text);
+        color: var(--bg);
+        font-size: 10px;
+        letter-spacing: 0.25em;
+        text-transform: uppercase;
+        text-decoration: none;
+        border-radius: 50px;
+      }
 
-.cart-item{
-  display:flex;
-  justify-content:space-between;
-  align-items:center;
-  margin-bottom:15px;
-  font-size:14px;
-}
+      /* LUXURY PRODUCT CARDS */
+      .product-box {
+        background: var(--accent) !important;
+        border-radius: 16px !important;
+        overflow: hidden !important;
+        padding-bottom: 20px !important;
+      }
+      .image-wrapper {
+        border-radius: 16px 16px 0 0 !important;
+        margin-bottom: 15px !important;
+      }
+      .product-info-grid {
+        padding: 0 20px !important;
+        align-items: center !important;
+        text-align: center !important;
+      }
+      .product-name {
+        font-size: 14px !important;
+        font-weight: 600 !important;
+      }
+      .product-price {
+        font-size: 13px !important;
+        font-weight: 400 !important;
+        color: var(--text) !important;
+        opacity: 0.7 !important;
+        margin-top: 5px !important;
+      }
+    }
 
-.cart-left{
-  display:flex;
-  gap:10px;
-}
-
-.remove-item{
-  cursor:pointer;
-  font-weight:bold;
-}
-
-.cart-footer{
-  position:absolute;
-  bottom:30px;
-  left:20px;
-  right:20px;
-}
-
-.cart-total{
-  display:flex;
-  justify-content:space-between;
-  margin-bottom:15px;
-  font-weight:600;
-}
-
-.checkout-btn{
-  width:100%;
-  padding:12px;
-  background:#000;
-  color:#fff;
-  border:none;
-  cursor:pointer;
-}
-
-.cart-overlay{
-  position:fixed;
-  top:0;
-  left:0;
-  width:100%;
-  height:100%;
-  background:rgba(0,0,0,0.2);
-  opacity:0;
-  pointer-events:none;
-  transition:.3s;
-}
-
-.cart-overlay.show{
-  opacity:1;
-  pointer-events:all;
-}
 </style>
+  
+
+  
+\n
+  
+
+
+  <!-- PWA & SEO Meta Tags -->
+  <meta name="description" content="DompomStore - Exclusive Vanguard E-Commerce. Pay seamlessly with Web3 (Solana, Phantom, MetaMask) or traditional methods.">
+  <meta name="theme-color" content="#ffffff">
+  <link rel="icon" type="image/png" href="https://dompomshop.com/favicon.ico">
+  <link rel="apple-touch-icon" href="https://dompomshop.com/favicon.ico">
+
+  <style>
+    /* Vanguard Global Preloader & Mobile Nav Fixes - SAFARI OPTIMIZED */
+    :root {
+      --vh: 1vh;
+    }
+
+    #global-preloader {
+      position: fixed;
+      top: 0; left: 0; width: 100vw; height: 100vh;
+      height: 100dvh;
+      background-color: #ffffff;
+      z-index: 99999;
+      display: -webkit-flex;
+      display: flex;
+      -webkit-justify-content: center;
+      justify-content: center;
+      -webkit-align-items: center;
+      align-items: center;
+      transition: opacity 0.6s cubic-bezier(0.16, 1, 0.3, 1), visibility 0.6s ease;
+      -webkit-transition: opacity 0.6s cubic-bezier(0.16, 1, 0.3, 1), visibility 0.6s ease;
+      pointer-events: none;
+    }
+    #global-preloader.fade-out {
+      opacity: 0;
+      visibility: hidden;
+    }
+    .spinner {
+      width: 40px;
+      height: 40px;
+      border: 3px solid rgba(0, 0, 0, 0.1);
+      border-top-color: #000000;
+      border-radius: 50%;
+      -webkit-border-radius: 50%;
+      animation: spin 1s linear infinite;
+      -webkit-animation: spin 1s linear infinite;
+    }
+    
+    /* WebKit Momentum Scrolling */
+    .scroll-container, #cart-items, .vanguard-right, .cart-drawer {
+      -webkit-overflow-scrolling: touch;
+    }
+
+    /* iOS Safe Area Support */
+    body {
+      padding-top: env(safe-area-inset-top);
+      padding-bottom: env(safe-area-inset-bottom);
+      padding-left: env(safe-area-inset-left);
+      padding-right: env(safe-area-inset-right);
+    }
+
+    /* Premium Touch Interactions */
+    button, a, .nav-item, .product-box, .v-btn {
+      -webkit-tap-highlight-color: transparent;
+      -webkit-touch-callout: none;
+      will-change: transform; /* Hint for hardware acceleration */
+    }
+
+    /* Safari Input Reset */
+    input, select, textarea {
+      -webkit-appearance: none;
+      border-radius: 0;
+    }
+
+    html.dark-mode #global-preloader { background-color: #000000; }
+    html.dark-mode .spinner { border: 3px solid rgba(255, 255, 255, 0.1); border-top-color: #ffffff; }
+
+    @keyframes spin { 100% { transform: rotate(360deg); } }
+    @-webkit-keyframes spin { 100% { -webkit-transform: rotate(360deg); } }
+
+    @media (max-width: 768px) {
+      .top {
+        padding: 15px 20px !important;
+        padding-top: calc(15px + env(safe-area-inset-top)) !important;
+        display: -webkit-flex;
+        display: flex;
+        -webkit-justify-content: space-between;
+        justify-content: space-between;
+        -webkit-align-items: center;
+        align-items: center;
+      }
+      .logo {
+        position: absolute;
+        left: 50%;
+        transform: translateX(-50%);
+        -webkit-transform: translateX(-50%);
+        font-size: 20px !important;
+      }
+    }
+  </style>
+
 </head>
 
 <body>
 
-<header>
-  <a href="index.html" class="back">‹</a>
-
-  <div class="cart-icon" id="cart-icon">
-    <span class="cart-count" id="cart-count">0</span>
-    <svg xmlns="http://www.w3.org/2000/svg">
-      <path d="M6 2l1 5h10l1-5z"/>
-      <path d="M2 7h20v14H2z"/>
-    </svg>
-  </div>
-
- <div id="cart-dropdown">
-
-  <h2 class="cart-title">Warenkorb</h2>
-
-  <div id="cart-items"></div>
-
-  <div class="cart-footer">
-    <div class="cart-total">
-      <span>Total</span>
-      <span id="cart-total-price">0 USDC</span>
-    </div>
-    <button class="checkout-btn" onclick="goToCheckout()">Checkout</button>
-  </div>
-
-</div>
-</header>
-
-<div class="cart-overlay" id="cart-overlay"></div>
-
-<div class="product-container">
-
-<div class="product-image">
-  <div class="image-track" id="imageTrack">
-    <img src="images/DB-01.jpg">
-    <img src="images/DB-00.jpg">
-  </div>
-</div>
-
-  <div class="dots">
-    <span class="active" onclick="setImg(0)"></span>
-    <span onclick="setImg(1)"></span>
-  </div>
-
-  <div class="product-title">DH-01</div>
-  <div class="product-price">49usdc</div>
+  <!-- Preloader Element -->
+  
 
 
-<div class="action-wrapper">
+  
 
-  <button class="add-btn" id="addBtn">+</button>
 
-  <div class="action-panel" id="actionPanel">
-
-    <div class="size-row">
-      <span onclick="addWithSize('S')">S</span>
-      <span onclick="addWithSize('M')">M</span>
-      <span onclick="addWithSize('L')">L</span>
+  <header>
+    <div class="header-left">
+      <a href="index.html" class="back-link">← Zurück</a>
     </div>
 
-    <div class="info-toggle" id="infoToggle">INFORMATION</div>
+    <a href="index.html" class="logo">Dom<span style="opacity:0.3">p</span>omstore</a>
 
-    <div class="product-info" id="productInfo">
-      Beste Badehose ever.
+    <div class="header-right">
+      <div class="cart-icon" id="cart-icon">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+          <path d="M6 2l1 5h10l1-5z" />
+          <path d="M2 7h20v14H2z" />
+        </svg>
+        <span class="cart-count" id="cart-count" style="display:none;">0</span>
+      </div>
     </div>
 
-  </div>
-</div>
-
-
-<script>
-
-const imageTrack = document.getElementById("imageTrack");
-let currentImg = 0;
-
-function setImg(i){
-  currentImg = i;
-  imageTrack.style.transform = `translateX(-${i * 100}%)`;
-
-  document.querySelectorAll(".dots span")
-    .forEach((d,idx)=>d.classList.toggle("active",idx===i));
-}
-
-
-let startX = 0;
-
-imageTrack.addEventListener("touchstart", e=>{
-  startX = e.touches[0].clientX;
-});
-
-imageTrack.addEventListener("touchend", e=>{
-  let diff = e.changedTouches[0].clientX - startX;
-
-  if(diff > 50 && currentImg > 0){
-    setImg(currentImg - 1);
-  }
-
-  if(diff < -50 && currentImg < 1){
-    setImg(currentImg + 1);
-  }
-});
-
-/* CART */
-let cart=[];
-const cartCount=document.getElementById("cart-count");
-
-function loadCart(){
-  const stored=localStorage.getItem("cart");
-  cart=stored?JSON.parse(stored):[];
-  updateCart(false);
-}
-
-function updateCart(save=true){
-
-  const cartItems = document.getElementById("cart-items");
-  const totalPriceEl = document.getElementById("cart-total-price");
-
-  cartItems.innerHTML = "";
-  let total = 0;
-
-  if(cart.length === 0){
-    cartItems.innerHTML = "<p style='font-size:14px;'>Warenkorb leer</p>";
-  } else {
-
-    cart.forEach((item,index)=>{
-
-      total += item.price;
-
-      const div = document.createElement("div");
-      div.classList.add("cart-item");
-
-      div.innerHTML = `
-        <div class="cart-left">
-          <span>${item.name}</span>
-          <span>(${item.size})</span>
+    <div id="cart-dropdown">
+      <div class="cart-header">
+        <h2 class="cart-title">Warenkorb</h2>
+        <button class="close-cart" id="close-cart">✕</button>
+      </div>
+      <div id="cart-items"></div>
+      <div class="cart-footer">
+        <div class="cart-total">
+          <span>Total</span>
+          <span id="cart-total-price">0 USDC</span>
         </div>
-        <div>
-          <span>${item.price.toFixed(2)} USDC</span>
+        <button class="checkout-btn" id="goToCheckoutBtn">Checkout</button>
+      </div>
+    </div>
+
+    <div class="cart-overlay" id="cart-overlay"></div>
+  </header>
+
+  <div class="split-layout">
+    <div class="image-side">
+      <div class="image-track">
+        <img loading="lazy" src="images/DB-01.jpg" alt="DB-01">
+      </div>
+    </div>
+
+    <div class="info-side">
+      <h1 class="product-title">DB-01</h1>
+      <div class="product-price">49 USDC</div>
+
+      <div class="size-label">Größe Wählen</div>
+      <div class="size-row">
+        <button class="size-btn" onclick="selectSize('S', this)">S</button>
+        <button class="size-btn" onclick="selectSize('M', this)">M</button>
+        <button class="size-btn" onclick="selectSize('L', this)">L</button>
+      </div>
+
+      <button class="add-to-cart" id="addBtn" onclick="addToCart()">In den Warenkorb</button>
+
+      <div class="info-accordion">
+        <div class="accordion-header" onclick="toggleAccordion('desc')">
+          Beschreibung <span id="icon-desc">+</span>
+        </div>
+        <div class="accordion-content" id="content-desc">
+          <p>Die DB-01 ist unsere Signature-Badehose. Gefertigt aus hochwertigen, schnelltrocknenden Materialien mit
+            einem kompromisslosen, minimalistischen Fit. Perfekt geschnitten für jede Umgebung.</p>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    // --- Variables that vary per product ---
+    const PRODUCT_NAME = "DB-01";
+    const PRODUCT_PRICE = 49;
+    // ----------------------------------------
+
+    let cart = [];
+    const cartCount = document.getElementById("cart-count");
+    const cartDrawer = document.getElementById("cart-dropdown");
+    const overlay = document.getElementById("cart-overlay");
+    const closeCartBtn = document.getElementById("close-cart");
+
+    function loadCart() {
+      const stored = localStorage.getItem("cart");
+      cart = stored ? JSON.parse(stored) : [];
+      updateCart(false);
+    }
+
+    function updateCart(save = true) {
+      const cartItems = document.getElementById("cart-items");
+      const totalPriceEl = document.getElementById("cart-total-price");
+
+      cartItems.innerHTML = "";
+      let total = 0;
+
+      if (cart.length === 0) {
+        cartItems.innerHTML = "<p style='font-size:14px; padding: 24px;'>Warenkorb leer</p>";
+      } else {
+        cart.forEach((item, index) => {
+          total += item.price;
+          const div = document.createElement("div");
+          div.classList.add("cart-item");
+          div.innerHTML = `
+        <div class="cart-left">
+          <span class="cart-item-name">${item.name}</span>
+          <span class="cart-item-size">Size: ${item.size || "One Size"}</span>
+        </div>
+        <div style="display:flex; align-items:center;">
+          <span style="font-weight: 500;">${item.price} USDC</span>
           <span class="remove-item" onclick="removeItem(${index})">×</span>
         </div>
       `;
+          cartItems.appendChild(div);
+        });
+      }
 
-      cartItems.appendChild(div);
+      totalPriceEl.innerText = total + " USDC";
+      cartCount.style.display = cart.length > 0 ? "flex" : "none";
+      cartCount.innerText = cart.length;
+
+      if (save) localStorage.setItem("cart", JSON.stringify(cart));
+    }
+
+    function removeItem(index) {
+      cart.splice(index, 1);
+      updateCart();
+    }
+
+    document.getElementById("cart-icon").onclick = () => {
+      cartDrawer.classList.toggle("show");
+      overlay.classList.toggle("show");
+    };
+
+    closeCartBtn.onclick = () => {
+      cartDrawer.classList.remove("show");
+      overlay.classList.remove("show");
+    };
+
+    overlay.onclick = () => {
+      cartDrawer.classList.remove("show");
+      overlay.classList.remove("show");
+    };
+
+    window.addEventListener("pageshow", function () {
+      loadCart();
     });
-  }
 
-  totalPriceEl.innerText = total.toFixed(2) + " USDC";
-  cartCount.innerText = cart.length;
+    let selectedSize = null;
 
-  if(save){
-    localStorage.setItem("cart", JSON.stringify(cart));
-  }
-}
-function removeItem(index){
-  cart.splice(index,1);
-  updateCart();
-}
+    function selectSize(size, el) {
+      selectedSize = size;
+      document.querySelectorAll('.size-btn').forEach(btn => btn.classList.remove('selected'));
+      el.classList.add('selected');
+    }
 
-const cartDrawer = document.getElementById("cart-dropdown");
-const overlay = document.getElementById("cart-overlay");
+    function addToCart() {
+      if (!selectedSize) {
+        alert("Bitte wähle eine Größe.");
+        return;
+      }
 
-document.getElementById("cart-icon").onclick = () => {
-  cartDrawer.classList.add("show");
-  overlay.classList.add("show");
-};
+      cart.push({
+        name: PRODUCT_NAME,
+        size: selectedSize,
+        price: PRODUCT_PRICE,
+        quantity: 1
+      });
 
-overlay.onclick = () => {
-  cartDrawer.classList.remove("show");
-  overlay.classList.remove("show");
-};
-/* ADD DROPDOWN LOGIC */
+      updateCart();
+      cartDrawer.classList.add("show");
+      overlay.classList.add("show");
+    }
 
-const addBtn = document.getElementById("addBtn");
-const actionPanel = document.getElementById("actionPanel");
-const infoToggle = document.getElementById("infoToggle");
-const productInfo = document.getElementById("productInfo");
+    function toggleAccordion(id) {
+      const content = document.getElementById(`content-${id}`);
+      const icon = document.getElementById(`icon-${id}`);
 
-let actionOpen = false;
+      if (content.classList.contains('open')) {
+        content.classList.remove('open');
+        icon.innerText = "+";
+      } else {
+        content.classList.add('open');
+        icon.innerText = "-";
+      }
+    }
 
-addBtn.onclick = () => {
+    document.getElementById('goToCheckoutBtn').addEventListener('click', () => {
+      if (cart.length === 0) {
+        alert('Dein Warenkorb ist leer!');
+        return;
+      }
+      window.location.href = 'checkout.html';
+    });
 
-  actionOpen = !actionOpen;
-
-  if(actionOpen){
-    addBtn.innerText = "×";
-    addBtn.classList.add("active");
-    actionPanel.classList.add("show");
-  } else {
-    addBtn.innerText = "+";
-    addBtn.classList.remove("active");
-    actionPanel.classList.remove("show");
-    productInfo.classList.remove("show");
-  }
-};
-
-infoToggle.onclick = () => {
-  productInfo.classList.toggle("show");
-};
-
-function addWithSize(size){
-  cart.push({
-    name:"DH-01",
-    price:49,
-    size:size
-  });
-
-  updateCart();
- 
-  cartCount.style.transform="scale(1.3)";
-  setTimeout(()=>cartCount.style.transform="scale(1)",200);
-}
-
-loadCart();
-function goToCheckout(){
-  if(cart.length === 0){
-    alert("Warenkorb ist leer");
-    return;
-  }
-
-  window.location.href = "checkout.html";
-}
-</script>
-
+    loadCart();
+  </script>
 </body>
+
 </html>

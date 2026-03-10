@@ -1,194 +1,600 @@
 <!DOCTYPE html>
 <html lang="de">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Bestellung erfolgreich – Dompomstore</title>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Receipt – Dompomstore</title>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600&family=Syncopate:wght@300;400;700&display=swap" rel="stylesheet">
+  <style>
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    :root {
+      --bg: #ffffff;
+      --text: #000000;
+      --border: rgba(0,0,0,0.1);
+      --accent: #f4f4f4;
+      --glass: rgba(255,255,255,0.8);
+    }
+    .dark-mode {
+      --bg: #000000;
+      --text: #ffffff;
+      --border: rgba(255,255,255,0.15);
+      --accent: #111111;
+      --glass: rgba(0,0,0,0.8);
+    }
+    
+    @keyframes slideUp { from { opacity: 0; transform: translateY(40px); } to { opacity: 1; transform: translateY(0); } }
+    @keyframes reveal { from { clip-path: inset(0 100% 0 0); } to { clip-path: inset(0 0 0 0); } }
+    @keyframes fadeMask { from { mask-position: 200% center; -webkit-mask-position: 200% center; } to { mask-position: 0% center; -webkit-mask-position: 0% center; } }
 
-<link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;600&display=swap" rel="stylesheet">
+    body {
+      font-family: 'Inter', sans-serif;
+      background: var(--bg);
+      color: var(--text);
+      -webkit-font-smoothing: antialiased;
+      overflow-x: hidden;
+    }
 
-<style>
-*{
-  box-sizing:border-box;
-  margin:0;
-  padding:0;
-}
+    /* SPLIT SCREEN LAYOUT */
+    .vanguard-layout {
+      display: flex;
+      flex-direction: column;
+      min-height: 100vh;
+    }
 
-body{
-  font-family:'Montserrat',sans-serif;
-  background:#fff;
-  color:#111;
-}
+    .vanguard-left {
+      background: var(--accent);
+      padding: 60px 30px;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      position: relative;
+      overflow: hidden;
+    }
 
-/* HEADER */
-header{
-  position:relative;
-  display:flex;
-  align-items:center;
-  justify-content:center;
-  padding:18px 0;
-  font-size:1rem;
-  font-weight:500;
-  letter-spacing:0.3em;
-}
+    .vanguard-left::after {
+      content: 'DOMPOM';
+      position: absolute;
+      top: -5%;
+      left: -5%;
+      font-family: 'Syncopate', sans-serif;
+      font-size: 25vw;
+      font-weight: 700;
+      color: var(--text);
+      opacity: 0.03;
+      pointer-events: none;
+      writing-mode: vertical-rl;
+      text-orientation: mixed;
+      z-index: 0;
+    }
 
-.container{
-  max-width:520px;
-  margin:80px auto 120px auto;
-  padding:0 24px;
-  text-align:center;
-}
+    .vanguard-right {
+      padding: 60px 30px;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      animation: slideUp 1.2s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+    }
 
-.title{
-  font-size:16px;
-  letter-spacing:0.35em;
-  margin-bottom:30px;
-}
+    @media(min-width: 900px) {
+      .vanguard-layout {
+        flex-direction: row;
+      }
+      .vanguard-left {
+        width: 45vw;
+        height: 100vh;
+        position: fixed;
+        top: 0; left: 0;
+        padding: 80px 60px;
+      }
+      .vanguard-right {
+        width: 55vw;
+        margin-left: 45vw;
+        min-height: 100vh;
+        padding: 80px 10%;
+      }
+    }
 
-.check{
-  font-size:40px;
-  margin-bottom:20px;
-}
+    .back-nav {
+      font-size: 10px;
+      letter-spacing: 0.2em;
+      text-transform: uppercase;
+      text-decoration: none;
+      color: var(--text);
+      opacity: 0.5;
+      transition: opacity 0.4s;
+      z-index: 10;
+      position: relative;
+    }
+    .back-nav:hover { opacity: 1; }
 
-.text{
-  font-size:14px;
-  line-height:1.8;
-  margin-bottom:40px;
-  opacity:0.8;
-}
+    .step-indicator {
+      font-family: 'Syncopate', sans-serif;
+      font-size: 10px;
+      letter-spacing: 0.4em;
+      opacity: 0.4;
+      margin-bottom: 20px;
+      z-index: 10;
+      position: relative;
+    }
 
-.order-box{
-  border-top:1px solid rgba(0,0,0,0.1);
-  border-bottom:1px solid rgba(0,0,0,0.1);
-  padding:25px 0;
-  margin-bottom:40px;
-  text-align:left;
-}
+    .huge-title {
+      font-family: 'Syncopate', sans-serif;
+      font-weight: 400;
+      font-size: 2.5rem;
+      line-height: 1.1;
+      text-transform: uppercase;
+      margin-bottom: 50px;
+      letter-spacing: 0.05em;
+      animation: reveal 1.5s cubic-bezier(0.77, 0, 0.175, 1) forwards;
+    }
+    
+    .huge-title i {
+      font-style: italic;
+      font-weight: 300;
+      color: gray;
+    }
 
-.order-item{
-  display:flex;
-  justify-content:space-between;
-  margin-bottom:12px;
-  font-size:14px;
-}
+    /* ORDER REVIEW LIST */
+    .order-review {
+      z-index: 10;
+      position: relative;
+    }
+    .order-item-vanguard {
+      display: flex;
+      justify-content: space-between;
+      border-bottom: 1px solid var(--border);
+      padding: 20px 0;
+      font-size: 12px;
+      text-transform: uppercase;
+      letter-spacing: 0.1em;
+    }
+    .order-total-vanguard {
+      display: flex;
+      justify-content: space-between;
+      padding: 30px 0;
+      font-size: 14px;
+      font-weight: 600;
+      letter-spacing: 0.15em;
+    }
 
-.total{
-  display:flex;
-  justify-content:space-between;
-  font-weight:600;
-  margin-top:20px;
-  letter-spacing:0.15em;
-}
+    /* FORMS */
+    .v-form {
+      display: flex;
+      flex-direction: column;
+      gap: 35px;
+    }
+    .v-input-group {
+      position: relative;
+    }
+    .v-input {
+      width: 100%;
+      background: transparent;
+      border: none;
+      border-bottom: 1px solid var(--border);
+      padding: 10px 0;
+      font-family: 'Inter', sans-serif;
+      font-size: 14px;
+      color: var(--text);
+      outline: none;
+      transition: border-color 0.4s;
+    }
+    .v-input:focus {
+      border-bottom-color: var(--text);
+    }
+    .v-label {
+      position: absolute;
+      top: 10px;
+      left: 0;
+      font-size: 10px;
+      letter-spacing: 0.15em;
+      text-transform: uppercase;
+      color: var(--text);
+      opacity: 0.4;
+      pointer-events: none;
+      transition: all 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+    }
+    .v-input:focus ~ .v-label, .v-input:valid ~ .v-label {
+      top: -20px;
+      font-size: 9px;
+      opacity: 1;
+    }
 
-.btn{
-  width:100%;
-  padding:18px;
-  border:none;
-  background:#000;
-  color:#fff;
-  letter-spacing:0.25em;
-  font-size:13px;
-  cursor:pointer;
-  transition:.3s;
-  margin-bottom:14px;
-}
+    /* BUTTONS */
+    .v-btn {
+      display: inline-block;
+      width: 100%;
+      background: var(--text);
+      color: var(--bg);
+      border: none;
+      padding: 24px;
+      font-family: 'Inter', sans-serif;
+      font-size: 11px;
+      text-transform: uppercase;
+      letter-spacing: 0.25em;
+      cursor: pointer;
+      position: relative;
+      overflow: hidden;
+      margin-top: 20px;
+      transition: transform 0.6s cubic-bezier(0.16, 1, 0.3, 1);
+    }
+    .v-btn::before {
+      content: '';
+      position: absolute;
+      top: 0; left: 0; width: 100%; height: 100%;
+      background: var(--bg);
+      transform: scaleY(0);
+      transform-origin: bottom;
+      transition: transform 0.6s cubic-bezier(0.16, 1, 0.3, 1);
+      z-index: 1;
+    }
+    .v-btn span {
+      position: relative;
+      z-index: 2;
+      transition: color 0.6s;
+    }
+    .v-btn:hover {
+      transform: translateY(-4px);
+      box-shadow: 0 20px 40px rgba(0,0,0,0.1);
+    }
+    .v-btn:hover::before {
+      transform: scaleY(1);
+    }
+    .v-btn:hover span {
+      color: var(--text);
+    }
+    .dark-mode .v-btn:hover {
+      box-shadow: 0 20px 40px rgba(255,255,255,0.05);
+    }
 
-.btn:hover{
-  background:#111;
-}
+    /* WALLET BOXES */
+    .wallet-box {
+      border: 1px solid var(--border);
+      padding: 30px 25px;
+      display: flex;
+      align-items: center;
+      gap: 20px;
+      cursor: pointer;
+      margin-bottom: 20px;
+      background: transparent;
+      transition: all 0.5s cubic-bezier(0.16, 1, 0.3, 1);
+    }
+    .wallet-box img {
+      width: 32px; height: 32px;
+      transition: transform 0.5s;
+    }
+    .wallet-info {
+      display: flex;
+      flex-direction: column;
+      gap: 5px;
+    }
+    .wallet-name {
+      font-size: 13px;
+      font-weight: 500;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+    }
+    .wallet-chain {
+      font-size: 9px;
+      opacity: 0.5;
+      letter-spacing: 0.2em;
+      text-transform: uppercase;
+    }
+    .wallet-box:hover {
+      background: var(--accent);
+      border-color: var(--text);
+    }
+    .wallet-box:hover img {
+      transform: scale(1.1) rotate(5deg);
+    }
 
-.btn-outline{
-  background:#fff;
-  color:#000;
-  border:1px solid #000;
-}
+    .payment-area {
+      display:none; 
+      animation: slideUp 0.6s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+      margin-top: 40px;
+      padding-top: 40px;
+      border-top: 1px solid var(--border);
+    }
+    
+    .token-pill {
+      display: inline-block;
+      padding: 12px 24px;
+      border: 1px solid var(--border);
+      border-radius: 50px;
+      font-size: 10px;
+      letter-spacing: 0.15em;
+      margin: 0 10px 10px 0;
+      cursor: pointer;
+      transition: all 0.3s;
+    }
+    .token-pill.active {
+      background: var(--text);
+      color: var(--bg);
+      border-color: var(--text);
+    }
 
-.btn-outline:hover{
-  background:#000;
-  color:#fff;
-}
+    .ty-center {
+      position: absolute;
+      top: 50%; left: 50%;
+      transform: translate(-50%, -50%);
+      text-align: center;
+      width: 100%; maxWidth: 600px;
+    }
+  
+    /* --- MOBILE UX PREMIUM FIXES --- */
+    /* CART RESPONSIVE FIX */
+    #cart-dropdown {
+      width: 100%;
+      max-width: 100vw;
+    }
+
+    /* INPUT IOS FIX (Prevent Auto-Zoom) */
+    input, select, textarea {
+      font-size: 16px !important;
+    }
+
+    @media (max-width: 500px) {
+      /* PRODUCT CAROUSEL FIX */
+      .container {
+        display: flex !important;
+        flex-direction: row !important;
+        overflow-x: auto !important;
+        scroll-snap-type: x mandatory !important;
+        gap: 15px !important;
+        padding-bottom: 20px !important; /* scrollbar padding */
+        -webkit-overflow-scrolling: touch;
+      }
+      
+      .container::-webkit-scrollbar {
+        display: none; /* Hide scrollbar for clean UI */
+      }
+      
+      .product-box {
+        min-width: 90% !important;
+        scroll-snap-align: center !important;
+        flex: 0 0 auto !important;
+      }
+      
+      /* STICKY CTA Product Pages */
+      .add-to-cart {
+        position: fixed !important;
+        bottom: 0 !important;
+        left: 0 !important;
+        width: 100% !important;
+        margin-bottom: 0 !important;
+        padding-bottom: calc(26px + env(safe-area-inset-bottom)) !important;
+        z-index: 1000 !important;
+      }
+      
+      /* Ensure info-side doesn't overlap the fixed CTA */
+      .info-side {
+        padding-bottom: 120px !important; 
+      }
+    }
+
+
+    /* --- LUXURY MOBILE REDESIGN --- */
+    
+    /* BOTTOM SHEET CART */
+    #cart-dropdown {
+      top: auto !important;
+      bottom: -100% !important;
+      right: 0 !important;
+      left: 0 !important;
+      width: 100% !important;
+      max-width: 100vw !important;
+      height: 80vh !important;
+      border-radius: 25px 25px 0 0 !important;
+      border-top: 1px solid var(--border) !important;
+      border-left: none !important;
+      transition: bottom 0.5s cubic-bezier(0.16, 1, 0.3, 1) !important;
+      box-shadow: 0 -10px 40px rgba(0,0,0,0.1) !important;
+    }
+    #cart-dropdown.show {
+      bottom: 0 !important;
+    }
+
+    /* LUXURY TYPOGRAPHY */
+    body {
+      font-family: 'Inter', sans-serif !important;
+    }
+    h1, h2, h3, .brand-logo, .huge-title, .cart-title, .step-indicator {
+      font-family: 'Syncopate', sans-serif !important;
+    }
+
+    @media (max-width: 768px) {
+      /* FULLSCREEN HERO (Index only) */
+      .mobile-hero {
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
+        text-align: center;
+        height: 100vh;
+        width: 100vw;
+        position: relative;
+        left: 50%;
+        transform: translateX(-50%);
+        background: var(--bg);
+        z-index: 5;
+        border-bottom: 1px solid var(--border);
+        margin-bottom: 40px;
+      }
+      .mobile-hero-title {
+        font-family: 'Syncopate', sans-serif;
+        font-size: 2.5rem;
+        letter-spacing: 0.1em;
+        text-transform: uppercase;
+        margin-bottom: 10px;
+      }
+      .mobile-hero-subtitle {
+        font-family: 'Inter', sans-serif;
+        font-size: 11px;
+        letter-spacing: 0.15em;
+        text-transform: uppercase;
+        opacity: 0.5;
+        margin-bottom: 40px;
+      }
+      .mobile-hero-btn {
+        padding: 18px 40px;
+        background: var(--text);
+        color: var(--bg);
+        font-size: 10px;
+        letter-spacing: 0.25em;
+        text-transform: uppercase;
+        text-decoration: none;
+        border-radius: 50px;
+      }
+
+      /* LUXURY PRODUCT CARDS */
+      .product-box {
+        background: var(--accent) !important;
+        border-radius: 16px !important;
+        overflow: hidden !important;
+        padding-bottom: 20px !important;
+      }
+      .image-wrapper {
+        border-radius: 16px 16px 0 0 !important;
+        margin-bottom: 15px !important;
+      }
+      .product-info-grid {
+        padding: 0 20px !important;
+        align-items: center !important;
+        text-align: center !important;
+      }
+      .product-name {
+        font-size: 14px !important;
+        font-weight: 600 !important;
+      }
+      .product-price {
+        font-size: 13px !important;
+        font-weight: 400 !important;
+        color: var(--text) !important;
+        opacity: 0.7 !important;
+        margin-top: 5px !important;
+      }
+    }
+
 </style>
+
+  
+\n
+  
+
+
+  <!-- PWA & SEO Meta Tags -->
+  <meta name="description" content="DompomStore - Exclusive Vanguard E-Commerce. Pay seamlessly with Web3 (Solana, Phantom, MetaMask) or traditional methods.">
+  <meta name="theme-color" content="#ffffff">
+  <link rel="icon" type="image/png" href="https://dompomshop.com/favicon.ico">
+  <link rel="apple-touch-icon" href="https://dompomshop.com/favicon.ico">
+
+  <style>
+    /* Vanguard Global Preloader & Mobile Nav Fixes - SAFARI OPTIMIZED */
+    :root {
+      --vh: 1vh;
+    }
+
+    #global-preloader {
+      position: fixed;
+      top: 0; left: 0; width: 100vw; height: 100vh;
+      height: 100dvh;
+      background-color: #ffffff;
+      z-index: 99999;
+      display: -webkit-flex;
+      display: flex;
+      -webkit-justify-content: center;
+      justify-content: center;
+      -webkit-align-items: center;
+      align-items: center;
+      transition: opacity 0.6s cubic-bezier(0.16, 1, 0.3, 1), visibility 0.6s ease;
+      -webkit-transition: opacity 0.6s cubic-bezier(0.16, 1, 0.3, 1), visibility 0.6s ease;
+      pointer-events: none;
+    }
+    #global-preloader.fade-out {
+      opacity: 0;
+      visibility: hidden;
+    }
+    .spinner {
+      width: 40px;
+      height: 40px;
+      border: 3px solid rgba(0, 0, 0, 0.1);
+      border-top-color: #000000;
+      border-radius: 50%;
+      -webkit-border-radius: 50%;
+      animation: spin 1s linear infinite;
+      -webkit-animation: spin 1s linear infinite;
+    }
+    
+    /* WebKit Momentum Scrolling */
+    .scroll-container, #cart-items, .vanguard-right, .cart-drawer {
+      -webkit-overflow-scrolling: touch;
+    }
+
+    /* iOS Safe Area Support */
+    body {
+      padding-top: env(safe-area-inset-top);
+      padding-bottom: env(safe-area-inset-bottom);
+      padding-left: env(safe-area-inset-left);
+      padding-right: env(safe-area-inset-right);
+    }
+
+    /* Premium Touch Interactions */
+    button, a, .nav-item, .product-box, .v-btn {
+      -webkit-tap-highlight-color: transparent;
+      -webkit-touch-callout: none;
+      will-change: transform; /* Hint for hardware acceleration */
+    }
+
+    /* Safari Input Reset */
+    input, select, textarea {
+      -webkit-appearance: none;
+      border-radius: 0;
+    }
+
+    html.dark-mode #global-preloader { background-color: #000000; }
+    html.dark-mode .spinner { border: 3px solid rgba(255, 255, 255, 0.1); border-top-color: #ffffff; }
+
+    @keyframes spin { 100% { transform: rotate(360deg); } }
+    @-webkit-keyframes spin { 100% { -webkit-transform: rotate(360deg); } }
+
+    @media (max-width: 768px) {
+      .top {
+        padding: 15px 20px !important;
+        padding-top: calc(15px + env(safe-area-inset-top)) !important;
+        display: -webkit-flex;
+        display: flex;
+        -webkit-justify-content: space-between;
+        justify-content: space-between;
+        -webkit-align-items: center;
+        align-items: center;
+      }
+      .logo {
+        position: absolute;
+        left: 50%;
+        transform: translateX(-50%);
+        -webkit-transform: translateX(-50%);
+        font-size: 20px !important;
+      }
+    }
+  </style>
+
 </head>
+<body class="">
 
-<body>
+  <div class="ty-center">
+    <div class="step-indicator" style="animation: slideUp 1s ease forwards;">03 / COMPLETE</div>
+    <h1 class="huge-title" style="margin-bottom: 20px;">Receipt <i>Generated</i></h1>
+    <p style="font-size:12px; letter-spacing:0.1em; opacity:0.6; margin-bottom: 50px; line-height: 1.8;">
+      Thank you for purchasing.<br>Your order is cryptographically secured.
+    </p>
 
-<header>
-  <span>DOMPOMSTORE</span>
-</header>
-
-<div class="container">
-
-  <div class="check">✓</div>
-
-  <div class="title">BESTELLUNG ERFOLGREICH</div>
-
-  <div class="text">
-    Vielen Dank für deine Bestellung.<br>
-    Deine Zahlung wurde bestätigt und deine Bestellung wird bearbeitet.
-  </div>
-
-  <div class="order-box" id="orderBox">
-    <div class="order-item">
-      <span>Keine Bestellung gefunden</span>
-      <span></span>
+    <a href="https://t.me/deingrappletgramlink" target="_blank" style="text-decoration:none;">
+      <button class="v-btn" style="max-width:300px; margin:0 auto; display:block;"><span>Join Telegram Priority</span></button>
+    </a>
+    
+    <div style="margin-top:40px;">
+      <a href="index.html" class="back-nav">← Return to Store</a>
     </div>
   </div>
-
-  <a href="index.html" class="btn" onclick="clearData()">ZUR STARTSEITE</a>
-
-<a href="https://t.me/dompomstore"
-   target="_blank"
-   class="btn btn-outline"
-   onclick="clearData()">
-   TELEGRAM SUPPORT
-</a>
-
-</div>
-
-<script>
-const orderBox = document.getElementById("orderBox");
-
-// Statt cart → lastOrderCart verwenden
-const cart = JSON.parse(localStorage.getItem("lastOrderCart") || "[]");
-
-orderBox.innerHTML = "";
-
-let total = 0;
-
-if(cart.length === 0){
-  orderBox.innerHTML = `
-    <div class="order-item">
-      <span>Keine Daten verfügbar</span>
-      <span></span>
-    </div>
-  `;
-} else {
-  cart.forEach(item=>{
-    const price = parseFloat(item.price) || 0;
-    const qty = parseInt(item.quantity) || 1;
-    const sum = price * qty;
-    total += sum;
-
-    orderBox.innerHTML += `
-      <div class="order-item">
-        <span>${item.name} × ${qty}</span>
-        <span>${sum.toFixed(2)} USDC</span>
-      </div>
-    `;
-  });
-
-  orderBox.innerHTML += `
-    <div class="total">
-      <span>GESAMT</span>
-      <span>${total.toFixed(2)} USDC</span>
-    </div>
-  `;
-}
-
-function clearData(){
-  localStorage.removeItem("lastOrderCart");
-}
-</script>
 
 </body>
 </html>

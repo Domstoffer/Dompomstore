@@ -1,0 +1,657 @@
+<!DOCTYPE html>
+<html lang="de">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Admin Dashboard</title>
+  <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;600&display=swap" rel="stylesheet">
+  <style>
+    body {
+      font-family: 'Montserrat', sans-serif;
+      background: #ffffff;
+      padding: 40px;
+      color: #000000;
+    }
+
+    .box {
+      background: #ffffff;
+      padding: 30px;
+      border-radius: 0px;
+      width: 340px;
+      border: 1px solid rgba(0, 0, 0, 0.1);
+      margin: 100px auto;
+    }
+
+    input,
+    button {
+      width: 100%;
+      padding: 12px;
+      margin-bottom: 14px;
+      border-radius: 8px;
+      border: 1px solid #ccc;
+      box-sizing: border-box;
+    }
+
+    button {
+      background: #111;
+      color: #fff;
+      border: none;
+      font-weight: 600;
+      cursor: pointer
+    }
+
+    .error {
+      color: red;
+      margin-bottom: 10px;
+      font-size: 13px;
+    }
+
+    .top {
+      display: none;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 40px;
+    }
+
+    h1 {
+      font-size: 18px;
+      letter-spacing: 0.25em;
+      font-weight: 600;
+    }
+
+    .logout {
+      background: #000;
+      color: #fff;
+      padding: 10px 16px;
+      border-radius: 6px;
+      text-decoration: none;
+      font-size: 12px;
+      letter-spacing: 0.15em;
+      transition: .2s;
+      cursor: pointer;
+    }
+
+    .logout:hover {
+      background: #222;
+    }
+
+    #dashboard {
+      display: none;
+    }
+
+    .order {
+      background: #ffffff;
+      border: 1px solid rgba(0, 0, 0, 0.1);
+      border-radius: 0px;
+      padding: 24px;
+      margin-bottom: 20px;
+      transition: .2s ease;
+    }
+
+    .order:hover {
+      border-color: rgba(0, 0, 0, 0.3);
+    }
+
+    .header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      cursor: pointer;
+    }
+
+    .name {
+      font-size: 16px;
+      font-weight: 600;
+      letter-spacing: 0.05em;
+    }
+
+    .badge {
+      padding: 6px 12px;
+      border-radius: 20px;
+      font-size: 11px;
+      letter-spacing: 0.15em;
+      font-weight: 600;
+    }
+
+    .badge.neu {
+      background: #ffffff;
+      color: #000000;
+      border: 1px solid #000;
+    }
+
+    .badge.pending {
+      background: #fff3cd;
+      color: #856404;
+    }
+
+    .badge.paid {
+      background: #000000;
+      color: #ffffff;
+    }
+
+    .source-badge {
+      padding: 3px 8px;
+      border-radius: 4px;
+      font-size: 10px;
+      letter-spacing: 0.15em;
+      font-weight: 600;
+      text-transform: uppercase;
+    }
+
+    .source-badge.private {
+      background: #000000;
+      color: #ffffff;
+    }
+
+    .source-badge.public {
+      display: none;
+    }
+
+    .details {
+      margin-top: 20px;
+      display: none;
+      font-size: 14px;
+      line-height: 1.7;
+      border-top: 1px solid #eee;
+      padding-top: 18px;
+    }
+
+    .section {
+      margin-bottom: 18px;
+    }
+
+    .section strong {
+      display: block;
+      margin-bottom: 6px;
+      font-size: 12px;
+      letter-spacing: 0.15em;
+      color: #777;
+      text-transform: uppercase;
+    }
+
+    /* --- MOBILE UX PREMIUM FIXES --- */
+    /* CART RESPONSIVE FIX */
+    #cart-dropdown {
+      width: 100%;
+      max-width: 100vw;
+    }
+
+    /* INPUT IOS FIX (Prevent Auto-Zoom) */
+    input,
+    select,
+    textarea {
+      font-size: 16px !important;
+    }
+
+    @media (max-width: 500px) {
+
+      /* PRODUCT CAROUSEL FIX */
+      .container {
+        display: flex !important;
+        flex-direction: row !important;
+        overflow-x: auto !important;
+        scroll-snap-type: x mandatory !important;
+        gap: 15px !important;
+        padding-bottom: 20px !important;
+        /* scrollbar padding */
+        -webkit-overflow-scrolling: touch;
+      }
+
+      .container::-webkit-scrollbar {
+        display: none;
+        /* Hide scrollbar for clean UI */
+      }
+
+      .product-box {
+        min-width: 90% !important;
+        scroll-snap-align: center !important;
+        flex: 0 0 auto !important;
+      }
+
+      /* STICKY CTA Product Pages */
+      .add-to-cart {
+        position: fixed !important;
+        bottom: 0 !important;
+        left: 0 !important;
+        width: 100% !important;
+        margin-bottom: 0 !important;
+        padding-bottom: calc(26px + env(safe-area-inset-bottom)) !important;
+        z-index: 1000 !important;
+      }
+
+      /* Ensure info-side doesn't overlap the fixed CTA */
+      .info-side {
+        padding-bottom: 120px !important;
+      }
+    }
+
+
+    /* --- LUXURY MOBILE REDESIGN --- */
+
+    /* BOTTOM SHEET CART */
+    #cart-dropdown {
+      top: auto !important;
+      bottom: -100% !important;
+      right: 0 !important;
+      left: 0 !important;
+      width: 100% !important;
+      max-width: 100vw !important;
+      height: 80vh !important;
+      border-radius: 25px 25px 0 0 !important;
+      border-top: 1px solid var(--border) !important;
+      border-left: none !important;
+      transition: bottom 0.5s cubic-bezier(0.16, 1, 0.3, 1) !important;
+      box-shadow: 0 -10px 40px rgba(0, 0, 0, 0.1) !important;
+    }
+
+    #cart-dropdown.show {
+      bottom: 0 !important;
+    }
+
+    /* LUXURY TYPOGRAPHY */
+    body {
+      font-family: 'Inter', sans-serif !important;
+    }
+
+    h1,
+    h2,
+    h3,
+    .brand-logo,
+    .huge-title,
+    .cart-title,
+    .step-indicator {
+      font-family: 'Syncopate', sans-serif !important;
+    }
+
+    @media (max-width: 768px) {
+
+      /* FULLSCREEN HERO (Index only) */
+      .mobile-hero {
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
+        text-align: center;
+        height: 100vh;
+        width: 100vw;
+        position: relative;
+        left: 50%;
+        transform: translateX(-50%);
+        background: var(--bg);
+        z-index: 5;
+        border-bottom: 1px solid var(--border);
+        margin-bottom: 40px;
+      }
+
+      .mobile-hero-title {
+        font-family: 'Syncopate', sans-serif;
+        font-size: 2.5rem;
+        letter-spacing: 0.1em;
+        text-transform: uppercase;
+        margin-bottom: 10px;
+      }
+
+      .mobile-hero-subtitle {
+        font-family: 'Inter', sans-serif;
+        font-size: 11px;
+        letter-spacing: 0.15em;
+        text-transform: uppercase;
+        opacity: 0.5;
+        margin-bottom: 40px;
+      }
+
+      .mobile-hero-btn {
+        padding: 18px 40px;
+        background: var(--text);
+        color: var(--bg);
+        font-size: 10px;
+        letter-spacing: 0.25em;
+        text-transform: uppercase;
+        text-decoration: none;
+        border-radius: 50px;
+      }
+
+      /* LUXURY PRODUCT CARDS */
+      .product-box {
+        background: var(--accent) !important;
+        border-radius: 16px !important;
+        overflow: hidden !important;
+        padding-bottom: 20px !important;
+      }
+
+      .image-wrapper {
+        border-radius: 16px 16px 0 0 !important;
+        margin-bottom: 15px !important;
+      }
+
+      .product-info-grid {
+        padding: 0 20px !important;
+        align-items: center !important;
+        text-align: center !important;
+      }
+
+      .product-name {
+        font-size: 14px !important;
+        font-weight: 600 !important;
+      }
+
+      .product-price {
+        font-size: 13px !important;
+        font-weight: 400 !important;
+        color: var(--text) !important;
+        opacity: 0.7 !important;
+        margin-top: 5px !important;
+      }
+    }
+  </style>
+</head>
+
+<body>
+
+  <div id="login-container" class="box">
+    <h2>Admin Login</h2>
+    <div id="login-error" class="error"></div>
+    <form id="login-form">
+      <input id="username" placeholder="Username" required>
+      <input id="password" type="password" placeholder="Password" required>
+      <button type="submit">LOGIN</button>
+    </form>
+  </div>
+
+  <div id="dashboard">
+    <div class="top" style="display:flex;">
+      <h1><a href="index.html" style="color: inherit; text-decoration: none;">📦 Orders Dashboard <span
+            style="font-size: 11px; font-weight: normal; margin-left:10px; opacity:0.5;">← zum Shop</span></a></h1>
+      <div><button class="logout" onclick="logout()">Logout</button></div>
+    </div>
+
+
+    <div id="paid-section" style="margin-bottom: 40px; margin-top: 10px;">
+      <h2
+        style="font-size: 14px; margin-bottom: 20px; color: #1c7c3a; text-transform: uppercase; letter-spacing: 0.1em;">
+        ✅ Bezahlte Bestellungen</h2>
+      <div id="paid-orders-container">Lädt bezahlte Bestellungen...</div>
+    </div>
+
+    <div id="unpaid-section" style="margin-bottom: 50px;">
+      <h2
+        style="font-size: 14px; margin-bottom: 20px; color: #856404; text-transform: uppercase; letter-spacing: 0.1em;">
+        ⏳ Offene Zahlungen</h2>
+      <div id="unpaid-orders-container">Lädt offene Bestellungen...</div>
+    </div>
+
+    <div id="pgp-section"
+      style="margin-bottom: 40px; background: #ffffff; padding: 24px; border: 1px solid rgba(0,0,0,0.1);">
+      <h2 style="font-size: 14px; margin-bottom: 15px; color: #000; text-transform: uppercase; letter-spacing: 0.1em;">
+        🔐 PGP End-to-End Encryption</h2>
+      <div style="font-size: 12px; margin-bottom: 10px; color: #333;">System Status: <strong id="pgp-status"
+          style="color: #1c7c3a;">Aktiv & Sicher</strong></div>
+      <div style="font-size: 10px; margin-bottom: 20px; color: #777; letter-spacing: 0.05em; word-break: break-all;">
+        Fingerprint: <span id="pgp-fingerprint" style="font-family: monospace;">Loading secure cryptographic
+          layer...</span></div>
+      <div style="display:flex; gap: 10px;">
+        <button onclick="downloadPublicKey()"
+          style="width: auto; padding: 10px 15px; font-size: 11px; letter-spacing: 0.1em; background: #000; color: #fff;">Download
+          Public Key (.asc)</button>
+        <button onclick="regeneratePGP()"
+          style="width: auto; padding: 10px 15px; font-size: 11px; letter-spacing: 0.1em; background: #fff; color: #b42323; border: 1px solid #b42323;">Rotations-Regenerierung
+          (Warnung)</button>
+      </div>
+    </div>
+
+
+  </div>
+
+  <script>
+
+    const escapeHTML = (str) => {
+      if (!str) return '';
+      return String(str)
+        .replace(/&/g, '&amp;')
+        .replace(/</g, '&lt;')
+        .replace(/>/g, '&gt;')
+        .replace(/"/g, '&quot;')
+        .replace(/'/g, '&#39;');
+    };
+
+
+
+    const API_URL = `http://${window.location.hostname}:3001/api`;
+
+    let refreshInterval = null;
+
+    async function checkAuth() {
+      try {
+        const res = await fetch(`${API_URL}/admin/me`, {
+          credentials: 'include'
+        });
+        if (res.ok) {
+          document.getElementById('login-container').style.display = 'none';
+          document.getElementById('dashboard').style.display = 'block';
+          loadOrders();
+          loadPGPStatus();
+
+          if (!refreshInterval) {
+            refreshInterval = setInterval(loadOrders, 10000); // Auto-refresh every 10 seconds
+          }
+        } else {
+          showLogin();
+        }
+      } catch (e) {
+        console.error(e);
+        showLogin();
+      }
+    }
+
+    function showLogin() {
+      document.getElementById('login-container').style.display = 'block';
+      document.getElementById('dashboard').style.display = 'none';
+      if (refreshInterval) {
+        clearInterval(refreshInterval);
+        refreshInterval = null;
+      }
+    }
+
+    document.getElementById('login-form').addEventListener('submit', async (e) => {
+      e.preventDefault();
+      const username = document.getElementById('username').value;
+      const password = document.getElementById('password').value;
+
+      try {
+        const res = await fetch(`${API_URL}/admin/login`, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ username, password }),
+          credentials: 'include'
+        });
+
+        const data = await res.json();
+        if (data.success) {
+          checkAuth();
+        } else {
+          document.getElementById('login-error').innerText = data.error || 'Login failed';
+        }
+      } catch (err) {
+        console.error(err);
+        document.getElementById('login-error').innerText = 'Server error or Blocked by Browser (' + err.message + ')';
+      }
+    });
+
+    async function logout() {
+      if (confirm('Are you sure you want to securely end your session?')) {
+        await fetch(API_URL + '/admin/logout', { method: 'POST', credentials: 'include' });
+        checkAuth();
+      }
+    }
+
+    function generateOrderHTML(o) {
+      let itemsHtml = '';
+      const safeItems = Array.isArray(o.items) ? o.items : [];
+      safeItems.forEach(i => {
+        itemsHtml += ` - ${escapeHTML(i.name)} (${escapeHTML(i.quantity) || 1} x ${escapeHTML(i.price)} USD)<br>`;
+      });
+
+      const safeFirst = escapeHTML(o.shipping?.firstname || 'Unbekannt');
+      const safeLast = escapeHTML(o.shipping?.lastname || '');
+      const safeStreet = escapeHTML(o.shipping?.street || '');
+      const safeZip = escapeHTML(o.shipping?.zip || '');
+      const safeCity = escapeHTML(o.shipping?.city || '');
+      const safeCountry = escapeHTML(o.shipping?.country || '');
+
+      let shippingHtml = '';
+      if (o.shipping?.error) {
+        shippingHtml = `<span style="color:red;font-weight:bold;">${escapeHTML(o.shipping.error)}</span>`;
+      } else {
+        shippingHtml = `
+          ${safeFirst} ${safeLast}<br>
+          ${safeStreet}<br>
+          ${safeZip} ${safeCity}<br>
+          ${safeCountry || ''}
+        `;
+      }
+
+      const safeFirstHeader = escapeHTML(o.shipping?.firstname || 'Unbekannt');
+      const safeLastHeader = escapeHTML(o.shipping?.lastname || '');
+
+      const safeId = escapeHTML(o.id);
+      const safeStatus = escapeHTML(o.status);
+      const safeSource = escapeHTML(o.source);
+      const safeRef = escapeHTML(o.reference);
+      const safeNetwork = escapeHTML(o.network);
+      const safeToken = escapeHTML(o.token);
+      const safeTxHash = escapeHTML(o.txHash);
+      const safeSender = escapeHTML(o.walletSender);
+      const safeTotal = escapeHTML(o.total);
+
+      return `
+        <div class="order">
+          <div class="header" onclick="this.nextElementSibling.style.display = this.nextElementSibling.style.display === 'block' ? 'none' : 'block'">
+              <div class="name">${safeFirstHeader} ${safeLastHeader}</div>
+              <div style="display:flex; align-items:center; gap:8px;">
+                <div class="source-badge ${safeSource || 'public'}">${safeSource === 'private' ? '🔒 Private' : ''}</div>
+                <div class="badge ${safeStatus.toLowerCase()}">${safeStatus}</div>
+                <a href="#" onclick="deleteOrder('${safeId}', event)" style="font-size:13px; color:#b42323; text-decoration:none;" aria-label="Delete Order">✕</a>
+              </div>
+          </div>
+          <div class="details">
+              <div class="section">
+                  <strong>🆔 Order Infos</strong>
+                  Order ID: ${safeId}<br>
+                  Quelle: ${safeSource === 'private' ? '🔒 Private Shop' : '🌐 Public Shop'}<br>
+                  Reference: ${safeRef}<br>
+                  Datum: ${new Date(o.createdAt).toLocaleString()}
+              </div>
+              <div class="section">
+                  <strong>🚚 Versandadresse</strong><br>
+                  ${shippingHtml}
+              </div>
+              <div class="section">
+                  <strong>🌐 Web3 Zahlung</strong>
+                  Status: ${safeStatus === 'paid' ? 'Bezahlt' : 'Ausstehend'}<br>
+                  Netzwerk: ${safeNetwork || '-'}<br>
+                  Token: ${safeToken || '-'}<br>
+                  TxHash: ${safeTxHash ? '<span style="font-size:11px; word-break:break-all;">' + safeTxHash + '</span>' : '-'}<br>
+                  Sender: ${safeSender ? '<span style="font-size:11px; word-break:break-all;">' + safeSender + '</span>' : '-'}
+              </div>
+              <div class="section">
+                  <strong>🛒 Artikel</strong>
+                  ${itemsHtml}
+                  <br><strong>Gesamt: ${safeTotal} USD</strong>
+              </div>
+          </div>
+        </div>
+      `;
+    }
+
+    async function loadOrders() {
+      try {
+        const res = await fetch(`${API_URL}/admin/orders`, {
+          credentials: 'include'
+        });
+
+        if (res.status === 401 || res.status === 403) {
+          logout();
+          return;
+        }
+
+        const orders = await res.json();
+        const unpaidContainer = document.getElementById('unpaid-orders-container');
+        const paidContainer = document.getElementById('paid-orders-container');
+
+        if (orders.length === 0) {
+          unpaidContainer.innerHTML = '<p>Keine Bestellungen vorhanden.</p>';
+          paidContainer.innerHTML = '<p>Keine Bestellungen vorhanden.</p>';
+          return;
+        }
+
+        const unpaidOrders = orders.filter(o => o.status !== 'paid');
+        const paidOrders = orders.filter(o => o.status === 'paid');
+
+        unpaidContainer.innerHTML = unpaidOrders.length > 0 ? unpaidOrders.map(generateOrderHTML).join('') : '<p>Keine offenen Bestellungen.</p>';
+        paidContainer.innerHTML = paidOrders.length > 0 ? paidOrders.map(generateOrderHTML).join('') : '<p>Keine bezahlten Bestellungen.</p>';
+
+      } catch (err) {
+        document.getElementById('unpaid-orders-container').innerText = 'Fehler beim Laden der Bestellungen.';
+      }
+    }
+
+    async function deleteOrder(id, event) {
+      event.stopPropagation();
+      if (!confirm('Bestellung wirklich löschen?')) return;
+
+      await fetch(`${API_URL}/admin/orders/${id}`, {
+        method: 'DELETE',
+        credentials: 'include'
+      });
+
+      loadOrders();
+    }
+
+
+    let currentPublicKey = '';
+
+    async function loadPGPStatus() {
+      try {
+        const res = await fetch(API_URL + '/admin/pgp/status', { credentials: 'include' });
+        if (res.ok) {
+          const data = await res.json();
+          document.getElementById('pgp-fingerprint').innerText = data.fingerprint || 'Security Handshake Failed';
+          currentPublicKey = data.publicKey;
+        }
+      } catch (e) { console.error('[PGP SEC] Status Sync Error', e); }
+    }
+
+    function downloadPublicKey() {
+      if (!currentPublicKey) return alert('Kryptografische Schlüssel noch nicht initialisiert.');
+      const blob = new Blob([currentPublicKey], { type: 'text/plain' });
+      const url = URL.createObjectURL(blob);
+      const a = document.createElement('a');
+      a.href = url;
+      a.download = 'dompom_public_key.asc';
+      a.click();
+      URL.revokeObjectURL(url);
+    }
+
+    async function regeneratePGP() {
+      if (!confirm('CRITICAL WARNING: Die Generierung eines neuen Schlüsselpaares macht den alten Public Key ungültig. Fortfahren?')) return;
+      document.getElementById('pgp-fingerprint').innerText = 'Generiere (ECC Curve25519)... Das kann einen Moment dauern.';
+      try {
+        const res = await fetch(API_URL + '/admin/pgp/generate', { method: 'POST', credentials: 'include' });
+        const data = await res.json();
+        if (data.success) {
+          alert('Ein neues PGP-Schlüsselpaar wurde sicher erzeugt und geladen.');
+          loadPGPStatus();
+        } else {
+          alert('Systemfehler: ' + data.error);
+        }
+      } catch (e) { alert('Netzwerkfehler während der sicheren Übertragung.'); }
+    }
+
+
+
+    checkAuth();
+  </script>
+</body>
+
+</html>

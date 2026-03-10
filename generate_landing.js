@@ -1,0 +1,225 @@
+const fs = require('fs');
+const path = require('path');
+
+const targetFile = path.join(__dirname, 'mobile_landing.html');
+
+const htmlContent = `<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+  <title>Dompom | Vanguard Crypto Apparel</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600&family=Syncopate:wght@300;400;700&display=swap" rel="stylesheet">
+  
+  <!-- DEFERRED WEB3 LOADERS (Performance Optimization) -->
+  <script defer src="https://unpkg.com/@solana/web3.js@latest/lib/index.iife.min.js"></script>
+  <script defer src="https://cdnjs.cloudflare.com/ajax/libs/ethers/6.7.0/ethers.umd.min.js"></script>
+  <script defer src="https://www.paypal.com/sdk/js?client-id=test&currency=USD&disable-funding=card,sepa,giropay,sofort,bancontact,eps,ideal,mybank,p24,blik"></script>
+
+  <style>
+    /* MOBILE LUXURY THEME */
+    :root {
+      --bg: #000000;
+      --text: #ffffff;
+      --accent: #111111;
+      --border: rgba(255, 255, 255, 0.15);
+    }
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+      -webkit-tap-highlight-color: transparent;
+    }
+    body {
+      font-family: 'Inter', sans-serif;
+      background: var(--bg);
+      color: var(--text);
+      -webkit-font-smoothing: antialiased;
+      overflow-x: hidden;
+      padding-bottom: 100px; /* Space for Sticky Buy Bar */
+    }
+    h1, h2, h3, .brand {
+      font-family: 'Syncopate', sans-serif;
+      text-transform: uppercase;
+    }
+    a { text-decoration: none; color: inherit; }
+
+    /* STEP 1: HERO SECTION */
+    .hero {
+      height: 100vh;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+      text-align: center;
+      border-bottom: 1px solid var(--border);
+      position: relative;
+    }
+    .hero-brand {
+      font-size: 3rem;
+      letter-spacing: 0.15em;
+      margin-bottom: 10px;
+    }
+    .hero-tagline {
+      font-size: 11px;
+      letter-spacing: 0.25em;
+      opacity: 0.5;
+      margin-bottom: 50px;
+    }
+    .hero-shop-btn {
+      padding: 18px 40px;
+      border: 1px solid var(--text);
+      border-radius: 50px;
+      font-size: 10px;
+      letter-spacing: 0.25em;
+      text-transform: uppercase;
+      transition: all 0.3s;
+    }
+    .hero-shop-btn:hover { background: var(--text); color: var(--bg); }
+
+    /* STEP 2: FEATURED PRODUCT */
+    .section { padding: 60px 24px; border-bottom: 1px solid var(--border); }
+    .featured-product {
+      background: var(--accent);
+      border-radius: 20px;
+      padding-bottom: 24px;
+      overflow: hidden;
+    }
+    .featured-img-wrapper {
+      width: 100%;
+      aspect-ratio: 3/4;
+      background: #1a1a1a;
+    }
+    .featured-img-wrapper img {
+      width: 100%; height: 100%; object-fit: cover;
+    }
+    .featured-info { padding: 24px; text-align: center; }
+    .featured-title { font-size: 24px; letter-spacing: 0.1em; margin-bottom: 8px; }
+    .featured-price { font-size: 16px; opacity: 0.7; margin-bottom: 24px; }
+
+    /* STEP 3: CRYPTO PAYMENT SECTION */
+    .crypto-section h2 { font-size: 14px; letter-spacing: 0.15em; margin-bottom: 24px; text-align: center; }
+    .pay-btn {
+      display: block; width: 100%; padding: 20px;
+      margin-bottom: 15px; border-radius: 12px; border: none;
+      font-family: 'Inter', sans-serif; font-size: 12px; font-weight: 600;
+      letter-spacing: 0.2em; text-transform: uppercase; text-align: center; cursor: pointer;
+    }
+    .btn-sol { background: #14F195; color: #000; }
+    .btn-eth { background: #627EEA; color: #fff; }
+    .btn-paypal { background: #FFC439; color: #000; margin-bottom: 0;}
+
+    /* STEP 4: STICKY BUY BAR */
+    .sticky-bar {
+      position: fixed; bottom: 0; left: 0; width: 100%;
+      background: rgba(0,0,0,0.8);
+      backdrop-filter: blur(10px);
+      -webkit-backdrop-filter: blur(10px);
+      border-top: 1px solid var(--border);
+      padding: 15px 24px;
+      padding-bottom: calc(15px + env(safe-area-inset-bottom));
+      display: flex; justify-content: space-between; align-items: center;
+      z-index: 1000;
+    }
+    .sticky-info { display: flex; flex-direction: column; }
+    .sticky-title { font-family: 'Syncopate', sans-serif; font-size: 12px; letter-spacing: 0.05em; }
+    .sticky-price { font-size: 11px; opacity: 0.5; margin-top: 4px; }
+    .sticky-btn {
+      background: #fff; color: #000; padding: 12px 24px; border-radius: 50px;
+      font-size: 10px; font-weight: 600; letter-spacing: 0.15em; text-transform: uppercase;
+    }
+
+    /* STEP 5: PRODUCT CAROUSEL */
+    .carousel-section h2 { font-size: 14px; letter-spacing: 0.15em; margin-bottom: 24px; padding: 0 24px; }
+    .carousel {
+      display: flex; overflow-x: auto; scroll-snap-type: x mandatory;
+      gap: 15px; padding: 0 24px 24px 24px;
+      -webkit-overflow-scrolling: touch;
+    }
+    .carousel::-webkit-scrollbar { display: none; }
+    .card {
+      min-width: 80%; scroll-snap-align: center; flex: 0 0 auto;
+      background: var(--accent); border-radius: 16px; overflow: hidden;
+      padding-bottom: 20px;
+    }
+    .card-img { width: 100%; aspect-ratio: 1; background: #1a1a1a; margin-bottom: 15px; }
+    .card-img img { width: 100%; height: 100%; object-fit: cover; }
+    .card-info { padding: 0 20px; text-align: center; }
+    .card-title { font-family: 'Syncopate', sans-serif; font-size: 12px; letter-spacing: 0.1em; }
+    .card-price { font-size: 11px; opacity: 0.5; margin-top: 5px; }
+  </style>
+</head>
+<body>
+
+  <!-- STEP 1: HERO SECTION -->
+  <div class="hero">
+    <div class="hero-brand">DOMPOM</div>
+    <div class="hero-tagline">Vanguard Crypto Apparel</div>
+    <a href="#featured" class="hero-shop-btn">View Collection</a>
+  </div>
+
+  <!-- STEP 2: FEATURED PRODUCT -->
+  <div id="featured" class="section">
+    <div class="featured-product">
+      <div class="featured-img-wrapper">
+        <img loading="lazy" src="images/DB-01.jpg" alt="DB-01 Badehose">
+      </div>
+      <div class="featured-info">
+        <div class="featured-title brand">DB-01</div>
+        <div class="featured-price">49.00 USDC</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- STEP 3: CRYPTO PAYMENT SECTION -->
+  <div class="section crypto-section" id="checkout">
+    <h2>Select Vault</h2>
+    <button class="pay-btn btn-sol" onclick="alert('Simulated Solana Fast Checkout')">PAY WITH SOLANA</button>
+    <button class="pay-btn btn-eth" onclick="alert('Simulated Ethereum Fast Checkout')">PAY WITH ETHEREUM</button>
+    <button class="pay-btn btn-paypal" onclick="alert('Simulated PayPal Fast Checkout')">PAY WITH PAYPAL</button>
+  </div>
+
+  <!-- STEP 5: PRODUCT CAROUSEL -->
+  <div class="section carousel-section">
+    <h2>More Drops</h2>
+    <div class="carousel">
+      <div class="card">
+        <div class="card-img"><img loading="lazy" src="images/pepe-shirt.jpg" alt="PS-01"></div>
+        <div class="card-info">
+          <div class="card-title">PS-01</div>
+          <div class="card-price">19 USDC</div>
+        </div>
+      </div>
+      <div class="card">
+        <div class="card-img"><img loading="lazy" src="https://picsum.photos/seed/test1/400/400" alt="Testcy"></div>
+        <div class="card-info">
+          <div class="card-title">Testcy</div>
+          <div class="card-price">30 USDC</div>
+        </div>
+      </div>
+      <div class="card">
+        <div class="card-img"><img loading="lazy" src="images/zyn.png" alt="ZYN"></div>
+        <div class="card-info">
+          <div class="card-title">ZYN</div>
+          <div class="card-price">22 USDC</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- STEP 4: STICKY BUY BAR -->
+  <div class="sticky-bar">
+    <div class="sticky-info">
+      <div class="sticky-title">DB-01</div>
+      <div class="sticky-price">49.00 USDC</div>
+    </div>
+    <a href="#checkout" class="sticky-btn">Buy Now</a>
+  </div>
+
+</body>
+</html>`;
+
+fs.writeFileSync(targetFile, htmlContent, 'utf8');
+console.log(`✅ Successfully generated highly optimized mobile landing page at: ${targetFile}`);

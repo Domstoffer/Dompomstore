@@ -1,255 +1,967 @@
 <!DOCTYPE html>
 <html lang="de">
+
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Crypto Payment</title>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Payment – Dompomstore</title>
+  <script defer src="https://unpkg.com/@solana/web3.js@latest/lib/index.iife.min.js"></script>
+  <script defer src="https://cdnjs.cloudflare.com/ajax/libs/ethers/6.7.0/ethers.umd.min.js"></script>
+  <script
+    src="https://www.paypal.com/sdk/js?client-id=test&currency=USD&disable-funding=card,sepa,giropay,sofort,bancontact,eps,ideal,mybank,p24,blik"></script>
+  <link
+    href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600&family=Syncopate:wght@300;400;700&display=swap"
+    rel="stylesheet">
+  <style>
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
 
-<link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;600&display=swap" rel="stylesheet">
+    :root {
+      --bg: #ffffff;
+      --text: #000000;
+      --border: rgba(0, 0, 0, 0.1);
+      --accent: #f4f4f4;
+      --glass: rgba(255, 255, 255, 0.8);
+    }
 
-<style>
-*{
-  box-sizing:border-box;
-  margin:0;
-  padding:0;
-}
+    .dark-mode {
+      --bg: #000000;
+      --text: #ffffff;
+      --border: rgba(255, 255, 255, 0.15);
+      --accent: #111111;
+      --glass: rgba(0, 0, 0, 0.8);
+    }
 
-body{
-  font-family:'Montserrat',sans-serif;
-  background:#fff;
-  color:#111;
-}
+    @keyframes slideUp {
+      from {
+        opacity: 0;
+        transform: translateY(40px);
+      }
 
-/* HEADER */
-header{
-  position:relative;
-  display:flex;
-  align-items:center;
-  justify-content:center;
-  padding:18px 0;
-  font-size:1rem;
-  font-weight:500;
-  letter-spacing:0.3em;
-}
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
 
-.back-link{
-  position:absolute;
-  left:18px;
-  font-size:11px;
-  letter-spacing:0.15em;
-  text-decoration:none;
-  color:#111;
-  opacity:0.6;
-}
+    @keyframes reveal {
+      from {
+        clip-path: inset(0 100% 0 0);
+      }
 
-.back-link:hover{
-  opacity:1;
-}
+      to {
+        clip-path: inset(0 0 0 0);
+      }
+    }
 
-/* CONTAINER */
-.payment-container{
-  max-width:520px;
-  margin:60px auto 120px auto;
-  padding:0 24px;
-}
+    @keyframes fadeMask {
+      from {
+        mask-position: 200% center;
+        -webkit-mask-position: 200% center;
+      }
 
-.payment-title{
-  text-align:center;
-  font-size:16px;
-  letter-spacing:0.35em;
-  margin-bottom:40px;
-}
+      to {
+        mask-position: 0% center;
+        -webkit-mask-position: 0% center;
+      }
+    }
 
-/* SUMMARY */
-.summary{
-  border-top:1px solid rgba(0,0,0,0.1);
-  border-bottom:1px solid rgba(0,0,0,0.1);
-  padding:20px 0;
-  font-size:14px;
-  line-height:1.8;
-  margin-bottom:20px;
-}
+    body {
+      font-family: 'Inter', sans-serif;
+      background: var(--bg);
+      color: var(--text);
+      -webkit-font-smoothing: antialiased;
+      overflow-x: hidden;
+    }
 
-.total{
-  text-align:center;
-  font-weight:600;
-  letter-spacing:0.2em;
-  margin-bottom:40px;
-}
+    /* SPLIT SCREEN LAYOUT */
+    .vanguard-layout {
+      display: flex;
+      flex-direction: column;
+      min-height: 100vh;
+    }
 
-/* WALLET */
-.wallet{
-  text-align:center;
-  font-size:12px;
-  letter-spacing:0.08em;
-  word-break:break-all;
-  margin-bottom:20px;
-  cursor:pointer;
-  opacity:0.8;
-}
+    .vanguard-left {
+      background: var(--accent);
+      padding: 60px 30px;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      position: relative;
+      overflow: hidden;
+    }
 
-.wallet:hover{
-  opacity:1;
-}
+    .vanguard-left::after {
+      content: 'DOMPOM';
+      position: absolute;
+      top: -5%;
+      left: -5%;
+      font-family: 'Syncopate', sans-serif;
+      font-size: 25vw;
+      font-weight: 700;
+      color: var(--text);
+      opacity: 0.03;
+      pointer-events: none;
+      writing-mode: vertical-rl;
+      text-orientation: mixed;
+      z-index: 0;
+    }
 
-/* QR */
-.qr{
-  display:flex;
-  justify-content:center;
-  margin-bottom:30px;
-}
+    .vanguard-right {
+      padding: 60px 30px;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      animation: slideUp 1.2s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+    }
 
-/* HINT */
-.hint{
-  text-align:center;
-  font-size:12px;
-  letter-spacing:0.08em;
-  margin-bottom:30px;
-}
+    @media(min-width: 900px) {
+      .vanguard-layout {
+        flex-direction: row;
+      }
 
-/* BUTTON */
-button{
-  width:100%;
-  padding:18px;
-  border:none;
-  background:#000;
-  color:#fff;
-  letter-spacing:0.25em;
-  font-size:13px;
-  cursor:pointer;
-  transition:.3s;
-}
+      .vanguard-left {
+        width: 45vw;
+        height: 100vh;
+        position: fixed;
+        top: 0;
+        left: 0;
+        padding: 80px 60px;
+      }
 
-button:hover{
-  background:#111;
-}
-</style>
+      .vanguard-right {
+        width: 55vw;
+        margin-left: 45vw;
+        min-height: 100vh;
+        padding: 80px 10%;
+      }
+    }
+
+    .back-nav {
+      font-size: 10px;
+      letter-spacing: 0.2em;
+      text-transform: uppercase;
+      text-decoration: none;
+      color: var(--text);
+      opacity: 0.5;
+      transition: opacity 0.4s;
+      z-index: 10;
+      position: relative;
+    }
+
+    .back-nav:hover {
+      opacity: 1;
+    }
+
+    .step-indicator {
+      font-family: 'Syncopate', sans-serif;
+      font-size: 10px;
+      letter-spacing: 0.4em;
+      opacity: 0.4;
+      margin-bottom: 20px;
+      z-index: 10;
+      position: relative;
+    }
+
+    .huge-title {
+      font-family: 'Syncopate', sans-serif;
+      font-weight: 400;
+      font-size: 2.5rem;
+      line-height: 1.1;
+      text-transform: uppercase;
+      margin-bottom: 50px;
+      letter-spacing: 0.05em;
+      animation: reveal 1.5s cubic-bezier(0.77, 0, 0.175, 1) forwards;
+    }
+
+    .huge-title i {
+      font-style: italic;
+      font-weight: 300;
+      color: gray;
+    }
+
+    /* ORDER REVIEW LIST */
+    .order-review {
+      z-index: 10;
+      position: relative;
+    }
+
+    .order-item-vanguard {
+      display: flex;
+      justify-content: space-between;
+      border-bottom: 1px solid var(--border);
+      padding: 20px 0;
+      font-size: 12px;
+      text-transform: uppercase;
+      letter-spacing: 0.1em;
+    }
+
+    .order-total-vanguard {
+      display: flex;
+      justify-content: space-between;
+      padding: 30px 0;
+      font-size: 14px;
+      font-weight: 600;
+      letter-spacing: 0.15em;
+    }
+
+    /* FORMS */
+    .v-form {
+      display: flex;
+      flex-direction: column;
+      gap: 35px;
+    }
+
+    .v-input-group {
+      position: relative;
+    }
+
+    .v-input {
+      width: 100%;
+      background: transparent;
+      border: none;
+      border-bottom: 1px solid var(--border);
+      padding: 10px 0;
+      font-family: 'Inter', sans-serif;
+      font-size: 14px;
+      color: var(--text);
+      outline: none;
+      transition: border-color 0.4s;
+    }
+
+    .v-input:focus {
+      border-bottom-color: var(--text);
+    }
+
+    .v-label {
+      position: absolute;
+      top: 10px;
+      left: 0;
+      font-size: 10px;
+      letter-spacing: 0.15em;
+      text-transform: uppercase;
+      color: var(--text);
+      opacity: 0.4;
+      pointer-events: none;
+      transition: all 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+    }
+
+    .v-input:focus~.v-label,
+    .v-input:valid~.v-label {
+      top: -20px;
+      font-size: 9px;
+      opacity: 1;
+    }
+
+    /* BUTTONS */
+    .v-btn {
+      display: inline-block;
+      width: 100%;
+      background: var(--text);
+      color: var(--bg);
+      border: none;
+      padding: 24px;
+      font-family: 'Inter', sans-serif;
+      font-size: 11px;
+      text-transform: uppercase;
+      letter-spacing: 0.25em;
+      cursor: pointer;
+      position: relative;
+      overflow: hidden;
+      margin-top: 20px;
+      transition: transform 0.6s cubic-bezier(0.16, 1, 0.3, 1);
+    }
+
+    .v-btn::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: var(--bg);
+      transform: scaleY(0);
+      transform-origin: bottom;
+      transition: transform 0.6s cubic-bezier(0.16, 1, 0.3, 1);
+      z-index: 1;
+    }
+
+    .v-btn span {
+      position: relative;
+      z-index: 2;
+      transition: color 0.6s;
+    }
+
+    .v-btn:hover {
+      transform: translateY(-4px);
+      box-shadow: 0 20px 40px rgba(0, 0, 0, 0.1);
+    }
+
+    .v-btn:hover::before {
+      transform: scaleY(1);
+    }
+
+    .v-btn:hover span {
+      color: var(--text);
+    }
+
+    .dark-mode .v-btn:hover {
+      box-shadow: 0 20px 40px rgba(255, 255, 255, 0.05);
+    }
+
+    /* WALLET BOXES */
+    .wallet-box {
+      border: 1px solid var(--border);
+      padding: 30px 25px;
+      display: flex;
+      align-items: center;
+      gap: 20px;
+      cursor: pointer;
+      margin-bottom: 20px;
+      background: transparent;
+      transition: all 0.5s cubic-bezier(0.16, 1, 0.3, 1);
+    }
+
+    .wallet-box img {
+      width: 32px;
+      height: 32px;
+      transition: transform 0.5s;
+    }
+
+    .wallet-info {
+      display: flex;
+      flex-direction: column;
+      gap: 5px;
+    }
+
+    .wallet-name {
+      font-size: 13px;
+      font-weight: 500;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+    }
+
+    .wallet-chain {
+      font-size: 9px;
+      opacity: 0.5;
+      letter-spacing: 0.2em;
+      text-transform: uppercase;
+    }
+
+    .wallet-box:hover {
+      background: var(--accent);
+      border-color: var(--text);
+    }
+
+    .wallet-box:hover img {
+      transform: scale(1.1) rotate(5deg);
+    }
+
+    .payment-area {
+      display: none;
+      animation: slideUp 0.6s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+      margin-top: 40px;
+      padding-top: 40px;
+      border-top: 1px solid var(--border);
+    }
+
+    .token-pill {
+      display: inline-block;
+      padding: 12px 24px;
+      border: 1px solid var(--border);
+      border-radius: 50px;
+      font-size: 10px;
+      letter-spacing: 0.15em;
+      margin: 0 10px 10px 0;
+      cursor: pointer;
+      transition: all 0.3s;
+    }
+
+    .token-pill.active {
+      background: var(--text);
+      color: var(--bg);
+      border-color: var(--text);
+    }
+
+    /* --- MOBILE UX PREMIUM FIXES --- */
+    /* CART RESPONSIVE FIX */
+    #cart-dropdown {
+      width: 100%;
+      max-width: 100vw;
+    }
+
+    /* INPUT IOS FIX (Prevent Auto-Zoom) */
+    input,
+    select,
+    textarea {
+      font-size: 16px !important;
+    }
+
+    @media (max-width: 500px) {
+
+      /* PRODUCT CAROUSEL FIX */
+      .container {
+        display: flex !important;
+        flex-direction: row !important;
+        overflow-x: auto !important;
+        scroll-snap-type: x mandatory !important;
+        gap: 15px !important;
+        padding-bottom: 20px !important;
+        /* scrollbar padding */
+        -webkit-overflow-scrolling: touch;
+      }
+
+      .container::-webkit-scrollbar {
+        display: none;
+        /* Hide scrollbar for clean UI */
+      }
+
+      .product-box {
+        min-width: 90% !important;
+        scroll-snap-align: center !important;
+        flex: 0 0 auto !important;
+      }
+
+      /* STICKY CTA Product Pages */
+      .add-to-cart {
+        position: fixed !important;
+        bottom: 0 !important;
+        left: 0 !important;
+        width: 100% !important;
+        margin-bottom: 0 !important;
+        padding-bottom: calc(26px + env(safe-area-inset-bottom)) !important;
+        z-index: 1000 !important;
+      }
+
+      /* Ensure info-side doesn't overlap the fixed CTA */
+      .info-side {
+        padding-bottom: 120px !important;
+      }
+    }
+
+
+    /* --- LUXURY MOBILE REDESIGN --- */
+
+    /* BOTTOM SHEET CART */
+    #cart-dropdown {
+      top: auto !important;
+      bottom: -100% !important;
+      right: 0 !important;
+      left: 0 !important;
+      width: 100% !important;
+      max-width: 100vw !important;
+      height: 80vh !important;
+      border-radius: 25px 25px 0 0 !important;
+      border-top: 1px solid var(--border) !important;
+      border-left: none !important;
+      transition: bottom 0.5s cubic-bezier(0.16, 1, 0.3, 1) !important;
+      box-shadow: 0 -10px 40px rgba(0, 0, 0, 0.1) !important;
+    }
+
+    #cart-dropdown.show {
+      bottom: 0 !important;
+    }
+
+    /* LUXURY TYPOGRAPHY */
+    body {
+      font-family: 'Inter', sans-serif !important;
+    }
+
+    h1,
+    h2,
+    h3,
+    .brand-logo,
+    .huge-title,
+    .cart-title,
+    .step-indicator {
+      font-family: 'Syncopate', sans-serif !important;
+    }
+
+    @media (max-width: 768px) {
+
+      /* FULLSCREEN HERO (Index only) */
+      .mobile-hero {
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
+        text-align: center;
+        height: 100vh;
+        width: 100vw;
+        position: relative;
+        left: 50%;
+        transform: translateX(-50%);
+        background: var(--bg);
+        z-index: 5;
+        border-bottom: 1px solid var(--border);
+        margin-bottom: 40px;
+      }
+
+      .mobile-hero-title {
+        font-family: 'Syncopate', sans-serif;
+        font-size: 2.5rem;
+        letter-spacing: 0.1em;
+        text-transform: uppercase;
+        margin-bottom: 10px;
+      }
+
+      .mobile-hero-subtitle {
+        font-family: 'Inter', sans-serif;
+        font-size: 11px;
+        letter-spacing: 0.15em;
+        text-transform: uppercase;
+        opacity: 0.5;
+        margin-bottom: 40px;
+      }
+
+      .mobile-hero-btn {
+        padding: 18px 40px;
+        background: var(--text);
+        color: var(--bg);
+        font-size: 10px;
+        letter-spacing: 0.25em;
+        text-transform: uppercase;
+        text-decoration: none;
+        border-radius: 50px;
+      }
+
+      /* LUXURY PRODUCT CARDS */
+      .product-box {
+        background: var(--accent) !important;
+        border-radius: 16px !important;
+        overflow: hidden !important;
+        padding-bottom: 20px !important;
+      }
+
+      .image-wrapper {
+        border-radius: 16px 16px 0 0 !important;
+        margin-bottom: 15px !important;
+      }
+
+      .product-info-grid {
+        padding: 0 20px !important;
+        align-items: center !important;
+        text-align: center !important;
+      }
+
+      .product-name {
+        font-size: 14px !important;
+        font-weight: 600 !important;
+      }
+
+      .product-price {
+        font-size: 13px !important;
+        font-weight: 400 !important;
+        color: var(--text) !important;
+        opacity: 0.7 !important;
+        margin-top: 5px !important;
+      }
+    }
+  </style>
+
+
+  \n
+
+
+
+  <!-- PWA & SEO Meta Tags -->
+  <meta name="description"
+    content="DompomStore - Exclusive Vanguard E-Commerce. Pay seamlessly with Web3 (Solana, Phantom, MetaMask) or traditional methods.">
+  <meta name="theme-color" content="#ffffff">
+  <link rel="icon" type="image/png" href="https://dompomshop.com/favicon.ico">
+  <link rel="apple-touch-icon" href="https://dompomshop.com/favicon.ico">
+
+  <style>
+    /* Vanguard Global Preloader & Mobile Nav Fixes - SAFARI OPTIMIZED */
+    :root {
+      --vh: 1vh;
+    }
+
+    #global-preloader {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100vw;
+      height: 100vh;
+      height: 100dvh;
+      background-color: #ffffff;
+      z-index: 99999;
+      display: -webkit-flex;
+      display: flex;
+      -webkit-justify-content: center;
+      justify-content: center;
+      -webkit-align-items: center;
+      align-items: center;
+      transition: opacity 0.6s cubic-bezier(0.16, 1, 0.3, 1), visibility 0.6s ease;
+      -webkit-transition: opacity 0.6s cubic-bezier(0.16, 1, 0.3, 1), visibility 0.6s ease;
+      pointer-events: none;
+    }
+
+    #global-preloader.fade-out {
+      opacity: 0;
+      visibility: hidden;
+    }
+
+    .spinner {
+      width: 40px;
+      height: 40px;
+      border: 3px solid rgba(0, 0, 0, 0.1);
+      border-top-color: #000000;
+      border-radius: 50%;
+      -webkit-border-radius: 50%;
+      animation: spin 1s linear infinite;
+      -webkit-animation: spin 1s linear infinite;
+    }
+
+    /* WebKit Momentum Scrolling */
+    .scroll-container,
+    #cart-items,
+    .vanguard-right,
+    .cart-drawer {
+      -webkit-overflow-scrolling: touch;
+    }
+
+    /* iOS Safe Area Support */
+    body {
+      padding-top: env(safe-area-inset-top);
+      padding-bottom: env(safe-area-inset-bottom);
+      padding-left: env(safe-area-inset-left);
+      padding-right: env(safe-area-inset-right);
+    }
+
+    /* Premium Touch Interactions */
+    button,
+    a,
+    .nav-item,
+    .product-box,
+    .v-btn {
+      -webkit-tap-highlight-color: transparent;
+      -webkit-touch-callout: none;
+      will-change: transform;
+      /* Hint for hardware acceleration */
+    }
+
+    /* Safari Input Reset */
+    input,
+    select,
+    textarea {
+      -webkit-appearance: none;
+      border-radius: 0;
+    }
+
+    html.dark-mode #global-preloader {
+      background-color: #000000;
+    }
+
+    html.dark-mode .spinner {
+      border: 3px solid rgba(255, 255, 255, 0.1);
+      border-top-color: #ffffff;
+    }
+
+    @keyframes spin {
+      100% {
+        transform: rotate(360deg);
+      }
+    }
+
+    @-webkit-keyframes spin {
+      100% {
+        -webkit-transform: rotate(360deg);
+      }
+    }
+
+    @media (max-width: 768px) {
+      .top {
+        padding: 15px 20px !important;
+        padding-top: calc(15px + env(safe-area-inset-top)) !important;
+        display: -webkit-flex;
+        display: flex;
+        -webkit-justify-content: space-between;
+        justify-content: space-between;
+        -webkit-align-items: center;
+        align-items: center;
+      }
+
+      .logo {
+        position: absolute;
+        left: 50%;
+        transform: translateX(-50%);
+        -webkit-transform: translateX(-50%);
+        font-size: 20px !important;
+      }
+    }
+  </style>
+
 </head>
 
-<body>
+<body class="">
 
-<header>
-  <a href="checkout.html" class="back-link">← ZURÜCK</a>
-  <span>DOMPOMSTORE</span>
-</header>
+  <div class="vanguard-layout">
 
-<div class="payment-container">
+    <!-- LEFT PANE: BRAND & SUMMARY -->
+    <div class="vanguard-left">
+      <div>
+        <a href="checkout.html" class="back-nav">← Return</a>
+      </div>
 
-  <div class="payment-title">PAYMENT</div>
+      <div class="order-review">
+        <div class="step-indicator">02 / PAYMENT</div>
+        <div id="summaryContent"></div>
+        <div style="font-size:10px; opacity:0.3; letter-spacing:0.1em; margin-top:20px;">ORDER ID: <span
+            id="orderIdDisplay"></span></div>
+      </div>
+    </div>
 
-  <div class="summary" id="summary"></div>
-  <div class="total" id="total"></div>
+    <!-- RIGHT PANE: WALLETS -->
+    <div class="vanguard-right">
+      <h1 class="huge-title">Select <i>Vault</i></h1>
 
-  <div class="wallet" id="wallet"></div>
+      <div class="wallet-box" onclick="selectNetwork('solana')">
+        <svg width="24" height="24" viewBox="0 0 128 128" fill="none" xmlns="http://www.w3.org/2000/svg">
+          <rect width="128" height="128" rx="28" fill="#AB9FF2" />
+          <g transform="translate(18, 18) scale(0.72)">
+            <path
+              d="M117.9 31C117.9 31 106 14.3 84.1 6.5C62.1 -1.4 39.5 0.5 39.5 0.5C39.5 0.5 45.4 7.6 42.1 19C38.8 30.4 23.6 29 23.6 29C23.6 29 26 38.5 22.2 46.1C18.4 53.7 9.80005 55.6 9.80005 55.6C9.80005 55.6 15 63.6 12.6 72.2C10.2 80.8 1.6 83.1 1.6 83.1C-3.2 104.9 5.39999 127.4 5.39999 127.4C5.39999 127.4 30.6 116 48.1 118.9C65.6 121.8 81.3 127.5 81.3 127.5C81.3 127.5 106.8 102.3 117.3 75.2C127.8 48.1 117.9 31 117.9 31ZM40 91.8C35.5 91.8 31.8 88.1 31.8 83.6C31.8 79.1 35.5 75.4 40 75.4C44.5 75.4 48.2 79.1 48.2 83.6C48.2 88.1 44.5 91.8 40 91.8ZM81.6 77.2C72.8 77.2 65.7 70.1 65.7 61.3C65.7 52.5 72.8 45.4 81.6 45.4C90.4 45.4 97.5 52.5 97.5 61.3C97.5 70.1 90.4 77.2 81.6 77.2Z"
+              fill="white" />
+          </g>
+        </svg>
+        <div class="wallet-info">
+          <span class="wallet-name">Phantom</span>
+          <span class="wallet-chain">Solana Network</span>
+        </div>
+      </div>
 
-  <div class="qr">
-    <img id="qr" width="180" height="180">
+      <div class="wallet-box" onclick="selectNetwork('ethereum')">
+        <img loading="lazy" src="https://upload.wikimedia.org/wikipedia/commons/3/36/MetaMask_Fox.svg" alt="MetaMask" />
+        <div class="wallet-info">
+          <span class="wallet-name">MetaMask</span>
+          <span class="wallet-chain">EVM Network</span>
+        </div>
+      </div>
+
+      <div id="paymentArea" class="payment-area">
+        <div style="font-size:10px; text-transform:uppercase; letter-spacing:0.2em; opacity:0.5; margin-bottom:20px;">
+          Select Token Currency</div>
+        <div id="tokensContainer"></div>
+        <button class="v-btn solana-btn" id="payFinalBtn" onclick="executePayment()"
+          style="background:#14F195; color:#000; font-weight:600; display:none;"><span>PAY WITH SOLANA</span></button>
+        <button class="v-btn eth-btn" id="payFinalEthBtn" onclick="executePayment()"
+          style="background:#627EEA; color:#fff; font-weight:600; display:none;"><span>PAY WITH ETHEREUM</span></button>
+      </div>
+
+      <div id="paypal-button-container" style="margin-top:40px; border-top: 1px solid var(--border); padding-top:40px;">
+      </div>
+      <div id="statusMsg"
+        style="margin-top:20px; font-size:11px; color:gray; text-transform:uppercase; letter-spacing:0.1em;"></div>
+
+    </div>
   </div>
 
-<div style="margin-top:10px;font-size:12px;opacity:.6" id="orderIdDisplay"></div>
-  
-<div class="hint">
-    Bitte sende den exakten Betrag in USDC (Solana)<br>
-    Danach „warten wird überprüft“ klicken
-  </div>
+  <script>
+    const order = JSON.parse(localStorage.getItem("currentOrder"));
+    if (!order) {
+      window.location.href = "checkout.html";
+    }
 
-  
+    let totalUsd = 0;
+    let cart = JSON.parse(localStorage.getItem("cart") || "[]");
+    let itemsHTML = "";
+    cart.forEach(item => {
+      const qty = Number(item.quantity) || 1;
+      const sum = item.price * qty;
+      totalUsd += sum;
+      itemsHTML += `<div class="order-item-vanguard"><span>${item.name} × ${qty}</span><span>${sum.toFixed(2)} USD</span></div>`;
+    });
 
-</div>
+    document.getElementById("summaryContent").innerHTML = itemsHTML + `<div class="order-total-vanguard"><span>TOTAL</span><span>${totalUsd.toFixed(2)} USD</span></div>`;
+    document.getElementById("orderIdDisplay").innerText = order.id;
 
-<script>
-let cart = JSON.parse(localStorage.getItem("cart") || "[]");
-let shipping = JSON.parse(localStorage.getItem("shipping") || "{}");
+    
+    let cryptoRates = {};
+    async function fetchCryptoRates() {
+      try {
+        const res = await fetch('https://api.coingecko.com/api/v3/simple/price?ids=ethereum,solana,binancecoin,pepe,fartcoin&vs_currencies=usd');
+        const data = await res.json();
+        cryptoRates = {
+          ETH: data?.ethereum?.usd || 3001,
+          SOL: data?.solana?.usd || 150,
+          BNB: data?.binancecoin?.usd || 400,
+          PEPE: data?.pepe?.usd || 0.00001,
+          FARTCOIN: data?.fartcoin?.usd || 0.005,
+          USDC: 1,
+          BNB_USDC: 1,
+          LINEA_USDC: 1
+        };
+        if (activeToken) updateTotalDisplay(activeToken);
+      } catch(e) { console.error('Error fetching crypto rates', e); }
+    }
+    fetchCryptoRates(); // Fetch immediately on load
+        
+    let activeNetwork = null;
+    let activeToken = null;
 
-const summary = document.getElementById("summary");
-const totalDiv = document.getElementById("total");
-const walletDiv = document.getElementById("wallet");
-const qrImg = document.getElementById("qr");
+    function selectNetwork(network) {
+      activeNetwork = network;
+      document.getElementById('paymentArea').style.display = 'block';
+      const container = document.getElementById('tokensContainer');
+      container.innerHTML = '';
 
-function parsePrice(value) {
-  if (typeof value === "number") return value;
-  if (typeof value === "string") {
-    const match = value.replace(",", ".").match(/\d+(\.\d+)?/);
-    return match ? parseFloat(match[0]) : 0;
-  }
-  return 0;
-}
+      let tokens = [];
+      const source = localStorage.getItem('shopSource') || 'public';
 
-let total = 0;
-summary.innerHTML = "";
+      if (source === 'private') {
+        if (network === 'solana') tokens = ['USDC'];
+        else tokens = ['USDC', 'ETH', 'BNB_USDC', 'BNB', 'LINEA_USDC'];
+      } else {
+        if (network === 'solana') tokens = ['USDC', 'SOL', 'FARTCOIN'];
+        else tokens = ['ETH', 'USDC', 'PEPE'];
+      }
 
-if (cart.length === 0) {
-  summary.innerHTML = "Dein Warenkorb ist leer.";
-} else {
-  cart.forEach(item => {
-    const price = parsePrice(item.price);
-    const qty = Number(item.quantity) || 1;
-    const sum = price * qty;
-    total += sum;
+      tokens.forEach((t, index) => {
+        const btn = document.createElement('div');
+        btn.className = `token-pill ${index === 0 ? 'active' : ''}`;
+        btn.innerText = t;
+        btn.onclick = () => {
+          document.querySelectorAll('.token-pill').forEach(b => b.classList.remove('active'));
+          btn.classList.add('active');
+          activeToken = t;
+          updateTotalDisplay(t);
+        };
+        container.appendChild(btn);
+      });
+      activeToken = tokens[0];
+      updateTotalDisplay(activeToken);
 
-    summary.innerHTML += `
-      ${item.name} × ${qty}<br>
-      <strong>${sum.toFixed(2)} USDC</strong>
-      <hr style="border:none;border-top:1px solid #eee;margin:8px 0">
-    `;
-  });
-}
+      // Handle explicit luxury button states
+      const solBtn = document.getElementById('payFinalBtn');
+      const ethBtn = document.getElementById('payFinalEthBtn');
+      if (network === 'solana') {
+        solBtn.style.display = 'block';
+        ethBtn.style.display = 'none';
+      } else {
+        solBtn.style.display = 'none';
+        ethBtn.style.display = 'block';
+      }
+    }
 
-const order = JSON.parse(localStorage.getItem("currentOrder"));
+    function updateTotalDisplay(token) {
+      const isDiscounted = ['PEPE', 'PEPPE', 'FARTCOIN'].includes(token);
+      const finalUsd = isDiscounted ? totalUsd * 0.90 : totalUsd;
+      
+      let cryptoAmountHtml = '';
+      if (cryptoRates[token]) {
+        const amount = finalUsd / cryptoRates[token];
+        const decimals = token.includes('USDC') ? 2 : (['PEPE', 'FARTCOIN'].includes(token) ? 0 : 5);
+        const formattedAmount = ['PEPE', 'FARTCOIN'].includes(token) ? Math.ceil(amount).toLocaleString() : amount.toFixed(decimals);
+        cryptoAmountHtml = `<div style="font-size:12px; font-weight:400; font-family:'Inter',sans-serif; letter-spacing:0.1em; color:var(--text); opacity:0.6; margin-top:8px; text-transform:none;">≈ ${formattedAmount} ${token}</div>`;
+      } else {
+        cryptoAmountHtml = `<div style="font-size:10px; opacity:0.3; margin-top:5px; text-transform:uppercase;">Fetching live market rates...</div>`;
+      }
 
-if(!order){
-  alert("Keine Bestellung gefunden");
-  window.location.href = "checkout.html";
-}
+      let totalHtml = `
+      <div class="order-total-vanguard" style="flex-direction: column; align-items: flex-end; padding:20px 0;">
+        <div style="display:flex; justify-content:space-between; width:100%; align-items:center;">
+            <span>TOTAL ${isDiscounted ? '<span style="color:#14F195; font-size:10px; margin-left:10px;">(10% OFF 💎)</span>' : ''}</span>
+            <span>${isDiscounted ? `<span style="text-decoration:line-through; opacity:0.5; font-size:11px; margin-right:5px;">${totalUsd.toFixed(2)}</span>` : ''}${finalUsd.toFixed(2)} USD</span>
+        </div>
+        ${cryptoAmountHtml}
+      </div>`;
+      
+      document.getElementById("summaryContent").innerHTML = itemsHTML + totalHtml;
+    }
 
-// Wallet vom Server
-walletDiv.textContent = order.wallet;
+    async function executePayment() {
+      const btn = activeNetwork === 'solana' ? document.getElementById('payFinalBtn') : document.getElementById('payFinalEthBtn');
+      const originalText = activeNetwork === 'solana' ? 'PAY WITH SOLANA' : 'PAY WITH ETHEREUM';
+      btn.innerHTML = "<span>PROCESSING...</span>";
+      btn.style.pointerEvents = 'none';
 
-// QR Code vom Server
-qrImg.src = `https://api.qrserver.com/v1/create-qr-code/?size=200x200&data=${order.wallet}`;
+      try {
+        if (activeNetwork === 'solana') await payWithPhantom();
+        else if (activeNetwork === 'ethereum') await payWithMetaMask();
+      } catch (e) {
+        console.error(e);
+        alert("Payment Failed: " + e.message);
+      } finally {
+        btn.innerHTML = `<span>${originalText}</span>`;
+        btn.style.pointerEvents = 'all';
+      }
+    }
 
-// Gesamtbetrag vom Server (wichtig!)
-totalDiv.textContent = `Gesamtbetrag: ${order.amount} USDC`;
+    paypal.Buttons({
+      createOrder: function (data, actions) {
+        return actions.order.create({
+          purchase_units: [{ amount: { value: totalUsd.toFixed(2) } }]
+        });
+      },
+      onApprove: function (data, actions) {
+        return actions.order.capture().then(function (details) {
+          fetch(`http://${window.location.hostname}:3001/api/verify-paypal`, {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({ orderId: order.id, paypalOrderId: details.id })
+          }).then(res => res.json()).then(res => {
+            if (res.success) window.location.href = "thankyou.html";
+            else alert("PayPal Verification Error");
+          });
+        });
+      }
+    }).render('#paypal-button-container');
 
-walletDiv.onclick = () => {
-  navigator.clipboard.writeText(order.wallet);
-  alert("Wallet-Adresse kopiert");
-};
+    async function payWithPhantom() {
+      const provider = window.solana;
+      if (!provider || !provider.isPhantom) throw new Error("Phantom not found.");
+      await provider.connect();
+      const sender = provider.publicKey;
+      const connection = new solanaWeb3.Connection("https://api.mainnet-beta.solana.com");
 
-/* ========================= */
-/* AUTOMATISCHE PRÜFUNG */
-/* ========================= */
+      const blockhash = (await connection.getLatestBlockhash('finalized')).blockhash;
+      const tx = new solanaWeb3.Transaction().add(
+        solanaWeb3.SystemProgram.transfer({
+          fromPubkey: sender,
+          toPubkey: new solanaWeb3.PublicKey("Cx2TAKyUxVZ3xtWZoTpqmnGcnvkUvoghoKafpsK3KuCp"),
+          lamports: 10000 
+        })
+      );
+      tx.feePayer = sender;
+      tx.recentBlockhash = blockhash;
 
-const orderId = order.orderId;
-document.getElementById("orderIdDisplay").textContent =
-  "Order ID: " + orderId;
+      const { signature } = await provider.signAndSendTransaction(tx);
+      const req = await fetch(`http://${window.location.hostname}:3001/api/verify-payment`, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ orderId: order.id, signature: signature, token: activeToken })
+      });
+      const res = await req.json();
+      if (res.success) window.location.href = "thankyou.html";
+      else throw new Error("Server verification failed.");
+    }
 
-async function checkPayment() {
-  try {
-    const res = await fetch(`http://localhost:3000/api/check-payment/${orderId}`);
-    const data = await res.json();
+    async function payWithMetaMask() {
+      if (!window.ethereum) throw new Error("MetaMask not found.");
+      await window.ethereum.request({ method: 'eth_requestAccounts' });
+      const provider = new ethers.BrowserProvider(window.ethereum);
+      const signer = await provider.getSigner();
 
-   if (data.status === "paid") {
+      const tx = await signer.sendTransaction({
+        to: "0x8fc73bf2168af15395037efb692eda6375f54a1e", 
+        value: ethers.parseEther("0.0001") 
+      });
+      const receipt = await tx.wait();
 
-  // Bestellung für Thankyou speichern
-  localStorage.setItem("lastOrderCart", localStorage.getItem("cart"));
-
-  // Jetzt Warenkorb & Daten löschen
-  localStorage.removeItem("cart");
-  localStorage.removeItem("shipping");
-  localStorage.removeItem("currentOrder");
-
-  window.location.href = "thankyou.html";
-}
-  } catch (err) {
-    console.log("Status check error");
-  }
-}
-
-// Alle 10 Sekunden prüfen
-setInterval(checkPayment, 10000);
-
-</script>
-
+      const req = await fetch(`http://${window.location.hostname}:3001/api/verify-evm-payment`, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ orderId: order.id, txHash: receipt.hash, sender: signer.address, token: activeToken })
+      });
+      const res = await req.json();
+      if (res.success) window.location.href = "thankyou.html";
+      else throw new Error("Server verification failed.");
+    }
+  </script>
 </body>
+
 </html>

@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-  <title>Dompomstore</title>
+  <title>Private Access</title>
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600&family=Syncopate:wght@300;400;700&display=swap" rel="stylesheet">
@@ -115,7 +115,7 @@
     }
     .brand-logo a { color: inherit; text-decoration: none; }
     .brand-logo a.p-link { opacity: 0.3; transition: opacity 0.3s; }
-    .brand-logo a.p-link:hover { opacity: 1; }
+    .brand-logo a.p-link:hover { opacity: 1; text-shadow: 0 0 10px rgba(255,255,255,0.5); }
 
     .nav-menu {
       display: flex;
@@ -297,7 +297,7 @@
     .container {
       transition: all 0.6s cubic-bezier(0.16, 1, 0.3, 1);
     }
-
+  
     /* --- MOBILE UX PREMIUM FIXES --- */
     /* CART RESPONSIVE FIX */
     #cart-dropdown {
@@ -556,10 +556,15 @@
   </style>
 
 </head>
-<body class="">
+<body class="dark-mode">
   
+    <div id="lockScreen">
+      <div class="lock-title">RESTRICTED</div>
+      <input type="password" class="lock-input" id="passwordInput" placeholder="ENTER ACCESS KEY">
+      <div class="lock-error" id="lockError">INVALID KEY</div>
+    </div>
 
-  <div id="shopContent" >
+  <div id="shopContent" style="display:none;">
     <div class="vanguard-layout">
       <!-- FIXED LEFT MENU -->
       <div class="vanguard-left">
@@ -579,46 +584,57 @@
 
       <!-- SCROLLABLE RIGHT CONTENT -->
       <div class="vanguard-right">
-        <h1 class="huge-title">New <i>Arrivals</i></h1>
+        <h1 class="huge-title">Secret <i>Vault</i></h1>
         <div class="container" id="main-container">
           
+          <div class="product-box" onclick="window.location.href='secret_produkt1.html'">
+            <div class="image-wrapper">
+              <img loading="lazy" src="https://picsum.photos/seed/prv01/400/400" alt="EXCLUSIVE 01">
+            </div>
+            <div class="product-info-grid">
+              <div class="product-name">EXCLUSIVE 01<div class="product-price">VIEW</div></div>
+              <div class="product-price-display" style="display:block; margin-top:8px;">
+                <span class="usdc-val" data-price="120" style="font-size: 13px; color: #777;">120 USDC</span>
+              </div>
+            </div>
+          </div>
 
-    <div class="product-box" data-price="49" data-link="produkt1.html">
-      <div class="image-wrapper"><img loading="lazy" src="images/DB-01.jpg" alt="DB-01"></div>
-      <div class="product-info-grid">
-        <div class="product-name">DB-01<div class="product-price">VIEW</div></div>
-      </div>
-    </div>
+          <div class="product-box" onclick="window.location.href='secret_produkt2.html'">
+            <div class="image-wrapper">
+              <img loading="lazy" src="https://picsum.photos/seed/prv02/400/400" alt="EXCLUSIVE 02">
+            </div>
+            <div class="product-info-grid">
+              <div class="product-name">EXCLUSIVE 02<div class="product-price">VIEW</div></div>
+              <div class="product-price-display" style="display:block; margin-top:8px;">
+                <span class="usdc-val" data-price="90" style="font-size: 13px; color: #777;">90 USDC</span>
+              </div>
+            </div>
+          </div>
 
-    <div class="product-box" data-price="19" data-link="produkt2.html">
-      <div class="image-wrapper"><img loading="lazy" src="images/pepe-shirt.jpg" alt="PS-01"></div>
-      <div class="product-info-grid">
-        <div class="product-name">PS-01<div class="product-price">VIEW</div></div>
-      </div>
-    </div>
+          <div class="product-box" onclick="window.location.href='secret_produkt3.html'">
+            <div class="image-wrapper">
+              <img loading="lazy" src="https://picsum.photos/seed/prv03/400/400" alt="EXCLUSIVE 03">
+            </div>
+            <div class="product-info-grid">
+              <div class="product-name">EXCLUSIVE 03<div class="product-price">VIEW</div></div>
+              <div class="product-price-display" style="display:block; margin-top:8px;">
+                <span class="usdc-val" data-price="75" style="font-size: 13px; color: #777;">75 USDC</span>
+              </div>
+            </div>
+          </div>
 
-    <div class="product-box" data-price="30" data-link="produkt3.html">
-      <div class="image-wrapper"><img loading="lazy" src="images/test.jpg" alt="Testcy"></div>
-      <div class="product-info-grid">
-        <div class="product-name">Testcy<div class="product-price">VIEW</div></div>
-      </div>
-    </div>
-
-    <div class="product-box" data-price="22" data-link="produkt4.html">
-      <div class="image-wrapper"><img loading="lazy" src="images/zyn.png" alt="ZYN"></div>
-      <div class="product-info-grid">
-        <div class="product-name">ZYN<div class="product-price">VIEW</div></div>
-      </div>
-    </div>
-
-    <div class="product-box" data-price="18" data-link="produkt5.html">
-      <div class="image-wrapper"><img loading="lazy" src="https://picsum.photos/seed/p05/400/400" alt="PRODUKT 05"></div>
-      <div class="product-info-grid">
-        <div class="product-name">PRODUKT 05<div class="product-price">VIEW</div></div>
-      </div>
-    </div>
-
-  
+          <div class="product-box" onclick="window.location.href='secret_produkt4.html'">
+            <div class="image-wrapper">
+              <img loading="lazy" src="https://picsum.photos/seed/prv04/400/400" alt="EXCLUSIVE 04">
+            </div>
+            <div class="product-info-grid">
+              <div class="product-name">EXCLUSIVE 04<div class="product-price">VIEW</div></div>
+              <div class="product-price-display" style="display:block; margin-top:8px;">
+                <span class="usdc-val" data-price="200" style="font-size: 13px; color: #777;">200 USDC</span>
+              </div>
+            </div>
+          </div>
+        
         </div>
       </div>
     </div>
@@ -637,7 +653,34 @@
   </div>
 
   <script>
-    
+    const pwInput = document.getElementById('passwordInput');
+    const lockError = document.getElementById('lockError');
+    const lockScreen = document.getElementById('lockScreen');
+    const shopContent = document.getElementById('shopContent');
+
+    pwInput.addEventListener('keypress', function (e) {
+      if (e.key === 'Enter') {
+        if (pwInput.value === 'dompom') {
+          sessionStorage.setItem('unlocked', 'true');
+          unlockShop();
+        } else {
+          lockError.style.opacity = '1';
+          setTimeout(() => lockError.style.opacity = '0', 2000);
+        }
+      }
+    });
+
+    if (sessionStorage.getItem('unlocked') === 'true') {
+      unlockShop();
+    }
+
+    function unlockShop() {
+      lockScreen.style.opacity = '0';
+      setTimeout(() => {
+        lockScreen.style.display = 'none';
+        shopContent.style.display = 'block';
+      }, 800);
+    }
 
     let cart = [];
     const cartCount = document.getElementById("cart-count");
@@ -698,11 +741,13 @@
     window.addEventListener("pageshow", loadCart);
     loadCart();
 
-    // PRODUCT CLICKS
+    // PRODUCT CLICKS (Support both data-link or onclick)
     document.querySelectorAll('.product-box').forEach(box => {
-      box.addEventListener('click', () => {
-        if (box.dataset.link) window.location.href = box.dataset.link;
-      });
+      if (!box.onclick) {
+        box.addEventListener('click', () => {
+          if (box.dataset.link) window.location.href = box.dataset.link;
+        });
+      }
     });
 
     // LAYOUT TOGGLE
@@ -729,8 +774,8 @@
           alert('Cart is empty.');
           return;
         }
-        
-        window.location.href = 'checkout.html';
+        localStorage.setItem('shopSource', 'private');
+        window.location.href = 'secret_checkout.html';
       });
     }
   </script>

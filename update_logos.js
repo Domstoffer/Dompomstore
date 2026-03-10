@@ -1,0 +1,29 @@
+const fs = require('fs');
+
+const payPath = '/Users/dompom/Desktop/Dompomstore /pay.html';
+let content = fs.readFileSync(payPath, 'utf8');
+
+// Replace Phantom SVG with <img> tag
+content = content.replace(
+  /<svg viewBox="0 0 84 84" fill="none">[\s\S]*?<\/svg>/,
+  `<img src="data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCA4NCA4NCIgZmlsbD0ibm9uZSI+PHBhdGggZD0iTTQyIDg0QzY1LjE5NiA4NCA4NCA2NS4xOTYgODQgNDJDODQgMTguODA0IDY1LjE5NiAw NDIgMEMxOC44MDQgMCAwIDE4LjgwNCAwIDQyQzAgNjUuMTk2IDE4LjgwNCA4NCA0MiA4NFoiIGZpbGw9IiNBQjlGRjIiLz48cGF0aCBkPSJNNjIuNjYyNSAzMS41SDM4LjcxODhDMzUuMDQzNyAzMS41IDMyLjI4NzUgMzQuNjUgMzIuMjg3NSAzNy44QzMyLjI4NzUgNDAuOTUgMzQuOTEyNSA0My41NzUgMzguMzI1IDQzLjU3NUM0MS43Mzc1IDQzLjU3NSA0NC4zNjI1IDQwLjk1 NDQuMzYyNSAzNy44VjM1LjdINDYuNDYyNVY0Mi41MjVDNDYuNDYyNSA0NS40MTI1IDQ0Ljg4NzUgNDguMDM3NSA0Mi41MjUgNDkuMzVDMzguMzI1IDUxLjcxMjUgMzIuODEyNSA1Mi43NjI1IDI3LjAzNzUgNTIuNzYyNUMyMi4wNSA1Mi43NjI1IDE3LjU4NzUgNTEuOTc1IDEzLjkxMjUgNTAuNFY3Mi40NUMxMy45MTI1IDc2LjY1IDE3LjMyNSA4MC4wNjI1IDIxLjUyNSA4MC4wNjI1SDYyLjQ3NUM2Ni42NzUgODAuMDYyNSA3MC4wODc1IDc2LjY1IDcwLjA4NzUgNzIuNDVWMzguODVDNzAuMDg3NSAzNC42NSA2Ni44MDYyIDMxLjUgNjIuNjYyNSAzMS41WiIgZmlsbD0id2hpdGUiLz48cGF0aCBkPSJNNDguMDM3NCA0Mi41MjUxQzQ3Ljc3NDkgNDMuMzEyNiA0Ny4xMTg3IDQ0LjEwMDEgNDYuNTkzNyA0NC43NTYzQzQ1LjI4MTIgNDYuNDYyNiA0My4xODEyIDQ3Ljc3NTEgNDAuODE4NyA0OC4zMDAxQzM4LjU4NzQgNDguODI1MSAzNi4zNTYyIDQ4LjgyNTEgMzQuMzg3NCA0OC4zMDAxQzMwLjcxMjQgNDcuMjUwMSAyNy41NjI0 NDQuMjMxMyAyNi42NDM3IDQwLjQyNTFDMjYuMTE4NyAzOC4zMjUxIDI2LjExODcgMzYuMDkzOCAyNi42NDM3IDM0LjEyNTFDMjcuNTYyNCAzMC4zMTg4IDMwLjcxMjQgMjcuMzAwMSAzNC4zODc0IDI2LjI1MDFDMzYuNjE4NyAyNS43MjUxIDM4Ljg1IDI1LjcyNTEgNDAuOTUgMjYuMjUwMUM0My4zMTI1IDI2LjkwNjMgNDUuNDEyNSAyOC4yMTg4IDQ2LjcyNSAzMC4wNTYzQzQ3LjI1IDMwLjcxMjUgNDcuNzc1IDMxLjUgNDguMTY4NyAzMi4yODc1QzQ4LjU2MjUgMzMuMzM3NSA0OS4zNSAzNC4zODc1IDUwLjQgMzQuNjUxM0M1Mi4yMzc1IDM1LjE3NjMgNTMuNjgxMiAzMy44NjM4IDU0LjA3NSAzMi4wMjYzQzU0LjQ2ODcgMzAuMzIwMSA1NC4wNzUgMjguNjEzOCA1My4wMjUgMjcuMTcwMUM1MS41ODEyIDI1LjIwMTMgNDkuNjEyNSAyMy42MjYzIDQ3LjM4MTIgMjIuNTc2M0M0NC43NTYyIDIxLjAwMTMgNDEuNjA2MiAyMC4yMTM4IDM4LjMyNSAxOS45NTEzQzM0Ljc4MTIgMTkuODIwMSAzMS4yMzc1IDIwLjM0NTEgMjcuOTU2MiAyMS42NTc2QzIzLjYyNSAyMy40OTUxIDE5LjgxODcgMjYuMzgyNiAxNi45MzEy MzAuMTg4OEMxNC4wNDM3IDMzLjk5NTEgMTIuMzM3NSAzOC40NTc2IDExLjk0MzcgNDMuMTgyNlY0NC4yMzI2SDEyLjA3NUMxMi40Njg3IDUwLjUzMjYgMTQuODMxMiA1Ni40Mzg4IDE4Ljc2ODcgNjEuMjk1MUMyMi43MDYy NjYuMTUxMyAyNy45NTYyIDY5LjgyNjMgMzMuODYyNSA3MS43OTVDMzguNDU2MiA3My4yMzg4IDQzLjMxMjUgNzMuNTAxMyA0OC4wMzc1IDcyLjcxMzhWNDIuNTI1MUg0OC4wMzc0WiIgZmlsbD0id2hpdGUiLz48L3N2Zz4=" alt="Phantom" style="width:24px; height:24px;" />`
+);
+
+// Replace MetaMask SVG with <img> tag
+content = content.replace(
+  /<svg viewBox="0 0 318\.6 318\.6">[\s\S]*?<\/svg>/,
+  `<img src="https://upload.wikimedia.org/wikipedia/commons/3/36/MetaMask_Fox.svg" alt="MetaMask" style="width:24px; height:24px;" />`
+);
+
+// Specifically ensure styling for newly injected image tags inside .wallet-option
+content = content.replace(
+  /\.wallet-option svg {/g,
+  `.wallet-option img, .wallet-option svg {`
+);
+content = content.replace(
+  /\.wallet-option:hover svg {/g,
+  `.wallet-option:hover img, .wallet-option:hover svg {`
+);
+
+fs.writeFileSync(payPath, content);
+console.log("Replaced inline SVGs with robust img tags");

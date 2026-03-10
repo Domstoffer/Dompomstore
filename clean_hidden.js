@@ -1,9 +1,11 @@
-<!DOCTYPE html>
+const fs = require('fs');
+
+const cleanHTML = `<!DOCTYPE html>
 <html lang="de">
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-  <title>Dompomstore</title>
+  <title>Private Access</title>
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600&family=Syncopate:wght@300;400;700&display=swap" rel="stylesheet">
@@ -115,7 +117,7 @@
     }
     .brand-logo a { color: inherit; text-decoration: none; }
     .brand-logo a.p-link { opacity: 0.3; transition: opacity 0.3s; }
-    .brand-logo a.p-link:hover { opacity: 1; }
+    .brand-logo a.p-link:hover { opacity: 1; text-shadow: 0 0 10px rgba(255,255,255,0.5); }
 
     .nav-menu {
       display: flex;
@@ -297,269 +299,17 @@
     .container {
       transition: all 0.6s cubic-bezier(0.16, 1, 0.3, 1);
     }
-
-    /* --- MOBILE UX PREMIUM FIXES --- */
-    /* CART RESPONSIVE FIX */
-    #cart-dropdown {
-      width: 100%;
-      max-width: 100vw;
-    }
-
-    /* INPUT IOS FIX (Prevent Auto-Zoom) */
-    input, select, textarea {
-      font-size: 16px !important;
-    }
-
-    @media (max-width: 500px) {
-      /* PRODUCT CAROUSEL FIX */
-      .container {
-        display: flex !important;
-        flex-direction: row !important;
-        overflow-x: auto !important;
-        scroll-snap-type: x mandatory !important;
-        gap: 15px !important;
-        padding-bottom: 20px !important; /* scrollbar padding */
-        -webkit-overflow-scrolling: touch;
-      }
-      
-      .container::-webkit-scrollbar {
-        display: none; /* Hide scrollbar for clean UI */
-      }
-      
-      .product-box {
-        min-width: 90% !important;
-        scroll-snap-align: center !important;
-        flex: 0 0 auto !important;
-      }
-      
-      /* STICKY CTA Product Pages */
-      .add-to-cart {
-        position: fixed !important;
-        bottom: 0 !important;
-        left: 0 !important;
-        width: 100% !important;
-        margin-bottom: 0 !important;
-        padding-bottom: calc(26px + env(safe-area-inset-bottom)) !important;
-        z-index: 1000 !important;
-      }
-      
-      /* Ensure info-side doesn't overlap the fixed CTA */
-      .info-side {
-        padding-bottom: 120px !important; 
-      }
-    }
-
-
-    /* --- LUXURY MOBILE REDESIGN --- */
-    
-    /* BOTTOM SHEET CART */
-    #cart-dropdown {
-      top: auto !important;
-      bottom: -100% !important;
-      right: 0 !important;
-      left: 0 !important;
-      width: 100% !important;
-      max-width: 100vw !important;
-      height: 80vh !important;
-      border-radius: 25px 25px 0 0 !important;
-      border-top: 1px solid var(--border) !important;
-      border-left: none !important;
-      transition: bottom 0.5s cubic-bezier(0.16, 1, 0.3, 1) !important;
-      box-shadow: 0 -10px 40px rgba(0,0,0,0.1) !important;
-    }
-    #cart-dropdown.show {
-      bottom: 0 !important;
-    }
-
-    /* LUXURY TYPOGRAPHY */
-    body {
-      font-family: 'Inter', sans-serif !important;
-    }
-    h1, h2, h3, .brand-logo, .huge-title, .cart-title, .step-indicator {
-      font-family: 'Syncopate', sans-serif !important;
-    }
-
-    @media (max-width: 768px) {
-      /* FULLSCREEN HERO (Index only) */
-      .mobile-hero {
-        display: flex;
-        flex-direction: column;
-        justify-content: center;
-        align-items: center;
-        text-align: center;
-        height: 100vh;
-        width: 100vw;
-        position: relative;
-        left: 50%;
-        transform: translateX(-50%);
-        background: var(--bg);
-        z-index: 5;
-        border-bottom: 1px solid var(--border);
-        margin-bottom: 40px;
-      }
-      .mobile-hero-title {
-        font-family: 'Syncopate', sans-serif;
-        font-size: 2.5rem;
-        letter-spacing: 0.1em;
-        text-transform: uppercase;
-        margin-bottom: 10px;
-      }
-      .mobile-hero-subtitle {
-        font-family: 'Inter', sans-serif;
-        font-size: 11px;
-        letter-spacing: 0.15em;
-        text-transform: uppercase;
-        opacity: 0.5;
-        margin-bottom: 40px;
-      }
-      .mobile-hero-btn {
-        padding: 18px 40px;
-        background: var(--text);
-        color: var(--bg);
-        font-size: 10px;
-        letter-spacing: 0.25em;
-        text-transform: uppercase;
-        text-decoration: none;
-        border-radius: 50px;
-      }
-
-      /* LUXURY PRODUCT CARDS */
-      .product-box {
-        background: var(--accent) !important;
-        border-radius: 16px !important;
-        overflow: hidden !important;
-        padding-bottom: 20px !important;
-      }
-      .image-wrapper {
-        border-radius: 16px 16px 0 0 !important;
-        margin-bottom: 15px !important;
-      }
-      .product-info-grid {
-        padding: 0 20px !important;
-        align-items: center !important;
-        text-align: center !important;
-      }
-      .product-name {
-        font-size: 14px !important;
-        font-weight: 600 !important;
-      }
-      .product-price {
-        font-size: 13px !important;
-        font-weight: 400 !important;
-        color: var(--text) !important;
-        opacity: 0.7 !important;
-        margin-top: 5px !important;
-      }
-    }
-
-</style>
-
-  
-\n
-  
-
-
-  <!-- PWA & SEO Meta Tags -->
-  <meta name="description" content="DompomStore - Exclusive Vanguard E-Commerce. Pay seamlessly with Web3 (Solana, Phantom, MetaMask) or traditional methods.">
-  <meta name="theme-color" content="#ffffff">
-  <link rel="icon" type="image/png" href="https://dompomshop.com/favicon.ico">
-  <link rel="apple-touch-icon" href="https://dompomshop.com/favicon.ico">
-
-  <style>
-    /* Vanguard Global Preloader & Mobile Nav Fixes - SAFARI OPTIMIZED */
-    :root {
-      --vh: 1vh;
-    }
-
-    #global-preloader {
-      position: fixed;
-      top: 0; left: 0; width: 100vw; height: 100vh;
-      height: 100dvh;
-      background-color: #ffffff;
-      z-index: 99999;
-      display: -webkit-flex;
-      display: flex;
-      -webkit-justify-content: center;
-      justify-content: center;
-      -webkit-align-items: center;
-      align-items: center;
-      transition: opacity 0.6s cubic-bezier(0.16, 1, 0.3, 1), visibility 0.6s ease;
-      -webkit-transition: opacity 0.6s cubic-bezier(0.16, 1, 0.3, 1), visibility 0.6s ease;
-      pointer-events: none;
-    }
-    #global-preloader.fade-out {
-      opacity: 0;
-      visibility: hidden;
-    }
-    .spinner {
-      width: 40px;
-      height: 40px;
-      border: 3px solid rgba(0, 0, 0, 0.1);
-      border-top-color: #000000;
-      border-radius: 50%;
-      -webkit-border-radius: 50%;
-      animation: spin 1s linear infinite;
-      -webkit-animation: spin 1s linear infinite;
-    }
-    
-    /* WebKit Momentum Scrolling */
-    .scroll-container, #cart-items, .vanguard-right, .cart-drawer {
-      -webkit-overflow-scrolling: touch;
-    }
-
-    /* iOS Safe Area Support */
-    body {
-      padding-top: env(safe-area-inset-top);
-      padding-bottom: env(safe-area-inset-bottom);
-      padding-left: env(safe-area-inset-left);
-      padding-right: env(safe-area-inset-right);
-    }
-
-    /* Premium Touch Interactions */
-    button, a, .nav-item, .product-box, .v-btn {
-      -webkit-tap-highlight-color: transparent;
-      -webkit-touch-callout: none;
-      will-change: transform; /* Hint for hardware acceleration */
-    }
-
-    /* Safari Input Reset */
-    input, select, textarea {
-      -webkit-appearance: none;
-      border-radius: 0;
-    }
-
-    html.dark-mode #global-preloader { background-color: #000000; }
-    html.dark-mode .spinner { border: 3px solid rgba(255, 255, 255, 0.1); border-top-color: #ffffff; }
-
-    @keyframes spin { 100% { transform: rotate(360deg); } }
-    @-webkit-keyframes spin { 100% { -webkit-transform: rotate(360deg); } }
-
-    @media (max-width: 768px) {
-      .top {
-        padding: 15px 20px !important;
-        padding-top: calc(15px + env(safe-area-inset-top)) !important;
-        display: -webkit-flex;
-        display: flex;
-        -webkit-justify-content: space-between;
-        justify-content: space-between;
-        -webkit-align-items: center;
-        align-items: center;
-      }
-      .logo {
-        position: absolute;
-        left: 50%;
-        transform: translateX(-50%);
-        -webkit-transform: translateX(-50%);
-        font-size: 20px !important;
-      }
-    }
   </style>
-
 </head>
-<body class="">
+<body class="dark-mode">
   
+    <div id="lockScreen">
+      <div class="lock-title">RESTRICTED</div>
+      <input type="password" class="lock-input" id="passwordInput" placeholder="ENTER ACCESS KEY">
+      <div class="lock-error" id="lockError">INVALID KEY</div>
+    </div>
 
-  <div id="shopContent" >
+  <div id="shopContent" style="display:none;">
     <div class="vanguard-layout">
       <!-- FIXED LEFT MENU -->
       <div class="vanguard-left">
@@ -579,46 +329,57 @@
 
       <!-- SCROLLABLE RIGHT CONTENT -->
       <div class="vanguard-right">
-        <h1 class="huge-title">New <i>Arrivals</i></h1>
+        <h1 class="huge-title">Secret <i>Vault</i></h1>
         <div class="container" id="main-container">
           
+          <div class="product-box" onclick="window.location.href='secret_produkt1.html'">
+            <div class="image-wrapper">
+              <img src="https://picsum.photos/seed/prv01/400/400" alt="EXCLUSIVE 01">
+            </div>
+            <div class="product-info-grid">
+              <div class="product-name">EXCLUSIVE 01<div class="product-price">VIEW</div></div>
+              <div class="product-price-display" style="display:block; margin-top:8px;">
+                <span class="usdc-val" data-price="120" style="font-size: 13px; color: #777;">120 USDC</span>
+              </div>
+            </div>
+          </div>
 
-    <div class="product-box" data-price="49" data-link="produkt1.html">
-      <div class="image-wrapper"><img loading="lazy" src="images/DB-01.jpg" alt="DB-01"></div>
-      <div class="product-info-grid">
-        <div class="product-name">DB-01<div class="product-price">VIEW</div></div>
-      </div>
-    </div>
+          <div class="product-box" onclick="window.location.href='secret_produkt2.html'">
+            <div class="image-wrapper">
+              <img src="https://picsum.photos/seed/prv02/400/400" alt="EXCLUSIVE 02">
+            </div>
+            <div class="product-info-grid">
+              <div class="product-name">EXCLUSIVE 02<div class="product-price">VIEW</div></div>
+              <div class="product-price-display" style="display:block; margin-top:8px;">
+                <span class="usdc-val" data-price="90" style="font-size: 13px; color: #777;">90 USDC</span>
+              </div>
+            </div>
+          </div>
 
-    <div class="product-box" data-price="19" data-link="produkt2.html">
-      <div class="image-wrapper"><img loading="lazy" src="images/pepe-shirt.jpg" alt="PS-01"></div>
-      <div class="product-info-grid">
-        <div class="product-name">PS-01<div class="product-price">VIEW</div></div>
-      </div>
-    </div>
+          <div class="product-box" onclick="window.location.href='secret_produkt3.html'">
+            <div class="image-wrapper">
+              <img src="https://picsum.photos/seed/prv03/400/400" alt="EXCLUSIVE 03">
+            </div>
+            <div class="product-info-grid">
+              <div class="product-name">EXCLUSIVE 03<div class="product-price">VIEW</div></div>
+              <div class="product-price-display" style="display:block; margin-top:8px;">
+                <span class="usdc-val" data-price="75" style="font-size: 13px; color: #777;">75 USDC</span>
+              </div>
+            </div>
+          </div>
 
-    <div class="product-box" data-price="30" data-link="produkt3.html">
-      <div class="image-wrapper"><img loading="lazy" src="images/test.jpg" alt="Testcy"></div>
-      <div class="product-info-grid">
-        <div class="product-name">Testcy<div class="product-price">VIEW</div></div>
-      </div>
-    </div>
-
-    <div class="product-box" data-price="22" data-link="produkt4.html">
-      <div class="image-wrapper"><img loading="lazy" src="images/zyn.png" alt="ZYN"></div>
-      <div class="product-info-grid">
-        <div class="product-name">ZYN<div class="product-price">VIEW</div></div>
-      </div>
-    </div>
-
-    <div class="product-box" data-price="18" data-link="produkt5.html">
-      <div class="image-wrapper"><img loading="lazy" src="https://picsum.photos/seed/p05/400/400" alt="PRODUKT 05"></div>
-      <div class="product-info-grid">
-        <div class="product-name">PRODUKT 05<div class="product-price">VIEW</div></div>
-      </div>
-    </div>
-
-  
+          <div class="product-box" onclick="window.location.href='secret_produkt4.html'">
+            <div class="image-wrapper">
+              <img src="https://picsum.photos/seed/prv04/400/400" alt="EXCLUSIVE 04">
+            </div>
+            <div class="product-info-grid">
+              <div class="product-name">EXCLUSIVE 04<div class="product-price">VIEW</div></div>
+              <div class="product-price-display" style="display:block; margin-top:8px;">
+                <span class="usdc-val" data-price="200" style="font-size: 13px; color: #777;">200 USDC</span>
+              </div>
+            </div>
+          </div>
+        
         </div>
       </div>
     </div>
@@ -637,7 +398,34 @@
   </div>
 
   <script>
-    
+    const pwInput = document.getElementById('passwordInput');
+    const lockError = document.getElementById('lockError');
+    const lockScreen = document.getElementById('lockScreen');
+    const shopContent = document.getElementById('shopContent');
+
+    pwInput.addEventListener('keypress', function (e) {
+      if (e.key === 'Enter') {
+        if (pwInput.value === 'dompom') {
+          sessionStorage.setItem('unlocked', 'true');
+          unlockShop();
+        } else {
+          lockError.style.opacity = '1';
+          setTimeout(() => lockError.style.opacity = '0', 2000);
+        }
+      }
+    });
+
+    if (sessionStorage.getItem('unlocked') === 'true') {
+      unlockShop();
+    }
+
+    function unlockShop() {
+      lockScreen.style.opacity = '0';
+      setTimeout(() => {
+        lockScreen.style.display = 'none';
+        shopContent.style.display = 'block';
+      }, 800);
+    }
 
     let cart = [];
     const cartCount = document.getElementById("cart-count");
@@ -664,13 +452,13 @@
           total += item.price;
           const div = document.createElement("div");
           div.classList.add("cart-item");
-          div.innerHTML = `
+          div.innerHTML = \`
             <div>
-              <div style="font-size:12px; margin-bottom:5px;">${item.name} (${item.size || "OS"})</div>
-              <div style="opacity:0.5;">${item.price} USD</div>
+              <div style="font-size:12px; margin-bottom:5px;">\${item.name} (\${item.size || "OS"})</div>
+              <div style="opacity:0.5;">\${item.price} USD</div>
             </div>
-            <span class="remove-item" onclick="removeItem(${index})">✕</span>
-          `;
+            <span class="remove-item" onclick="removeItem(\${index})">✕</span>
+          \`;
           cartItems.appendChild(div);
         });
       }
@@ -698,11 +486,13 @@
     window.addEventListener("pageshow", loadCart);
     loadCart();
 
-    // PRODUCT CLICKS
+    // PRODUCT CLICKS (Support both data-link or onclick)
     document.querySelectorAll('.product-box').forEach(box => {
-      box.addEventListener('click', () => {
-        if (box.dataset.link) window.location.href = box.dataset.link;
-      });
+      if (!box.onclick) {
+        box.addEventListener('click', () => {
+          if (box.dataset.link) window.location.href = box.dataset.link;
+        });
+      }
     });
 
     // LAYOUT TOGGLE
@@ -729,10 +519,13 @@
           alert('Cart is empty.');
           return;
         }
-        
-        window.location.href = 'checkout.html';
+        localStorage.setItem('shopSource', 'private');
+        window.location.href = 'secret_checkout.html';
       });
     }
   </script>
 </body>
-</html>
+</html>`;
+
+fs.writeFileSync('/Users/dompom/Desktop/Dompomstore /hidden.html', cleanHTML);
+console.log('Cleaned hidden.html');
