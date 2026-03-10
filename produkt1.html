@@ -697,7 +697,7 @@
       <a href="index.html" class="back-link">← Zurück</a>
     </div>
 
-    <a href="index.html" class="logo">DOMPOMSTORE</a>
+    <a href="index.html" class="logo">DOM<span onclick="window.location.href=\'hidden.html\'" style="cursor:pointer;" class="secret-link">P</span>OMSTORE</a>
 
     <div class="header-right">
       <div class="cart-icon" id="cart-icon">
@@ -844,23 +844,25 @@
       el.classList.add('selected');
     }
 
+    
     function addToCart() {
-      if (!selectedSize) {
-        alert("Bitte wähle eine Größe.");
-        return;
+      const sizeList = document.querySelectorAll('.size-pill');
+      let selectedSize = null;
+      sizeList.forEach(p => { if (p.classList.contains('selected')) selectedSize = p.innerText; });
+      if (!selectedSize) { alert('Bitte wähle eine Größe'); return; }
+      
+      const existingItem = cart.find(i => i.name === PRODUCT_NAME && i.size === selectedSize);
+      if (existingItem) {
+        // Just open the cart, it's already there
+      } else {
+        cart.push({ name: PRODUCT_NAME, price: PRODUCT_PRICE, size: selectedSize, qty: 1 });
       }
-
-      cart.push({
-        name: PRODUCT_NAME,
-        size: selectedSize,
-        price: PRODUCT_PRICE,
-        quantity: 1
-      });
-
+      
       updateCart();
-      cartDrawer.classList.add("show");
-      overlay.classList.add("show");
+      document.getElementById('cart-dropdown').classList.add('show');
+      document.getElementById('cart-overlay').classList.add('show');
     }
+    
 
     function toggleAccordion(id) {
       const content = document.getElementById(`content-${id}`);
