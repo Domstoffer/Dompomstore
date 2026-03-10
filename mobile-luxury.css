@@ -644,3 +644,21 @@ color:#444;
 max-height:200px;
 margin-top:20px;
 }
+
+/* EXACT HEADER LAYOUT FIX */
+.store-header{
+display:flex;
+justify-content:space-between;
+align-items:center;
+padding:20px;
+position:relative;
+}
+
+.logo{
+position:absolute;
+left:50%;
+transform:translateX(-50%);
+font-size:20px;
+letter-spacing:4px;
+font-weight:600;
+}
