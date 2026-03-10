@@ -408,3 +408,44 @@ body {
   .size-row, .mobile-size-pills { margin-bottom: 10px !important; }
   .info-accordion { display: none !important; /* Hide accordion on mobile to save space */ }
 }
+
+/* GLOBAL EXACT CART ICON PORTING */
+.cart-icon {
+  position: relative !important;
+  cursor: pointer !important;
+  display: flex !important;
+  align-items: center !important;
+}
+
+.cart-icon svg {
+  width: 20px !important;
+  height: 20px !important;
+  stroke: var(--text) !important;
+  fill: none !important;
+  transition: transform 0.2s !important;
+}
+
+body.dark-mode .cart-icon svg {
+  stroke: #ffffff !important;
+}
+
+.cart-count {
+  position: absolute !important;
+  top: -6px !important;
+  right: -6px !important;
+  background: var(--text) !important;
+  color: var(--bg) !important;
+  font-size: 11px !important;
+  width: 18px !important;
+  height: 18px !important;
+  border-radius: 50% !important;
+  display: flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  font-weight: bold !important;
+}
+
+body.dark-mode .cart-count {
+  background: #ffffff !important;
+  color: #000000 !important;
+}

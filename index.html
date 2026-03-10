@@ -567,7 +567,13 @@
         <div>
           <div class="brand-logo"><a href="index.html">DOM</a><a href="hidden.html" class="secret-link" style="cursor:pointer; opacity:0.3; transition:0.3s;" onmouseover="this.style.opacity=1" onmouseout="this.style.opacity=0.3">P</a><a href="index.html">OMSTORE</a></div>
           <div class="nav-menu">
-            <a class="nav-item" id="cart-icon">Cart (<span id="cart-count">0</span>)</a>
+            <div class="cart-icon" id="cart-icon">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" style="width:20px;height:20px;">
+          <path d="M6 2l1 5h10l1-5z" />
+          <path d="M2 7h20v14H2z" />
+        </svg>
+        <span class="cart-count" id="cart-count">0</span>
+      </div>
             <a class="nav-item" id="layout-toggle">Toggle Grid</a>
           </div>
         </div>
