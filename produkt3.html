@@ -561,7 +561,24 @@
     html, body {
       touch-action: manipulation !important;
     }
-</style>
+\n.cart-icon {
+      position: absolute;
+      right: 20px;
+      top: 50%;
+      transform: translateY(-50%);
+      cursor: pointer;
+    }
+
+    .cart-count {
+      position: absolute;
+      top: -6px;
+      right: -6px;
+      background: black;
+      color: white;
+      font-size: 10px;
+      padding: 2px 6px;
+      border-radius: 50%;
+    }\n</style>
   
 
   
@@ -684,10 +701,11 @@
 </div>
 
 <div class="cart-icon" id="cart-icon">
-  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" style="width:20px;height:20px;">
-    <path d="M6 2l1 5h10l1-5z" />
-    <path d="M2 7h20v14H2z" />
+  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" style="width:22px;height:22px;">
+    <path d="M6 2l1 5h10l1-5z"/>
+    <path d="M2 7h20v14H2z"/>
   </svg>
+
   <span class="cart-count" id="cart-count">0</span>
 </div>
 
