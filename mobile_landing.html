@@ -144,7 +144,11 @@
     .card-info { padding: 0 20px; text-align: center; }
     .card-title { font-family: 'Syncopate', sans-serif; font-size: 12px; letter-spacing: 0.1em; }
     .card-price { font-size: 11px; opacity: 0.5; margin-top: 5px; }
-  </style>
+  \n/* PREVENT DOUBLE TAP ZOOM */
+    html, body {
+      touch-action: manipulation !important;
+    }
+</style>
   <link rel="stylesheet" href="mobile-luxury.css">
 </head>
 <body>
@@ -214,5 +218,16 @@
     <a href="#checkout" class="sticky-btn">Buy Now</a>
   </div>
 
+<!-- ANTI-ZOOM SCRIPT -->
+<script>
+let lastTouchEnd = 0;
+document.addEventListener('touchend', function (event) {
+  const now = Date.now();
+  if (now - lastTouchEnd <= 300) {
+    event.preventDefault();
+  }
+  lastTouchEnd = now;
+}, false);
+</script>
 </body>
 </html>

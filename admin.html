@@ -3,7 +3,7 @@
 
 <head>
   <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
   <title>Admin Dashboard</title>
   <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;600&display=swap" rel="stylesheet">
   <style>
@@ -344,7 +344,11 @@
         margin-top: 5px !important;
       }
     }
-  </style>
+  \n/* PREVENT DOUBLE TAP ZOOM */
+    html, body {
+      touch-action: manipulation !important;
+    }
+</style>
   <link rel="stylesheet" href="mobile-luxury.css">
 </head>
 
@@ -653,6 +657,17 @@
 
     checkAuth();
   </script>
+<!-- ANTI-ZOOM SCRIPT -->
+<script>
+let lastTouchEnd = 0;
+document.addEventListener('touchend', function (event) {
+  const now = Date.now();
+  if (now - lastTouchEnd <= 300) {
+    event.preventDefault();
+  }
+  lastTouchEnd = now;
+}, false);
+</script>
 </body>
 
 </html>

@@ -452,6 +452,10 @@
       }
     }
 
+\n/* PREVENT DOUBLE TAP ZOOM */
+    html, body {
+      touch-action: manipulation !important;
+    }
 </style>
 
   
@@ -784,5 +788,16 @@
       });
     }
   </script>
+<!-- ANTI-ZOOM SCRIPT -->
+<script>
+let lastTouchEnd = 0;
+document.addEventListener('touchend', function (event) {
+  const now = Date.now();
+  if (now - lastTouchEnd <= 300) {
+    event.preventDefault();
+  }
+  lastTouchEnd = now;
+}, false);
+</script>
 </body>
 </html>
