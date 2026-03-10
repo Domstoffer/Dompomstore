@@ -1,34 +1,73 @@
 <!DOCTYPE html>
 <html lang="de">
+
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
   <title>Dompomstore</title>
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600&family=Syncopate:wght@300;400;700&display=swap" rel="stylesheet">
+  <link
+    href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600&family=Syncopate:wght@300;400;700&display=swap"
+    rel="stylesheet">
   <style>
-    * { box-sizing: border-box; margin: 0; padding: 0; }
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
     :root {
       --bg: #ffffff;
       --text: #000000;
-      --border: rgba(0,0,0,0.1);
+      --border: rgba(0, 0, 0, 0.1);
       --accent: #f4f4f4;
-      --glass: rgba(255,255,255,0.8);
-      --input-border: rgba(0,0,0,0.2);
+      --glass: rgba(255, 255, 255, 0.8);
+      --input-border: rgba(0, 0, 0, 0.2);
     }
+
     body.dark-mode {
       --bg: #000000;
       --text: #ffffff;
-      --border: rgba(255,255,255,0.15);
+      --border: rgba(255, 255, 255, 0.15);
       --accent: #111111;
-      --glass: rgba(0,0,0,0.8);
-      --input-border: rgba(255,255,255,0.2);
+      --glass: rgba(0, 0, 0, 0.8);
+      --input-border: rgba(255, 255, 255, 0.2);
     }
-    
-    @keyframes slideRight { from { opacity: 0; transform: translateX(-40px); } to { opacity: 1; transform: translateX(0); } }
-    @keyframes slideUp { from { opacity: 0; transform: translateY(40px); } to { opacity: 1; transform: translateY(0); } }
-    @keyframes reveal { from { clip-path: inset(0 100% 0 0); } to { clip-path: inset(0 0 0 0); } }
+
+    @keyframes slideRight {
+      from {
+        opacity: 0;
+        transform: translateX(-40px);
+      }
+
+      to {
+        opacity: 1;
+        transform: translateX(0);
+      }
+    }
+
+    @keyframes slideUp {
+      from {
+        opacity: 0;
+        transform: translateY(40px);
+      }
+
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+
+    @keyframes reveal {
+      from {
+        clip-path: inset(0 100% 0 0);
+      }
+
+      to {
+        clip-path: inset(0 0 0 0);
+      }
+    }
 
     body {
       font-family: 'Inter', sans-serif;
@@ -84,14 +123,19 @@
     }
 
     @media(min-width: 900px) {
-      .vanguard-layout { flex-direction: row; }
+      .vanguard-layout {
+        flex-direction: row;
+      }
+
       .vanguard-left {
         width: 30vw;
         height: 100vh;
         position: fixed;
-        top: 0; left: 0;
+        top: 0;
+        left: 0;
         padding: 60px 40px;
       }
+
       .vanguard-right {
         width: 70vw;
         margin-left: 30vw;
@@ -113,9 +157,20 @@
       position: relative;
       line-height: 1.2;
     }
-    .brand-logo a { color: inherit; text-decoration: none; }
-    .brand-logo a.p-link { opacity: 0.3; transition: opacity 0.3s; }
-    .brand-logo a.p-link:hover { opacity: 1; }
+
+    .brand-logo a {
+      color: inherit;
+      text-decoration: none;
+    }
+
+    .brand-logo a.p-link {
+      opacity: 0.3;
+      transition: opacity 0.3s;
+    }
+
+    .brand-logo a.p-link:hover {
+      opacity: 1;
+    }
 
     .nav-menu {
       display: flex;
@@ -125,7 +180,7 @@
       position: relative;
       margin-top: 50px;
     }
-    
+
     .nav-item {
       font-size: 11px;
       letter-spacing: 0.2em;
@@ -139,11 +194,12 @@
       opacity: 0.6;
       transition: opacity 0.3s, transform 0.3s;
     }
+
     .nav-item:hover {
       opacity: 1;
       transform: translateX(5px);
     }
-    
+
     .huge-title {
       font-family: 'Syncopate', sans-serif;
       font-weight: 300;
@@ -154,7 +210,12 @@
       letter-spacing: 0.05em;
       animation: reveal 1.5s cubic-bezier(0.77, 0, 0.175, 1) forwards;
     }
-    .huge-title i { font-style: italic; font-weight: 400; color: gray; }
+
+    .huge-title i {
+      font-style: italic;
+      font-weight: 400;
+      color: gray;
+    }
 
     /* PRODUCT GRID */
     .container {
@@ -163,19 +224,30 @@
       gap: 20px;
       width: 100%;
     }
+
     @media(min-width: 1200px) {
-      .container { grid-template-columns: repeat(3, 1fr); gap: 40px; }
+      .container {
+        grid-template-columns: repeat(3, 1fr);
+        gap: 40px;
+      }
     }
-    .container.mode-3 { grid-template-columns: repeat(2, 1fr); gap: 60px; }
-    
+
+    .container.mode-3 {
+      grid-template-columns: repeat(2, 1fr);
+      gap: 60px;
+    }
+
     .product-box {
       display: flex;
       flex-direction: column;
       cursor: pointer;
       transition: transform 0.6s cubic-bezier(0.16, 1, 0.3, 1);
     }
-    .product-box:hover { transform: translateY(-5px); }
-    
+
+    .product-box:hover {
+      transform: translateY(-5px);
+    }
+
     .image-wrapper {
       width: 100%;
       aspect-ratio: 3/4;
@@ -183,6 +255,7 @@
       margin-bottom: 20px;
       background: var(--accent);
     }
+
     .product-box img {
       width: 100%;
       height: 100%;
@@ -190,23 +263,26 @@
       transition: transform 1s cubic-bezier(0.16, 1, 0.3, 1), filter 1s;
       filter: grayscale(20%);
     }
+
     .product-box:hover img {
       transform: scale(1.05);
       filter: grayscale(0%);
     }
-    
+
     .product-info-grid {
       display: flex;
       flex-direction: column;
       align-items: flex-start;
       gap: 5px;
     }
+
     .product-name {
       font-size: 12px;
       font-weight: 500;
       letter-spacing: 0.15em;
       text-transform: uppercase;
     }
+
     .product-price {
       font-size: 11px;
       color: gray;
@@ -216,8 +292,10 @@
     /* CART DRAWER */
     #cart-dropdown {
       position: fixed;
-      top: 0; right: -100%;
-      width: 400px; height: 100vh;
+      top: 0;
+      right: -100%;
+      width: 400px;
+      height: 100vh;
       background: var(--bg);
       border-left: 1px solid var(--border);
       padding: 60px 40px;
@@ -226,18 +304,30 @@
       display: flex;
       flex-direction: column;
     }
-    #cart-dropdown.show { right: 0; }
-    
+
+    #cart-dropdown.show {
+      right: 0;
+    }
+
     .cart-overlay {
-      position: fixed; top: 0; left: 0; width: 100vw; height: 100vh;
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100vw;
+      height: 100vh;
       background: var(--glass);
       backdrop-filter: blur(10px);
-      opacity: 0; pointer-events: none;
+      opacity: 0;
+      pointer-events: none;
       transition: opacity 0.6s;
       z-index: 999;
     }
-    .cart-overlay.show { opacity: 1; pointer-events: all; }
-    
+
+    .cart-overlay.show {
+      opacity: 1;
+      pointer-events: all;
+    }
+
     .cart-title {
       font-family: 'Syncopate', sans-serif;
       font-size: 1.2rem;
@@ -246,19 +336,42 @@
       margin-bottom: 40px;
       font-weight: 300;
     }
-    #cart-items { flex: 1; overflow-y: auto; margin-bottom: 30px; }
-    
+
+    #cart-items {
+      flex: 1;
+      overflow-y: auto;
+      margin-bottom: 30px;
+    }
+
     .cart-item {
-      display: flex; justify-content: space-between;
+      display: flex;
+      justify-content: space-between;
       border-bottom: 1px solid var(--border);
       padding: 20px 0;
-      font-size: 11px; text-transform: uppercase; letter-spacing: 0.1em;
+      font-size: 11px;
+      text-transform: uppercase;
+      letter-spacing: 0.1em;
     }
-    .remove-item { cursor: pointer; color: gray; transition: color 0.3s; }
-    .remove-item:hover { color: red; }
-    
-    .cart-total { display: flex; justify-content: space-between; font-weight: 500; margin-bottom: 30px; font-size: 13px; letter-spacing: 0.1em;}
-    
+
+    .remove-item {
+      cursor: pointer;
+      color: gray;
+      transition: color 0.3s;
+    }
+
+    .remove-item:hover {
+      color: red;
+    }
+
+    .cart-total {
+      display: flex;
+      justify-content: space-between;
+      font-weight: 500;
+      margin-bottom: 30px;
+      font-size: 13px;
+      letter-spacing: 0.1em;
+    }
+
     .checkout-btn {
       width: 100%;
       padding: 24px;
@@ -272,26 +385,62 @@
       cursor: pointer;
       transition: transform 0.4s;
     }
-    .checkout-btn:hover { transform: translateY(-3px); }
+
+    .checkout-btn:hover {
+      transform: translateY(-3px);
+    }
 
     /* LOCK SCREEN */
     #lockScreen {
-      position: fixed; top: 0; left: 0; width: 100vw; height: 100vh;
-      background: #000; color: #fff;
-      display: flex; flex-direction: column; align-items: center; justify-content: center;
-      z-index: 9999; transition: opacity 0.8s;
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100vw;
+      height: 100vh;
+      background: #000;
+      color: #fff;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      z-index: 9999;
+      transition: opacity 0.8s;
     }
+
     .lock-title {
-      font-family: 'Syncopate', sans-serif; font-size: 2rem;
-      letter-spacing: 0.3em; margin-bottom: 40px; opacity: 0.5;
+      font-family: 'Syncopate', sans-serif;
+      font-size: 2rem;
+      letter-spacing: 0.3em;
+      margin-bottom: 40px;
+      opacity: 0.5;
     }
+
     .lock-input {
-      background: transparent; border: none; border-bottom: 1px solid rgba(255,255,255,0.2);
-      color: #fff; font-size: 14px; padding: 15px; width: 300px; text-align: center;
-      letter-spacing: 0.4em; outline: none; transition: border-color 0.4s;
+      background: transparent;
+      border: none;
+      border-bottom: 1px solid rgba(255, 255, 255, 0.2);
+      color: #fff;
+      font-size: 14px;
+      padding: 15px;
+      width: 300px;
+      text-align: center;
+      letter-spacing: 0.4em;
+      outline: none;
+      transition: border-color 0.4s;
     }
-    .lock-input:focus { border-color: #fff; }
-    .lock-error { margin-top: 20px; font-size: 10px; color: red; letter-spacing: 0.1em; opacity: 0; transition: opacity 0.3s; }
+
+    .lock-input:focus {
+      border-color: #fff;
+    }
+
+    .lock-error {
+      margin-top: 20px;
+      font-size: 10px;
+      color: red;
+      letter-spacing: 0.1em;
+      opacity: 0;
+      transition: opacity 0.3s;
+    }
 
     /* LAYOUT TOGGLE ANIMATION */
     .container {
@@ -306,11 +455,14 @@
     }
 
     /* INPUT IOS FIX (Prevent Auto-Zoom) */
-    input, select, textarea {
+    input,
+    select,
+    textarea {
       font-size: 16px !important;
     }
 
     @media (max-width: 500px) {
+
       /* PRODUCT CAROUSEL FIX */
       .container {
         display: flex !important;
@@ -318,20 +470,22 @@
         overflow-x: auto !important;
         scroll-snap-type: x mandatory !important;
         gap: 15px !important;
-        padding-bottom: 20px !important; /* scrollbar padding */
+        padding-bottom: 20px !important;
+        /* scrollbar padding */
         -webkit-overflow-scrolling: touch;
       }
-      
+
       .container::-webkit-scrollbar {
-        display: none; /* Hide scrollbar for clean UI */
+        display: none;
+        /* Hide scrollbar for clean UI */
       }
-      
+
       .product-box {
         min-width: 90% !important;
         scroll-snap-align: center !important;
         flex: 0 0 auto !important;
       }
-      
+
       /* STICKY CTA Product Pages */
       .add-to-cart {
         position: fixed !important;
@@ -342,16 +496,16 @@
         padding-bottom: calc(26px + env(safe-area-inset-bottom)) !important;
         z-index: 1000 !important;
       }
-      
+
       /* Ensure info-side doesn't overlap the fixed CTA */
       .info-side {
-        padding-bottom: 120px !important; 
+        padding-bottom: 120px !important;
       }
     }
 
 
     /* --- LUXURY MOBILE REDESIGN --- */
-    
+
     /* BOTTOM SHEET CART */
     #cart-dropdown {
       top: auto !important;
@@ -365,8 +519,9 @@
       border-top: 1px solid var(--border) !important;
       border-left: none !important;
       transition: bottom 0.5s cubic-bezier(0.16, 1, 0.3, 1) !important;
-      box-shadow: 0 -10px 40px rgba(0,0,0,0.1) !important;
+      box-shadow: 0 -10px 40px rgba(0, 0, 0, 0.1) !important;
     }
+
     #cart-dropdown.show {
       bottom: 0 !important;
     }
@@ -375,11 +530,19 @@
     body {
       font-family: 'Inter', sans-serif !important;
     }
-    h1, h2, h3, .brand-logo, .huge-title, .cart-title, .step-indicator {
+
+    h1,
+    h2,
+    h3,
+    .brand-logo,
+    .huge-title,
+    .cart-title,
+    .step-indicator {
       font-family: 'Syncopate', sans-serif !important;
     }
 
     @media (max-width: 768px) {
+
       /* FULLSCREEN HERO (Index only) */
       .mobile-hero {
         display: flex;
@@ -397,6 +560,7 @@
         border-bottom: 1px solid var(--border);
         margin-bottom: 40px;
       }
+
       .mobile-hero-title {
         font-family: 'Syncopate', sans-serif;
         font-size: 2.5rem;
@@ -404,6 +568,7 @@
         text-transform: uppercase;
         margin-bottom: 10px;
       }
+
       .mobile-hero-subtitle {
         font-family: 'Inter', sans-serif;
         font-size: 11px;
@@ -412,6 +577,7 @@
         opacity: 0.5;
         margin-bottom: 40px;
       }
+
       .mobile-hero-btn {
         padding: 18px 40px;
         background: var(--text);
@@ -430,19 +596,23 @@
         overflow: hidden !important;
         padding-bottom: 20px !important;
       }
+
       .image-wrapper {
         border-radius: 16px 16px 0 0 !important;
         margin-bottom: 15px !important;
       }
+
       .product-info-grid {
         padding: 0 20px !important;
         align-items: center !important;
         text-align: center !important;
       }
+
       .product-name {
         font-size: 14px !important;
         font-weight: 600 !important;
       }
+
       .product-price {
         font-size: 13px !important;
         font-weight: 400 !important;
@@ -451,16 +621,16 @@
         margin-top: 5px !important;
       }
     }
+  </style>
 
-</style>
 
-  
 
-  
+
 
 
   <!-- PWA & SEO Meta Tags -->
-  <meta name="description" content="DompomStore - Exclusive Vanguard E-Commerce. Pay seamlessly with Web3 (Solana, Phantom, MetaMask) or traditional methods.">
+  <meta name="description"
+    content="DompomStore - Exclusive Vanguard E-Commerce. Pay seamlessly with Web3 (Solana, Phantom, MetaMask) or traditional methods.">
   <meta name="theme-color" content="#ffffff">
   <link rel="icon" type="image/png" href="https://dompomshop.com/favicon.ico">
   <link rel="apple-touch-icon" href="https://dompomshop.com/favicon.ico">
@@ -473,7 +643,10 @@
 
     #global-preloader {
       position: fixed;
-      top: 0; left: 0; width: 100vw; height: 100vh;
+      top: 0;
+      left: 0;
+      width: 100vw;
+      height: 100vh;
       height: 100dvh;
       background-color: #ffffff;
       z-index: 99999;
@@ -487,10 +660,12 @@
       -webkit-transition: opacity 0.6s cubic-bezier(0.16, 1, 0.3, 1), visibility 0.6s ease;
       pointer-events: none;
     }
+
     #global-preloader.fade-out {
       opacity: 0;
       visibility: hidden;
     }
+
     .spinner {
       width: 40px;
       height: 40px;
@@ -501,9 +676,12 @@
       animation: spin 1s linear infinite;
       -webkit-animation: spin 1s linear infinite;
     }
-    
+
     /* WebKit Momentum Scrolling */
-    .scroll-container, #cart-items, .vanguard-right, .cart-drawer {
+    .scroll-container,
+    #cart-items,
+    .vanguard-right,
+    .cart-drawer {
       -webkit-overflow-scrolling: touch;
     }
 
@@ -516,23 +694,45 @@
     }
 
     /* Premium Touch Interactions */
-    button, a, .nav-item, .product-box, .v-btn {
+    button,
+    a,
+    .nav-item,
+    .product-box,
+    .v-btn {
       -webkit-tap-highlight-color: transparent;
       -webkit-touch-callout: none;
-      will-change: transform; /* Hint for hardware acceleration */
+      will-change: transform;
+      /* Hint for hardware acceleration */
     }
 
     /* Safari Input Reset */
-    input, select, textarea {
+    input,
+    select,
+    textarea {
       -webkit-appearance: none;
       border-radius: 0;
     }
 
-    html.dark-mode #global-preloader { background-color: #000000; }
-    html.dark-mode .spinner { border: 3px solid rgba(255, 255, 255, 0.1); border-top-color: #ffffff; }
+    html.dark-mode #global-preloader {
+      background-color: #000000;
+    }
 
-    @keyframes spin { 100% { transform: rotate(360deg); } }
-    @-webkit-keyframes spin { 100% { -webkit-transform: rotate(360deg); } }
+    html.dark-mode .spinner {
+      border: 3px solid rgba(255, 255, 255, 0.1);
+      border-top-color: #ffffff;
+    }
+
+    @keyframes spin {
+      100% {
+        transform: rotate(360deg);
+      }
+    }
+
+    @-webkit-keyframes spin {
+      100% {
+        -webkit-transform: rotate(360deg);
+      }
+    }
 
     @media (max-width: 768px) {
       .top {
@@ -545,6 +745,7 @@
         -webkit-align-items: center;
         align-items: center;
       }
+
       .logo {
         position: absolute;
         left: 50%;
@@ -557,25 +758,29 @@
 
   <link rel="stylesheet" href="mobile-luxury.css">
 </head>
-<body class="">
-  
 
-  <div id="shopContent" >
+<body class="">
+
+
+  <div id="shopContent">
     <div class="vanguard-layout">
       <!-- FIXED LEFT MENU -->
       <div class="vanguard-left">
         <div>
           <button id="gridToggle" class="grid-toggle-btn">+</button>
-          <div class="brand-logo"><a href="index.html">DOM</a><a href="hidden.html" class="secret-link" style="cursor:pointer; opacity:0.3; transition:0.3s;" onmouseover="this.style.opacity=1" onmouseout="this.style.opacity=0.3">P</a><a href="index.html">OMSTORE</a></div>
+          <div class="brand-logo"><a href="index.html">DOM</a><a href="hidden.html" class="secret-link"
+              style="cursor:pointer; opacity:0.3; transition:0.3s;" onmouseover="this.style.opacity=1"
+              onmouseout="this.style.opacity=0.3">P</a><a href="index.html">OMSTORE</a></div>
           <div class="nav-menu">
             <div class="cart-icon" id="cart-icon">
-        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" style="width:20px;height:20px;">
-          <path d="M6 2l1 5h10l1-5z" />
-          <path d="M2 7h20v14H2z" />
-        </svg>
-        <span class="cart-count" id="cart-count">0</span>
-      </div>
-            
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"
+                style="width:20px;height:20px;">
+                <path d="M6 2l1 5h10l1-5z" />
+                <path d="M2 7h20v14H2z" />
+              </svg>
+              <span class="cart-count" id="cart-count">0</span>
+            </div>
+
           </div>
         </div>
         <div style="font-size:10px; letter-spacing:0.1em; opacity:0.3; text-transform:uppercase;">
@@ -587,48 +792,49 @@
       <div class="vanguard-right">
         <h1 class="huge-title">New <i>Arrivals</i></h1>
         <div class="container grid-two" id="productsGrid">
-          
 
-    <div class="product-box" data-price="49" data-link="produkt1.html">
-      <div class="image-wrapper"><img loading="lazy" src="images/DB-01.jpg" alt="DB-01"></div>
-      <div class="product-info-grid">
-        <div class="product-name">DB-01</div>
-      </div>
-    </div>
 
-    <div class="product-box" data-price="19" data-link="produkt2.html">
-      <div class="image-wrapper"><img loading="lazy" src="images/pepe-shirt.jpg" alt="PS-01"></div>
-      <div class="product-info-grid">
-        <div class="product-name">PS-01</div>
-      </div>
-    </div>
+          <div class="product-box" data-price="49" data-link="produkt1.html">
+            <div class="image-wrapper"><img loading="lazy" src="images/DB-01.jpg" alt="DB-01"></div>
+            <div class="product-info-grid">
+              <div class="product-name">DB-01</div>
+            </div>
+          </div>
 
-    <div class="product-box" data-price="30" data-link="produkt3.html">
-      <div class="image-wrapper"><img loading="lazy" src="images/test.jpg" alt="Testcy"></div>
-      <div class="product-info-grid">
-        <div class="product-name">Testcy</div>
-      </div>
-    </div>
+          <div class="product-box" data-price="19" data-link="produkt2.html">
+            <div class="image-wrapper"><img loading="lazy" src="images/pepe-shirt.jpg" alt="PS-01"></div>
+            <div class="product-info-grid">
+              <div class="product-name">PS-01</div>
+            </div>
+          </div>
 
-    <div class="product-box" data-price="22" data-link="produkt4.html">
-      <div class="image-wrapper"><img loading="lazy" src="images/zyn.png" alt="ZYN"></div>
-      <div class="product-info-grid">
-        <div class="product-name">ZYN</div>
-      </div>
-    </div>
+          <div class="product-box" data-price="30" data-link="produkt3.html">
+            <div class="image-wrapper"><img loading="lazy" src="images/test.jpg" alt="Testcy"></div>
+            <div class="product-info-grid">
+              <div class="product-name">Testcy</div>
+            </div>
+          </div>
 
-    <div class="product-box" data-price="18" data-link="produkt5.html">
-      <div class="image-wrapper"><img loading="lazy" src="https://picsum.photos/seed/p05/400/400" alt="PRODUKT 05"></div>
-      <div class="product-info-grid">
-        <div class="product-name">PRODUKT 05</div>
-      </div>
-    </div>
+          <div class="product-box" data-price="22" data-link="produkt4.html">
+            <div class="image-wrapper"><img loading="lazy" src="images/zyn.png" alt="ZYN"></div>
+            <div class="product-info-grid">
+              <div class="product-name">ZYN</div>
+            </div>
+          </div>
 
-  
+          <div class="product-box" data-price="18" data-link="produkt5.html">
+            <div class="image-wrapper"><img loading="lazy" src="https://picsum.photos/seed/p05/400/400"
+                alt="PRODUKT 05"></div>
+            <div class="product-info-grid">
+              <div class="product-name">PRODUKT 05</div>
+            </div>
+          </div>
+
+
         </div>
       </div>
     </div>
-    
+
     <!-- CART DRAWER -->
     <div class="cart-overlay" id="cart-overlay"></div>
     <div id="cart-dropdown">
@@ -643,7 +849,7 @@
   </div>
 
   <script>
-    
+
 
     let cart = [];
     const cartCount = document.getElementById("cart-count");
@@ -727,21 +933,19 @@
   
     
   
-    const toggleButton = document.getElementById("gridToggle");
-    const productsGrid = document.getElementById("productsGrid");
+    const toggle = document.getElementById("gridToggle");
+    const grid = document.getElementById("productsGrid");
     
-    if (toggleButton && productsGrid) {
-      let isSingleColumn = false;
-      toggleButton.addEventListener("click", () => {
-        if(isSingleColumn){
-          productsGrid.classList.remove("grid-one");
-          productsGrid.classList.add("grid-two");
-        } else {
-          productsGrid.classList.remove("grid-two");
-          productsGrid.classList.add("grid-one");
-        }
-        isSingleColumn = !isSingleColumn;
-      });
+    toggle.onclick = function(){
+    
+    if(grid.classList.contains("grid-two")){
+    grid.classList.remove("grid-two");
+    grid.classList.add("grid-one");
+    } else {
+    grid.classList.remove("grid-one");
+    grid.classList.add("grid-two");
+    }
+    
     }
 
   </script>

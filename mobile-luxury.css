@@ -383,151 +383,166 @@ body {
         gap: 16px !important;
     }
 }
+
 /* CRITICAL FIXES FOR Z-INDEX AND MOBILE PRODUCT VIEW */
 @media (max-width: 768px) {
-  .add-to-cart {
-    z-index: 90 !important; /* Must be lower than cart overlay (998) and drawer (999) */
-  }
-  .cart-overlay {
-    z-index: 998 !important;
-  }
-  #cart-dropdown, .cart-drawer {
-    z-index: 999 !important;
-  }
+    .add-to-cart {
+        z-index: 90 !important;
+        /* Must be lower than cart overlay (998) and drawer (999) */
+    }
 
-  /* Force Product page to fit one screen without massive scroll */
-  .info-side {
-    padding: 0 16px 80px 16px !important;
-    display: flex !important;
-    flex-direction: column !important;
-    gap: 12px !important;
-  }
-  .product-title { margin-bottom: 0 !important; }
-  .product-price { margin-bottom: 0 !important; }
-  .size-label { margin-bottom: 0 !important; margin-top: 10px !important; }
-  .size-row, .mobile-size-pills { margin-bottom: 10px !important; }
-  .info-accordion { display: none !important; /* Hide accordion on mobile to save space */ }
+    .cart-overlay {
+        z-index: 998 !important;
+    }
+
+    #cart-dropdown,
+    .cart-drawer {
+        z-index: 999 !important;
+    }
+
+    /* Force Product page to fit one screen without massive scroll */
+    .info-side {
+        padding: 0 16px 80px 16px !important;
+        display: flex !important;
+        flex-direction: column !important;
+        gap: 12px !important;
+    }
+
+    .product-title {
+        margin-bottom: 0 !important;
+    }
+
+    .product-price {
+        margin-bottom: 0 !important;
+    }
+
+    .size-label {
+        margin-bottom: 0 !important;
+        margin-top: 10px !important;
+    }
+
+    .size-row,
+    .mobile-size-pills {
+        margin-bottom: 10px !important;
+    }
+
+    .info-accordion {
+        display: none !important;
+        /* Hide accordion on mobile to save space */
+    }
 }
 
 /* GLOBAL EXACT CART ICON PORTING */
 .cart-icon {
-  position: relative !important;
-  cursor: pointer !important;
-  display: flex !important;
-  align-items: center !important;
+    position: relative !important;
+    cursor: pointer !important;
+    display: flex !important;
+    align-items: center !important;
 }
 
 .cart-icon svg {
-  width: 20px !important;
-  height: 20px !important;
-  stroke: var(--text) !important;
-  fill: none !important;
-  transition: transform 0.2s !important;
+    width: 20px !important;
+    height: 20px !important;
+    stroke: var(--text) !important;
+    fill: none !important;
+    transition: transform 0.2s !important;
 }
 
 body.dark-mode .cart-icon svg {
-  stroke: #ffffff !important;
+    stroke: #ffffff !important;
 }
 
 .cart-count {
-  position: absolute !important;
-  top: -6px !important;
-  right: -6px !important;
-  background: var(--text) !important;
-  color: var(--bg) !important;
-  font-size: 11px !important;
-  width: 18px !important;
-  height: 18px !important;
-  border-radius: 50% !important;
-  display: flex !important;
-  align-items: center !important;
-  justify-content: center !important;
-  font-weight: bold !important;
+    position: absolute !important;
+    top: -6px !important;
+    right: -6px !important;
+    background: var(--text) !important;
+    color: var(--bg) !important;
+    font-size: 11px !important;
+    width: 18px !important;
+    height: 18px !important;
+    border-radius: 50% !important;
+    display: flex !important;
+    align-items: center !important;
+    justify-content: center !important;
+    font-weight: bold !important;
 }
 
 body.dark-mode .cart-count {
-  background: #ffffff !important;
-  color: #000000 !important;
+    background: #ffffff !important;
+    color: #000000 !important;
 }
 
 /* GRID TOGGLE SYSTEM */
 .grid-toggle-btn {
-  background: transparent !important;
-  border: none !important;
-  color: var(--text) !important;
-  font-size: 28px !important;
-  font-weight: 300 !important;
-  font-family: inherit !important;
-  cursor: pointer !important;
-  padding: 0 !important;
-  display: flex !important;
-  align-items: center !important;
-  justify-content: center !important;
-  width: 30px !important;
-  height: 30px !important;
-  z-index: 10 !important;
+    background: transparent !important;
+    border: none !important;
+    color: var(--text) !important;
+    font-size: 28px !important;
+    font-weight: 300 !important;
+    font-family: inherit !important;
+    cursor: pointer !important;
+    padding: 0 !important;
+    display: flex !important;
+    align-items: center !important;
+    justify-content: center !important;
+    width: 30px !important;
+    height: 30px !important;
+    z-index: 10 !important;
 }
 
 body.dark-mode .grid-toggle-btn {
-  color: #fff !important;
+    color: #fff !important;
 }
 
 @media (max-width: 768px) {
-  .vanguard-left > div:first-child {
-      display: flex !important;
-      justify-content: space-between !important;
-      align-items: center !important;
-      width: 100% !important;
-  }
+    .vanguard-left>div:first-child {
+        display: flex !important;
+        justify-content: space-between !important;
+        align-items: center !important;
+        width: 100% !important;
+    }
 
-  .container.grid-1, .products-grid.grid-1 {
-      grid-template-columns: 1fr !important;
-      gap: 20px !important;
-  }
+    .container.grid-1,
+    .products-grid.grid-1 {
+        grid-template-columns: 1fr !important;
+        gap: 20px !important;
+    }
 
-  .container.grid-1 .image-wrapper {
-      border-radius: 10px !important;
-      aspect-ratio: auto !important;
-  }
+    .container.grid-1 .image-wrapper {
+        border-radius: 10px !important;
+        aspect-ratio: auto !important;
+    }
 
-  .container.grid-1 img {
-      width: 100% !important;
-      height: auto !important;
-  }
+    .container.grid-1 img {
+        width: 100% !important;
+        height: auto !important;
+    }
 
-  .container.grid-1 .product-box {
-      padding-bottom: 20px !important;
-  }
+    .container.grid-1 .product-box {
+        padding-bottom: 20px !important;
+    }
 }
 
 /* FIXED GRID TOGGLE CLASSES */
 @media (max-width: 768px) {
-  .grid-two {
-      display: grid !important;
-      grid-template-columns: 1fr 1fr !important;
-      gap: 16px !important;
-      padding: 16px !important;
-  }
-  
-  .grid-one {
-      display: grid !important;
-      grid-template-columns: 1fr !important;
-      gap: 24px !important;
-      padding: 16px !important;
-  }
-  
-  .grid-one .product-box {
-      width: 100% !important;
-      padding-bottom: 20px !important;
-  }
+    .grid-two {
+        display: grid !important;
+        grid-template-columns: 1fr 1fr !important;
+        gap: 16px !important;
+        padding: 16px !important;
+    }
 
-  .grid-one .image-wrapper {
-      aspect-ratio: auto !important;
-  }
+    .grid-one {
+        display: grid !important;
+        grid-template-columns: 1fr !important;
+        gap: 20px !important;
+        padding: 16px !important;
+    }
 
-  .grid-one img {
-      width: 100% !important;
-      height: auto !important;
-      border-radius: 12px !important;
-  }
+    .grid-one .product-box img {
+        width: 100% !important;
+        height: auto !important;
+        border-radius: 12px !important;
+    }
 }
