@@ -2349,3 +2349,5 @@ Failed to decrypt shipping for order 1773161060010479: Error: Decryption Failed.
     at async Promise.all (index 1)
     at async Statement.<anonymous> (/Users/dompom/Desktop/Dompomstore /dompomstore-backend/server.js:373:22)
 [PGP Debug] Payload successfully decrypted.
+./start_store.sh: line 32: 95563 Hangup: 1               npm start  (wd: ~/Desktop/Dompomstore /dompomstore-backend)
+./start_store.sh: line 32: 95564 Hangup: 1               npx serve . -l 8080
