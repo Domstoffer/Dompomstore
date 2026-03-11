@@ -379,6 +379,37 @@
             padding-bottom: 24px;
         }
 
+        .slide-up-anim {
+            -webkit-animation: slideUpFade 0.8s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+            animation: slideUpFade 0.8s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+        }
+
+        @-webkit-keyframes slideUpFade {
+            0% {
+                opacity: 0;
+                -webkit-transform: translateY(150px);
+                transform: translateY(150px);
+            }
+
+            100% {
+                opacity: 1;
+                -webkit-transform: translateY(0);
+                transform: translateY(0);
+            }
+        }
+
+        @keyframes slideUpFade {
+            0% {
+                opacity: 0;
+                transform: translateY(150px);
+            }
+
+            100% {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
 
         @media (max-width: 900px) {
             .split-layout {
