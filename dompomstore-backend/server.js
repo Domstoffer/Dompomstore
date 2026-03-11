@@ -487,6 +487,97 @@ app.post('/api/admin/products', authenticateToken, [
   }
 });
 
+
+// ==========================================
+// ADMIN PRODUCT EDITOR API
+// ==========================================
+
+// GET ALL PRODUCTS
+app.get('/api/admin/products', authenticateToken, (req, res) => {
+  const productsFilePath = path.join(__dirname, '../products.js');
+  try {
+    const fileContent = fs.readFileSync(productsFilePath, 'utf8');
+    
+    // Extract the raw JS array string
+    const startIndex = fileContent.indexOf('const products = [');
+    const endIndex = fileContent.lastIndexOf('];') + 1;
+    
+    if (startIndex === -1 || endIndex === 0) {
+      return res.status(500).json({ error: "Could not locate products array in file" });
+    }
+    
+    let arrayString = fileContent.substring(startIndex + 'const products = '.length, endIndex);
+    
+    // Safely evaluate the JS string to JSON
+    const data = eval('(' + arrayString + ')');
+    res.json(data);
+  } catch (err) {
+    console.error("Error reading products:", err);
+    res.status(500).json({ error: "Failed to read products" });
+  }
+});
+
+// UPDATE EXISTING PRODUCT
+app.put('/api/admin/products/:id', authenticateToken, [
+  param('id').isString().notEmpty().escape(),
+  body('name').isString().notEmpty().trim().escape(),
+  body('price').isNumeric(),
+  body('sizes').isArray(),
+  body('description').isString().trim().escape()
+], (req, res) => {
+  const errors = validationResult(req);
+  if (!errors.isEmpty()) return res.status(400).json({ error: "Invalid Input Validation", details: errors.array() });
+
+  const targetId = req.params.id;
+  const updateData = req.body;
+  const productsFilePath = path.join(__dirname, '../products.js');
+
+  try {
+    let fileContent = fs.readFileSync(productsFilePath, 'utf8');
+    
+    const startIndex = fileContent.indexOf('const products = [');
+    const endIndex = fileContent.lastIndexOf('];') + 1;
+    
+    if (startIndex === -1 || endIndex === 0) {
+      return res.status(500).json({ error: "Could not locate products array in file" });
+    }
+    
+    let preArray = fileContent.substring(0, startIndex + 'const products = '.length);
+    let arrayString = fileContent.substring(startIndex + 'const products = '.length, endIndex);
+    let postArray = fileContent.substring(endIndex);
+    
+    // Parse the array
+    let productsArray = eval('(' + arrayString + ')');
+    
+    // Find and update the product
+    let productFound = false;
+    for (let i = 0; i < productsArray.length; i++) {
+        if (productsArray[i].id === targetId) {
+            productsArray[i].name = updateData.name;
+            productsArray[i].price = updateData.price;
+            productsArray[i].sizes = updateData.sizes;
+            productsArray[i].description = updateData.description;
+            productFound = true;
+            break;
+        }
+    }
+    
+    if (!productFound) {
+        return res.status(404).json({ error: "Product ID not found" });
+    }
+    
+    // Convert back to formatted JS string securely
+    const newArrayString = JSON.stringify(productsArray, null, 4);
+    
+    fs.writeFileSync(productsFilePath, preArray + newArrayString + postArray, 'utf8');
+    res.json({ success: true, message: "Product updated successfully" });
+    
+  } catch (err) {
+    console.error("Error updating product in filesystem:", err);
+    res.status(500).json({ error: "Server error during product filesystem update" });
+  }
+});
+
 pgpService.init().then(() => {
   app.listen(PORT, () => {
     console.log(`SECURE Server running on port ${PORT} with Enterprise Protections and PGP Engine Active.`);

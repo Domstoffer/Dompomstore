@@ -49,6 +49,18 @@ const products = [
         stock: 10,
         description: "Classic design. Must have piece."
     }
+,
+    {
+        id: "Fartcoin Shirt",
+        name: "FS-01",
+        price: 29,
+        currency: "USDC",
+        image: "images/1773193258736-0-unisex-garment-dyed-heavyweight-t-shirt-black-back-6953cef82cf54.PNG",
+        images: ["images/1773193258736-0-unisex-garment-dyed-heavyweight-t-shirt-black-back-6953cef82cf54.PNG"],
+        sizes: ["M","L","S"],
+        stock: 100,
+        description: "Fartcoin shirt das erste DTF print Video seht ihr fit und material unwichtig"
+    }
 ];
 
 function renderProducts(productsArray) {
