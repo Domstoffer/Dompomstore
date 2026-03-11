@@ -472,7 +472,8 @@ app.post('/api/admin/products', authenticateToken, [
   if (!errors.isEmpty()) return res.status(400).json({ error: "Invalid Input Validation", details: errors.array() });
 
   const newProduct = req.body;
-  const productsFilePath = path.join(__dirname, '../products.js');
+  const isSecret = newProduct.targetShop === 'secret';
+  const productsFilePath = path.join(__dirname, isSecret ? '../secret_products.js' : '../products.js');
   const imagesDirPath = path.join(__dirname, '../images');
 
   try {
@@ -535,23 +536,21 @@ app.post('/api/admin/products', authenticateToken, [
 
 // GET ALL PRODUCTS
 app.get('/api/admin/products', authenticateToken, (req, res) => {
-  const productsFilePath = path.join(__dirname, '../products.js');
   try {
-    const fileContent = fs.readFileSync(productsFilePath, 'utf8');
+    const parseFile = (filename, shopId) => {
+      const filePath = path.join(__dirname, '../' + filename);
+      if (!fs.existsSync(filePath)) return [];
+      const fileContent = fs.readFileSync(filePath, 'utf8');
+      const startIndex = fileContent.indexOf('const products = [');
+      const endIndex = fileContent.lastIndexOf('];') + 1;
+      if (startIndex === -1 || endIndex === 0) return [];
+      let arrayString = fileContent.substring(startIndex + 'const products = '.length, endIndex);
+      let arr = eval('(' + arrayString + ')');
+      return arr.map(p => ({ ...p, shopId }));
+    };
 
-    // Extract the raw JS array string
-    const startIndex = fileContent.indexOf('const products = [');
-    const endIndex = fileContent.lastIndexOf('];') + 1;
-
-    if (startIndex === -1 || endIndex === 0) {
-      return res.status(500).json({ error: "Could not locate products array in file" });
-    }
-
-    let arrayString = fileContent.substring(startIndex + 'const products = '.length, endIndex);
-
-    // Safely evaluate the JS string to JSON
-    const data = eval('(' + arrayString + ')');
-    res.json(data);
+    let allProducts = parseFile('products.js', 'main').concat(parseFile('secret_products.js', 'secret'));
+    res.json(allProducts);
   } catch (err) {
     console.error("Error reading products:", err);
     res.status(500).json({ error: "Failed to read products" });
@@ -571,48 +570,49 @@ app.put('/api/admin/products/:id', authenticateToken, [
 
   const targetId = req.params.id;
   const updateData = req.body;
-  const productsFilePath = path.join(__dirname, '../products.js');
+  const files = ['products.js', 'secret_products.js'];
 
   try {
-    let fileContent = fs.readFileSync(productsFilePath, 'utf8');
-
-    const startIndex = fileContent.indexOf('const products = [');
-    const endIndex = fileContent.lastIndexOf('];') + 1;
-
-    if (startIndex === -1 || endIndex === 0) {
-      return res.status(500).json({ error: "Could not locate products array in file" });
-    }
-
-    let preArray = fileContent.substring(0, startIndex + 'const products = '.length);
-    let arrayString = fileContent.substring(startIndex + 'const products = '.length, endIndex);
-    let postArray = fileContent.substring(endIndex);
-
-    // Parse the array
-    let productsArray = eval('(' + arrayString + ')');
-
-    // Find and update the product
     let productFound = false;
-    for (let i = 0; i < productsArray.length; i++) {
-      if (productsArray[i].id === targetId) {
-        productsArray[i].name = updateData.name;
-        productsArray[i].price = updateData.price;
-        productsArray[i].sizes = updateData.sizes;
-        productsArray[i].description = updateData.description;
-        productFound = true;
-        break;
+
+    for (const filename of files) {
+      if (productFound) break;
+      const productsFilePath = path.join(__dirname, '../' + filename);
+      if (!fs.existsSync(productsFilePath)) continue;
+
+      let fileContent = fs.readFileSync(productsFilePath, 'utf8');
+      const startIndex = fileContent.indexOf('const products = [');
+      const endIndex = fileContent.lastIndexOf('];') + 1;
+
+      if (startIndex === -1 || endIndex === 0) continue;
+
+      let preArray = fileContent.substring(0, startIndex + 'const products = '.length);
+      let arrayString = fileContent.substring(startIndex + 'const products = '.length, endIndex);
+      let postArray = fileContent.substring(endIndex);
+
+      let productsArray = eval('(' + arrayString + ')');
+
+      for (let i = 0; i < productsArray.length; i++) {
+        if (productsArray[i].id === targetId) {
+          productsArray[i].name = updateData.name;
+          productsArray[i].price = updateData.price;
+          productsArray[i].sizes = updateData.sizes;
+          productsArray[i].description = updateData.description;
+          productFound = true;
+          break;
+        }
+      }
+
+      if (productFound) {
+        const newArrayString = JSON.stringify(productsArray, null, 4);
+        fs.writeFileSync(productsFilePath, preArray + newArrayString + postArray, 'utf8');
+        return res.json({ success: true, message: "Product updated successfully" });
       }
     }
 
     if (!productFound) {
       return res.status(404).json({ error: "Product ID not found" });
     }
-
-    // Convert back to formatted JS string securely
-    const newArrayString = JSON.stringify(productsArray, null, 4);
-
-    fs.writeFileSync(productsFilePath, preArray + newArrayString + postArray, 'utf8');
-    res.json({ success: true, message: "Product updated successfully" });
-
   } catch (err) {
     console.error("Error updating product in filesystem:", err);
     res.status(500).json({ error: "Server error during product filesystem update" });
@@ -627,52 +627,60 @@ app.delete('/api/admin/products/:id', authenticateToken, [
   if (!errors.isEmpty()) return res.status(400).json({ error: "Invalid Input Validation", details: errors.array() });
 
   const targetId = req.params.id;
-  const productsFilePath = path.join(__dirname, '../products.js');
+  const files = ['products.js', 'secret_products.js'];
 
   try {
-    let fileContent = fs.readFileSync(productsFilePath, 'utf8');
+    let productFound = false;
 
-    const startIndex = fileContent.indexOf('const products = [');
-    const endIndex = fileContent.lastIndexOf('];') + 1;
+    for (const filename of files) {
+      if (productFound) break;
+      const productsFilePath = path.join(__dirname, '../' + filename);
+      if (!fs.existsSync(productsFilePath)) continue;
 
-    if (startIndex === -1 || endIndex === 0) {
-      return res.status(500).json({ error: "Could not locate products array in file" });
+      let fileContent = fs.readFileSync(productsFilePath, 'utf8');
+      const startIndex = fileContent.indexOf('const products = [');
+      const endIndex = fileContent.lastIndexOf('];') + 1;
+
+      if (startIndex === -1 || endIndex === 0) continue;
+
+      let preArray = fileContent.substring(0, startIndex + 'const products = '.length);
+      let arrayString = fileContent.substring(startIndex + 'const products = '.length, endIndex);
+      let postArray = fileContent.substring(endIndex);
+
+      let productsArray = eval('(' + arrayString + ')');
+
+      const productToDeleteIndex = productsArray.findIndex(p => p.id === targetId);
+      if (productToDeleteIndex !== -1) {
+        productFound = true;
+        const productToDelete = productsArray[productToDeleteIndex];
+
+        // Attempt to physically delete the images to save server storage
+        const imagesToDelete = productToDelete.images || (productToDelete.image ? [productToDelete.image] : []);
+        imagesToDelete.forEach(imgPath => {
+          try {
+            const fullImagePath = path.join(__dirname, '..', imgPath);
+            if (fs.existsSync(fullImagePath)) {
+              fs.unlinkSync(fullImagePath);
+            }
+          } catch (imgErr) {
+            console.error("Failed to delete image: ", imgPath, imgErr);
+          }
+        });
+
+        // Remove the product object from the array
+        productsArray.splice(productToDeleteIndex, 1);
+
+        // Convert back to formatted JS string securely
+        const newArrayString = JSON.stringify(productsArray, null, 4);
+
+        fs.writeFileSync(productsFilePath, preArray + newArrayString + postArray, 'utf8');
+        return res.json({ success: true, message: "Product and associated images wiped successfully" });
+      }
     }
 
-    let preArray = fileContent.substring(0, startIndex + 'const products = '.length);
-    let arrayString = fileContent.substring(startIndex + 'const products = '.length, endIndex);
-    let postArray = fileContent.substring(endIndex);
-
-    let productsArray = eval('(' + arrayString + ')');
-
-    // Find the product to delete its images from disk
-    const productToDelete = productsArray.find(p => p.id === targetId);
-    if (!productToDelete) {
+    if (!productFound) {
       return res.status(404).json({ error: "Product ID not found" });
     }
-
-    // Attempt to physically delete the images to save server storage
-    const imagesToDelete = productToDelete.images || (productToDelete.image ? [productToDelete.image] : []);
-    imagesToDelete.forEach(imgPath => {
-      try {
-        const fullImagePath = path.join(__dirname, '..', imgPath);
-        if (fs.existsSync(fullImagePath)) {
-          fs.unlinkSync(fullImagePath);
-        }
-      } catch (imgErr) {
-        console.error("Failed to delete image: ", imgPath, imgErr);
-      }
-    });
-
-    // Remove the product object from the array
-    const updatedArray = productsArray.filter(p => p.id !== targetId);
-
-    // Convert back to formatted JS string securely
-    const newArrayString = JSON.stringify(updatedArray, null, 4);
-
-    fs.writeFileSync(productsFilePath, preArray + newArrayString + postArray, 'utf8');
-    res.json({ success: true, message: "Product and associated images wiped successfully" });
-
   } catch (err) {
     console.error("Error deleting product in filesystem:", err);
     res.status(500).json({ error: "Server error during product filesystem deletion" });

@@ -33,32 +33,17 @@ template = template.replace(/\.add-to-cart\s*{[^}]+background:\s*#000;[^}]+color
     (match) => match.replace('background: #000;', 'background: #fff;').replace('color: #fff;', 'color: #000;'));
 template = template.replace(/\.add-to-cart:hover\s*{\s*background:\s*#222;/g, ".add-to-cart:hover { background: #eee;");
 
-// Fix specific text color for generic things that might have been hardcoded
-let products = [
-    { id: 1, name: "EXCLUSIVE 01", price: "120", img: "https://picsum.photos/seed/prv01/800/800" },
-    { id: 2, name: "EXCLUSIVE 02", price: "90", img: "https://picsum.photos/seed/prv02/800/800" },
-    { id: 3, name: "EXCLUSIVE 03", price: "75", img: "https://picsum.photos/seed/prv03/800/800" },
-    { id: 4, name: "EXCLUSIVE 04", price: "200", img: "https://picsum.photos/seed/prv04/800/800" },
-];
+// Point to the secret products script instead
+template = template.replace(/products\.js\?v=/g, 'secret_products.js?v=');
 
-for (const p of products) {
-    let phtml = template;
+// Replace Back Link to hidden
+template = template.replace(/href="index\.html"\s*class="back-link"/g, 'href="hidden.html" class="back-link"');
 
-    // Replace Back Link to hidden
-    phtml = phtml.replace(/href="index\.html"\s*class="back-link"/g, 'href="hidden.html" class="back-link"');
+// Replace Logo Link just to be purely decorative
+template = template.replace(/<a href="index\.html" class="logo">/g, '<a href="hidden.html" class="logo">');
 
-    // Replace Logo Link just to be purely decorative
-    phtml = phtml.replace(/<a href="index\.html" class="logo">/g, '<a href="hidden.html" class="logo">');
+// Ensure shopSource is set for checkout
+template = template.replace(/function addToCart\(/, "function addToCart(name, price, size, event) {\n      localStorage.setItem('shopSource', 'private');\n");
 
-    // Replace Content
-    phtml = phtml.replace(/<div class="product-title">DB-01<\/div>/, `<div class="product-title">${p.name}</div>`);
-    phtml = phtml.replace(/id="product-price">49 USDC<\/span>/, `id="product-price">${p.price} USDC</span>`);
-    phtml = phtml.replace(/const productData = \{[\s\S]*?\};/, `const productData = {\n      name: "${p.name}",\n      price: ${p.price}\n    };`);
-    phtml = phtml.replace(/<img id="mainImage" src="images\/DB-01\.jpg" alt="Product Image">/, `<img id="mainImage" src="${p.img}" alt="${p.name}">`);
-
-    // Ensure shopSource is set
-    phtml = phtml.replace(/function addToCart\(\) \{/, "function addToCart() {\n      localStorage.setItem('shopSource', 'private');");
-
-    fs.writeFileSync(path.join(__dirname, `secret_produkt${p.id}.html`), phtml);
-}
-console.log("Secret product pages generated.");
+fs.writeFileSync(path.join(__dirname, `secret_produkt.html`), template);
+console.log("Secret dynamic product template generated.");

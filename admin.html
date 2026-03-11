@@ -385,7 +385,12 @@
       <form id="add-product-form" onsubmit="submitProduct(event)">
         <div style="display:flex; gap:10px; margin-bottom:10px;">
           <input id="prod-id" placeholder="ID (z.B. SHIRT-01)" required style="flex:1;">
-          <input id="prod-name" placeholder="Name (z.B. Dompom Shirt)" required style="flex:2;">
+          <input id="prod-name" placeholder="Name (z.B. Dompom)" required style="flex:2;">
+          <select id="prod-target-shop"
+            style="flex:1; padding:10px; border:1px solid #ccc; background:#f9f9f9; cursor:pointer;">
+            <option value="main">Öffentlich</option>
+            <option value="secret">Geheim (Untershop)</option>
+          </select>
         </div>
         <div style="display:flex; gap:10px; margin-bottom:10px;">
           <input id="prod-price" type="number" placeholder="Preis (Zahl)" required style="flex:1;">
@@ -608,11 +613,19 @@
         const safeName = escapeHTML(p.name);
         const safeId = escapeHTML(p.id);
         const safePrice = escapeHTML(p.price);
+
+        let shopBadge = '';
+        if (p.shopId === 'secret') {
+          shopBadge = '<span style="background:#000; color:#fff; padding:2px 6px; border-radius:4px; font-size:10px; margin-left:8px; display:inline-block;">UNTERSHOP</span>';
+        } else {
+          shopBadge = '<span style="background:#eee; color:#333; padding:2px 6px; border-radius:4px; font-size:10px; margin-left:8px; display:inline-block;">HAUPTSHOP</span>';
+        }
+
         html += `
           <div style="display:flex; justify-content:space-between; align-items:center; padding:12px 16px; border:1px solid #eee; border-radius:6px; background:#fafafa;">
             <div>
-              <strong style="font-size:13px;">${safeName}</strong>
-              <div style="font-size:11px; color:#777;">ID: ${safeId} | Preis: ${safePrice} USDC</div>
+              <strong style="font-size:13px;">${safeName}</strong> ${shopBadge}
+              <div style="font-size:11px; color:#777; margin-top:4px;">ID: ${safeId} | Preis: ${safePrice} USDC</div>
             </div>
             <div style="display:flex; gap:8px;">
                 <button onclick="deleteProduct('${safeId}')" style="padding:6px 14px; font-size:11px; color:#fff; background:#e74c3c; border:none; border-radius:4px; cursor:pointer;">Löschen</button>
@@ -919,6 +932,7 @@
       const payload = {
         id: document.getElementById('prod-id').value.trim(),
         name: document.getElementById('prod-name').value.trim(),
+        targetShop: document.getElementById('prod-target-shop').value,
         price: Number(document.getElementById('prod-price').value),
         currency: "USDC", // Default store currency
         sizes: document.getElementById('prod-sizes').value.split(',').map(s => s.trim()),
