@@ -78,7 +78,7 @@ function renderProducts(productsArray) {
         box.innerHTML = `
             <div class="image-wrapper"><img loading="lazy" src="${product.image}" alt="${product.name}"></div>
             <div class="product-info-grid">
-              <div class="product-name">${product.name}</div>
+              <div class="product-name">${product.name}</div>\n              <div class="product-price">${product.price} ${product.currency}</div>
             </div>
         `;
         grid.appendChild(box);
