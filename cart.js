@@ -83,6 +83,11 @@ function initCart() {
             size: size
         });
         updateCart();
+
+        if (cartDrawer && overlay) {
+            cartDrawer.classList.add("show");
+            overlay.classList.add("show");
+        }
     };
 }
 
