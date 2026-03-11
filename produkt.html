@@ -427,18 +427,6 @@
                 transition: all 0.3s ease;
             }
 
-            .size-row.fixed-bottom {
-                position: fixed;
-                bottom: 0;
-                left: 0;
-                padding: 15px 24px;
-                padding-bottom: calc(15px + env(safe-area-inset-bottom));
-                border-top: 1px solid rgba(0, 0, 0, 0.05);
-                z-index: 1000;
-                margin: 0 !important;
-                box-shadow: 0 -4px 15px rgba(0, 0, 0, 0.03);
-            }
-
             .size-btn {
                 flex: 1;
             }
@@ -717,10 +705,6 @@
                         // Unlock overflow to allow scrolling down to the new section
                         document.body.style.overflow = "auto";
                         document.body.style.height = "auto";
-
-                        // Make size buttons permanently sticky once related products are revealed
-                        const sizePicker = document.querySelector('.size-row');
-                        if (sizePicker) sizePicker.classList.add('fixed-bottom');
 
                         // Smooth scroll down to reveal it partially
                         window.scrollBy({ top: 350, behavior: 'smooth' });
