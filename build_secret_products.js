@@ -1,7 +1,7 @@
 const fs = require('fs');
 const path = require('path');
 
-const templatePath = path.join(__dirname, 'produkt1.html');
+const templatePath = path.join(__dirname, 'produkt.html');
 let template = fs.readFileSync(templatePath, 'utf8');
 
 // Convert template to DARK MODE
