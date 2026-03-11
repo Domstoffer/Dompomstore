@@ -607,7 +607,21 @@
     body {
       touch-action: manipulation !important;
     }
-  </style>
+  
+    .grid-three { display: grid; grid-template-columns: repeat(3, 1fr); gap: 20px; }
+    .grid-two { display: grid; grid-template-columns: repeat(2, 1fr); gap: 20px; }
+    .grid-one { display: grid; grid-template-columns: 1fr; gap: 20px; }
+    
+    @media(max-width: 900px) {
+        /* Mobile overrides usually force everything to 1 or 2 columns, but we'll let the user toggle if they want or let css rule */
+        .grid-three { grid-template-columns: repeat(2, 1fr); }
+    }
+    @media(max-width: 600px) {
+        .grid-three { grid-template-columns: 1fr; }
+        .grid-two { grid-template-columns: 1fr; }
+    }
+
+</style>
 
 
 
@@ -809,7 +823,7 @@
       <!-- SCROLLABLE RIGHT CONTENT -->
       <div class="vanguard-right">
         <h1 class="huge-title">New <i>Arrivals</i></h1>
-        <div class="container grid-two" id="productsGrid">
+        <div class="container grid-three" id="productsGrid">
         </div>
       </div>
 
@@ -869,6 +883,34 @@
         }
       });
     </script>
+
+
+<script>
+    const toggle = document.getElementById("gridToggle");
+    const grid = document.getElementById("productsGrid");
+    
+    if(toggle && grid) {
+        // Initialize to grid-three by default if we want to start at 3er
+        // The user asked "kannst du bilder in 3er reihe machen" meaning start at 3?
+        // Wait, current HTML is "container grid-two". We'll change the HTML below.
+        
+        toggle.onclick = function() {
+            if(grid.classList.contains("grid-three")) {
+                grid.classList.remove("grid-three");
+                grid.classList.add("grid-two");
+                toggle.innerText = "++";
+            } else if(grid.classList.contains("grid-two")) {
+                grid.classList.remove("grid-two");
+                grid.classList.add("grid-one");
+                toggle.innerText = "+++";
+            } else {
+                grid.classList.remove("grid-one");
+                grid.classList.add("grid-three");
+                toggle.innerText = "+";
+            }
+        };
+    }
+</script>
 
 </body>
 
