@@ -830,10 +830,11 @@
         display: contents !important;
       }
 
-      .vanguard-left::before {
-        content: '' !important;
-        display: block !important;
+      .header-left-slot {
         grid-column: 1 !important;
+        justify-self: start !important;
+        display: flex !important;
+        align-items: center !important;
       }
 
       .brand-logo {
@@ -901,16 +902,16 @@
       <!-- FIXED LEFT MENU -->
       <div class="vanguard-left">
         <div>
+          <div class="header-left-slot">
+            <button id="gridToggle" class="grid-toggle-btn"
+              style="background:none; border:none; color:inherit; font-size:1.5rem; cursor:pointer; font-weight: 300; opacity: 0.5; transition: opacity 0.3s; padding: 0;"
+              onmouseover="this.style.opacity=1" onmouseout="this.style.opacity=0.5">+</button>
+          </div>
           <div class="brand-logo" style="display: flex; flex-direction: column; align-items: center;">
             <img class="main-logo-img" src="images/logo.png" alt="DOMPOMSTORE Logo">
-            <div style="display: flex; align-items: center; gap: 8px; justify-content: center;">
-              <button id="gridToggle" class="grid-toggle-btn"
-                style="background:none; border:none; color:inherit; font-size:1.5rem; cursor:pointer; font-weight: 300; opacity: 0.5; transition: opacity 0.3s; padding: 0;"
-                onmouseover="this.style.opacity=1" onmouseout="this.style.opacity=0.5">+</button>
-              <div><a href="index.html">DOM</a><a href="hidden.html" class="secret-link"
-                  style="cursor:pointer; opacity:0.3; transition:0.3s;" onmouseover="this.style.opacity=1"
-                  onmouseout="this.style.opacity=0.3">P</a><a href="index.html">OMSTORE</a></div>
-            </div>
+            <div><a href="index.html">DOM</a><a href="hidden.html" class="secret-link"
+                style="cursor:pointer; opacity:0.3; transition:0.3s;" onmouseover="this.style.opacity=1"
+                onmouseout="this.style.opacity=0.3">P</a><a href="index.html">OMSTORE</a></div>
           </div>
           <div class="nav-menu">
             <div class="cart-icon" id="cart-icon">
