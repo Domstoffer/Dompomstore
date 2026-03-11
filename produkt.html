@@ -487,8 +487,8 @@
                             const btn = document.createElement("button");
                             btn.className = "size-btn";
                             btn.innerText = "In den Warenkorb";
-                            btn.onclick = function () {
-                                addToCart(currentProduct.name, currentProduct.price, "OS");
+                            btn.onclick = function (e) {
+                                addToCart(currentProduct.name, currentProduct.price, "OS", e);
                             };
                             sizesContainer.appendChild(btn);
                         } else {
@@ -497,9 +497,9 @@
                                 const btn = document.createElement("button");
                                 btn.className = "size-btn";
                                 btn.innerText = size;
-                                btn.onclick = function () {
+                                btn.onclick = function (e) {
                                     // Instantly add to cart when clicking the size
-                                    addToCart(currentProduct.name, currentProduct.price, size);
+                                    addToCart(currentProduct.name, currentProduct.price, size, e);
                                 };
                                 sizesContainer.appendChild(btn);
                             });
@@ -511,8 +511,8 @@
                         const btn = document.createElement("button");
                         btn.className = "size-btn";
                         btn.innerText = "In den Warenkorb";
-                        btn.onclick = function () {
-                            addToCart(currentProduct.name, currentProduct.price, "OS");
+                        btn.onclick = function (e) {
+                            addToCart(currentProduct.name, currentProduct.price, "OS", e);
                         };
                         sizesContainer.appendChild(btn);
                     }

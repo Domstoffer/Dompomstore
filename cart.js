@@ -76,7 +76,50 @@ function initCart() {
     window.addEventListener("pageshow", loadCart);
     loadCart();
 
-    window.addToCart = function (name, price, size) {
+    window.addToCart = function (name, price, size, event) {
+        // 1. Chilliger Effekt (Flying Dot)
+        if (event) {
+            const dot = document.createElement("div");
+            dot.style.position = "fixed";
+            dot.style.width = "15px";
+            dot.style.height = "15px";
+            dot.style.borderRadius = "50%";
+            dot.style.backgroundColor = "#000";
+            dot.style.zIndex = "9999";
+            dot.style.pointerEvents = "none";
+
+            // Start at the click position
+            const startX = event.clientX;
+            const startY = event.clientY;
+            dot.style.left = startX + "px";
+            dot.style.top = startY + "px";
+            dot.style.transition = "all 0.8s cubic-bezier(0.25, 1, 0.5, 1)";
+
+            document.body.appendChild(dot);
+
+            // Force reflow
+            dot.getBoundingClientRect();
+
+            // Fly to the cart icon
+            if (cartIconNode) {
+                const cartRect = cartIconNode.getBoundingClientRect();
+                dot.style.left = (cartRect.left + cartRect.width / 2) + "px";
+                dot.style.top = (cartRect.top + cartRect.height / 2) + "px";
+                dot.style.transform = "scale(0.1)";
+                dot.style.opacity = "0";
+            }
+
+            // Clean up and open drawer after flying finishes
+            setTimeout(() => {
+                dot.remove();
+                executeCartAdd(name, price, size);
+            }, 800);
+        } else {
+            executeCartAdd(name, price, size);
+        }
+    };
+
+    function executeCartAdd(name, price, size) {
         cart.push({
             name: name,
             price: price,
@@ -88,7 +131,7 @@ function initCart() {
             cartDrawer.classList.add("show");
             overlay.classList.add("show");
         }
-    };
+    }
 }
 
 document.addEventListener("DOMContentLoaded", initCart);
