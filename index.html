@@ -884,8 +884,40 @@
 
 
     <script src="cart.js"></script>
-    <script src="products.js"></script>
 
+    <script>
+      // Load products dynamically with a cache buster timestamp
+      const productScript = document.createElement('script');
+      productScript.src = 'products.js?v=' + new Date().getTime();
+      document.body.appendChild(productScript);
+
+      productScript.onload = () => {
+        const grid = document.getElementById("productsGrid");
+        if (typeof products !== 'undefined' && grid) {
+          grid.innerHTML = "";
+          products.forEach(p => {
+            const box = document.createElement("a");
+            box.href = "produkt.html?id=" + encodeURIComponent(p.id);
+            box.className = "product-box";
+            box.style.textDecoration = "none";
+            box.style.color = "inherit";
+
+            const imgSrc = Array.isArray(p.images) && p.images.length > 0 ? p.images[0] : p.image;
+
+            box.innerHTML = `
+                  <div class="image-wrapper">
+                    <img src="${imgSrc}" alt="${p.name}" loading="lazy">
+                  </div>
+                  <div class="product-info-grid">
+                    <div class="product-name">${p.name}</div>
+                    <div class="product-price">${p.price} ${p.currency}</div>
+                  </div>
+                `;
+            grid.appendChild(box);
+          });
+        }
+      };
+    </script>
     <script>
       function unlockSite() {
         const password = "dompom";

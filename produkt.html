@@ -492,212 +492,213 @@
                     <div class="desc-content">
                         <div class="desc-content-inner" id="product-description"></div>
                     </div>
-                </div>
-            </div>
+                    <script src="cart.js"></script>
+                    <script>
+                        // Load products dynamically with a cache buster timestamp
+                        const productScript = document.createElement('script');
+                        productScript.src = 'products.js?v=' + new Date().getTime();
+                        document.body.appendChild(productScript);
 
-            <script src="products.js"></script>
-            <script src="cart.js"></script>
-            <script>
-                let currentProduct = null;
-                let selectedSize = null;
+                        let currentProduct = null;
+                        let selectedSize = null;
 
-                document.addEventListener("DOMContentLoaded", () => {
-                    // 1. Read URL Params
-                    const params = new URLSearchParams(window.location.search);
-                    const productId = params.get("id");
+                        productScript.onload = () => {
+                            // 1. Read URL Params
+                            const params = new URLSearchParams(window.location.search);
+                            const productId = params.get("id");
 
-                    // 2. Find Product
-                    if (typeof products !== 'undefined') {
-                        currentProduct = products.find(p => p.id === productId);
-                    }
+                            // 2. Find Product
+                            if (typeof products !== 'undefined') {
+                                currentProduct = products.find(p => p.id === productId);
+                            }
 
-                    if (!currentProduct) {
-                        document.getElementById("product-name").innerText = "Product not found";
-                        document.getElementById("addToCartBtn").style.display = 'none';
-                        return;
-                    }
+                            if (!currentProduct) {
+                                document.getElementById("product-name").innerText = "Product not found";
+                                document.getElementById("addToCartBtn").style.display = 'none';
+                                return;
+                            }
 
-                    // 3. Populate Data
-                    document.title = currentProduct.name + " – Dompomstore";
-                    document.getElementById("product-name").innerText = currentProduct.name;
-                    document.getElementById("product-price").innerText = currentProduct.price + " " + currentProduct.currency;
-                    document.getElementById("product-description").innerText = currentProduct.description;
+                            // 3. Populate Data
+                            document.title = currentProduct.name + " – Dompomstore";
+                            document.getElementById("product-name").innerText = currentProduct.name;
+                            document.getElementById("product-price").innerText = currentProduct.price + " " + currentProduct.currency;
+                            document.getElementById("product-description").innerText = currentProduct.description;
 
-                    const imageTrack = document.querySelector('.image-track');
-                    imageTrack.innerHTML = ''; // Clear fallback img
+                            const imageTrack = document.querySelector('.image-track');
+                            imageTrack.innerHTML = ''; // Clear fallback img
 
-                    if (currentProduct.images && currentProduct.images.length > 0) {
-                        currentProduct.images.forEach(imgSrc => {
-                            const img = document.createElement('img');
-                            img.src = imgSrc;
-                            img.alt = currentProduct.name;
-                            img.loading = "lazy";
-                            imageTrack.appendChild(img);
-                        });
-                    } else if (currentProduct.image) {
-                        const img = document.createElement('img');
-                        img.src = currentProduct.image;
-                        img.alt = currentProduct.name;
-                        img.loading = "lazy";
-                        imageTrack.appendChild(img);
-                    }
+                            if (currentProduct.images && currentProduct.images.length > 0) {
+                                currentProduct.images.forEach(imgSrc => {
+                                    const img = document.createElement('img');
+                                    img.src = imgSrc;
+                                    img.alt = currentProduct.name;
+                                    img.loading = "lazy";
+                                    imageTrack.appendChild(img);
+                                });
+                            } else if (currentProduct.image) {
+                                const img = document.createElement('img');
+                                img.src = currentProduct.image;
+                                img.alt = currentProduct.name;
+                                img.loading = "lazy";
+                                imageTrack.appendChild(img);
+                            }
 
-                    // 4. Populate Sizes
-                    const sizesContainer = document.getElementById("sizes-container");
-                    const sizeLabel = document.getElementById("size-label");
-                    if (currentProduct.sizes && currentProduct.sizes.length > 0) {
-                        if (currentProduct.sizes.length === 1 && currentProduct.sizes[0] === "OS") {
-                            // Fallback button if product has only "OS", which replaces the Add To Cart button
-                            sizeLabel.style.display = "block";
-                            sizeLabel.innerText = "KAUFEN";
-                            const btn = document.createElement("button");
-                            btn.className = "size-btn";
-                            btn.innerText = "In den Warenkorb";
-                            btn.onclick = function (e) {
-                                addToCart(currentProduct.name, currentProduct.price, "OS", e);
-                            };
-                            sizesContainer.appendChild(btn);
-                        } else {
-                            sizeLabel.style.display = "block";
-                            currentProduct.sizes.forEach(size => {
+                            // 4. Populate Sizes
+                            const sizesContainer = document.getElementById("sizes-container");
+                            const sizeLabel = document.getElementById("size-label");
+                            if (currentProduct.sizes && currentProduct.sizes.length > 0) {
+                                if (currentProduct.sizes.length === 1 && currentProduct.sizes[0] === "OS") {
+                                    // Fallback button if product has only "OS", which replaces the Add To Cart button
+                                    sizeLabel.style.display = "block";
+                                    sizeLabel.innerText = "KAUFEN";
+                                    const btn = document.createElement("button");
+                                    btn.className = "size-btn";
+                                    btn.innerText = "In den Warenkorb";
+                                    btn.onclick = function (e) {
+                                        addToCart(currentProduct.name, currentProduct.price, "OS", e);
+                                    };
+                                    sizesContainer.appendChild(btn);
+                                } else {
+                                    sizeLabel.style.display = "block";
+                                    currentProduct.sizes.forEach(size => {
+                                        const btn = document.createElement("button");
+                                        btn.className = "size-btn";
+                                        btn.innerText = size;
+                                        btn.onclick = function (e) {
+                                            // Instantly add to cart when clicking the size
+                                            addToCart(currentProduct.name, currentProduct.price, size, e);
+                                        };
+                                        sizesContainer.appendChild(btn);
+                                    });
+                                }
+                            } else {
+                                // If completely zero sizes, default to Add to Cart OS mode
+                                sizeLabel.style.display = "block";
+                                sizeLabel.innerText = "KAUFEN";
                                 const btn = document.createElement("button");
                                 btn.className = "size-btn";
-                                btn.innerText = size;
+                                btn.innerText = "In den Warenkorb";
                                 btn.onclick = function (e) {
-                                    // Instantly add to cart when clicking the size
-                                    addToCart(currentProduct.name, currentProduct.price, size, e);
+                                    addToCart(currentProduct.name, currentProduct.price, "OS", e);
                                 };
                                 sizesContainer.appendChild(btn);
-                            });
-                        }
-                    } else {
-                        // If completely zero sizes, default to Add to Cart OS mode
-                        sizeLabel.style.display = "block";
-                        sizeLabel.innerText = "KAUFEN";
-                        const btn = document.createElement("button");
-                        btn.className = "size-btn";
-                        btn.innerText = "In den Warenkorb";
-                        btn.onclick = function (e) {
-                            addToCart(currentProduct.name, currentProduct.price, "OS", e);
+                            }
+
+                            // 6. Description Toggle
+                            const descToggle = document.getElementById("desc-toggle");
+                            const descWrapper = document.getElementById("desc-wrapper");
+                            if (descToggle && descWrapper) {
+                                descToggle.onclick = function () {
+                                    descToggle.classList.toggle("open");
+                                    descWrapper.classList.toggle("open");
+                                }
+                            }
                         };
-                        sizesContainer.appendChild(btn);
-                    }
+                    </script>
 
-                    // 6. Description Toggle
-                    const descToggle = document.getElementById("desc-toggle");
-                    const descWrapper = document.getElementById("desc-wrapper");
-                    if (descToggle && descWrapper) {
-                        descToggle.onclick = function () {
-                            descToggle.classList.toggle("open");
-                            descWrapper.classList.toggle("open");
+                    <!-- ANTI-ZOOM SCRIPT & GESTURE NAVIGATION -->
+                    <script>
+                        let lastTouchEnd = 0;
+                        document.addEventListener('touchend', function (event) {
+                            const now = Date.now();
+                            if (now - lastTouchEnd <= 300) {
+                                event.preventDefault();
+                            }
+                            lastTouchEnd = now;
+                        }, false);
+
+                        // --- SWIPE / DRAG TO GO BACK ---
+                        let startX = 0;
+                        let isDragging = false;
+
+                        // Mobile Touch
+                        document.addEventListener('touchstart', e => {
+                            startX = e.changedTouches[0].screenX;
+                        }, { passive: true });
+
+                        document.addEventListener('touchend', e => {
+                            let endX = e.changedTouches[0].screenX;
+                            handleSwipe(startX, endX);
+                        }, { passive: true });
+
+                        // Desktop Mouse Drag
+                        document.addEventListener('mousedown', e => {
+                            startX = e.screenX;
+                            isDragging = true;
+                        });
+
+                        document.addEventListener('mouseup', e => {
+                            if (!isDragging) return;
+                            isDragging = false;
+                            let endX = e.screenX;
+                            handleSwipe(startX, endX);
+                        });
+
+                        function handleSwipe(start, end) {
+                            const threshold = 150; // Minimum distance swipe right in px to trigger
+                            if ((end - start) > threshold) {
+                                // User swiped/dragged significantly to the right
+                                window.location.href = "index.html";
+                            }
                         }
-                    }
-                });
-            </script>
+                    </script>
+                    <!-- RELATED PRODUCTS SECTION -->
+                    <div id="related-products-section"
+                        style="display: none; padding: 40px 24px; background: #ffffff; border-top: 1px solid rgba(0,0,0,0.05); margin-top: 100vh;">
+                        <h2
+                            style="font-family: 'Syncopate', sans-serif; font-size: 1.2rem; text-transform: uppercase; margin-bottom: 20px; text-align: center; color: #000;">
+                            Weitere Produkte</h2>
+                        <div id="related-grid"
+                            style="display: flex; gap: 20px; overflow-x: auto; scroll-snap-type: x mandatory; padding-bottom: 20px; -webkit-overflow-scrolling: touch;">
+                            <!-- Rendered by JS -->
+                        </div>
+                    </div>
 
-            <!-- ANTI-ZOOM SCRIPT & GESTURE NAVIGATION -->
-            <script>
-                let lastTouchEnd = 0;
-                document.addEventListener('touchend', function (event) {
-                    const now = Date.now();
-                    if (now - lastTouchEnd <= 300) {
-                        event.preventDefault();
-                    }
-                    lastTouchEnd = now;
-                }, false);
+                    <script>
+                        document.addEventListener("DOMContentLoaded", () => {
+                            setTimeout(() => {
+                                const relatedSection = document.getElementById("related-products-section");
+                                const relatedGrid = document.getElementById("related-grid");
 
-                // --- SWIPE / DRAG TO GO BACK ---
-                let startX = 0;
-                let isDragging = false;
+                                if (typeof products !== 'undefined' && currentProduct) {
+                                    const otherProducts = products.filter(p => p.id !== currentProduct.id);
+                                    if (otherProducts.length > 0) {
+                                        relatedSection.style.display = "block";
 
-                // Mobile Touch
-                document.addEventListener('touchstart', e => {
-                    startX = e.changedTouches[0].screenX;
-                }, { passive: true });
+                                        // Push the element just below the fold safely
+                                        relatedSection.style.marginTop = "0px";
 
-                document.addEventListener('touchend', e => {
-                    let endX = e.changedTouches[0].screenX;
-                    handleSwipe(startX, endX);
-                }, { passive: true });
+                                        otherProducts.forEach(p => {
+                                            const card = document.createElement("div");
+                                            card.style.minWidth = "220px";
+                                            card.style.maxWidth = "220px";
+                                            card.style.scrollSnapAlign = "start";
+                                            card.style.cursor = "pointer";
+                                            card.onclick = () => window.location.href = "produkt.html?id=" + p.id;
 
-                // Desktop Mouse Drag
-                document.addEventListener('mousedown', e => {
-                    startX = e.screenX;
-                    isDragging = true;
-                });
+                                            const imgSrc = Array.isArray(p.images) && p.images.length > 0 ? p.images[0] : p.image;
 
-                document.addEventListener('mouseup', e => {
-                    if (!isDragging) return;
-                    isDragging = false;
-                    let endX = e.screenX;
-                    handleSwipe(startX, endX);
-                });
-
-                function handleSwipe(start, end) {
-                    const threshold = 150; // Minimum distance swipe right in px to trigger
-                    if ((end - start) > threshold) {
-                        // User swiped/dragged significantly to the right
-                        window.location.href = "index.html";
-                    }
-                }
-            </script>
-            <!-- RELATED PRODUCTS SECTION -->
-            <div id="related-products-section"
-                style="display: none; padding: 40px 24px; background: #ffffff; border-top: 1px solid rgba(0,0,0,0.05); margin-top: 100vh;">
-                <h2
-                    style="font-family: 'Syncopate', sans-serif; font-size: 1.2rem; text-transform: uppercase; margin-bottom: 20px; text-align: center; color: #000;">
-                    Weitere Produkte</h2>
-                <div id="related-grid"
-                    style="display: flex; gap: 20px; overflow-x: auto; scroll-snap-type: x mandatory; padding-bottom: 20px; -webkit-overflow-scrolling: touch;">
-                    <!-- Rendered by JS -->
-                </div>
-            </div>
-
-            <script>
-                document.addEventListener("DOMContentLoaded", () => {
-                    setTimeout(() => {
-                        const relatedSection = document.getElementById("related-products-section");
-                        const relatedGrid = document.getElementById("related-grid");
-
-                        if (typeof products !== 'undefined' && currentProduct) {
-                            const otherProducts = products.filter(p => p.id !== currentProduct.id);
-                            if (otherProducts.length > 0) {
-                                relatedSection.style.display = "block";
-
-                                // Push the element just below the fold safely
-                                relatedSection.style.marginTop = "0px";
-
-                                otherProducts.forEach(p => {
-                                    const card = document.createElement("div");
-                                    card.style.minWidth = "220px";
-                                    card.style.maxWidth = "220px";
-                                    card.style.scrollSnapAlign = "start";
-                                    card.style.cursor = "pointer";
-                                    card.onclick = () => window.location.href = "produkt.html?id=" + p.id;
-
-                                    const imgSrc = Array.isArray(p.images) && p.images.length > 0 ? p.images[0] : p.image;
-
-                                    card.innerHTML = `
+                                            card.innerHTML = `
                                 <div style="width:100%; height:280px; background:#f4f4f4; border-radius:12px; margin-bottom:12px; overflow:hidden;">
                                     <img src="${imgSrc}" style="width:100%; height:100%; object-fit:cover; transition: transform 0.3s;" onmouseover="this.style.transform='scale(1.05)'" onmouseout="this.style.transform='scale(1)'">
                                 </div>
                                 <div style="font-size:12px; font-weight:600; text-transform:uppercase; font-family:'Inter', sans-serif; color:#000; letter-spacing:0.1em; margin-bottom:4px;">${p.name}</div>
                                 <div style="font-size:11px; color:#777; font-family:'Inter', sans-serif; letter-spacing:0.05em;">${p.price} ${p.currency}</div>
                             `;
-                                    relatedGrid.appendChild(card);
-                                });
+                                            relatedGrid.appendChild(card);
+                                        });
 
-                                // Unlock overflow to allow scrolling down to the new section
-                                document.body.style.overflow = "auto";
-                                document.body.style.height = "auto";
+                                        // Unlock overflow to allow scrolling down to the new section
+                                        document.body.style.overflow = "auto";
+                                        document.body.style.height = "auto";
 
-                                // Smooth scroll down to reveal it partially
-                                window.scrollBy({ top: 350, behavior: 'smooth' });
-                            }
-                        }
-                    }, 4000); // 4 Seconds Delay as requested
-                });
-            </script>
+                                        // Smooth scroll down to reveal it partially
+                                        window.scrollBy({ top: 350, behavior: 'smooth' });
+                                    }
+                                }
+                            }, 4000); // 4 Seconds Delay as requested
+                        });
+                    </script>
 </body>
 
 </html>

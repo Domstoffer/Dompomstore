@@ -1,38 +1,35 @@
 const products = [
     {
-        id: "Fartcoin Shirt",
-        name: "FS-01",
-        price: 29,
-        currency: "USDC",
-        image: "images/1773193258736-0-unisex-garment-dyed-heavyweight-t-shirt-black-back-6953cef82cf54.PNG",
-        images: ["images/1773193258736-0-unisex-garment-dyed-heavyweight-t-shirt-black-back-6953cef82cf54.PNG"],
-        sizes: ["M", "L", "S"],
-        stock: 100,
-        description: "Fartcoin shirt das erste DTF print Video seht ihr fit und material unwichtig"
-    }
-,
+        "id": "Fartcoin Shirt",
+        "name": "FS-01",
+        "price": 29,
+        "currency": "USDC",
+        "image": "images/1773193258736-0-unisex-garment-dyed-heavyweight-t-shirt-black-back-6953cef82cf54.PNG",
+        "images": [
+            "images/1773193258736-0-unisex-garment-dyed-heavyweight-t-shirt-black-back-6953cef82cf54.PNG"
+        ],
+        "sizes": [
+            "M",
+            "L",
+            "S"
+        ],
+        "stock": 100,
+        "description": "Fartcoin shirt das erste DTF print Video seht ihr fit und material unwichtig"
+    },
     {
-        id: "01",
-        name: "ZynZynZyn",
-        price: 10,
-        currency: "USDC",
-        image: "images/1773195550399-0-zyn.png",
-        images: ["images/1773195550399-0-zyn.png"],
-        sizes: ["Slim"],
-        stock: 100,
-        description: "zynzynzynzynzynzynyzyn nikotin snus slim beutel"
-    }
-,
-    {
-        id: "Zyn",
-        name: "Zyn",
-        price: 10,
-        currency: "USDC",
-        image: "images/1773195628853-0-1773195550399-0-zyn.png",
-        images: ["images/1773195628853-0-1773195550399-0-zyn.png"],
-        sizes: ["slim"],
-        stock: 100,
-        description: "zynzynzynzynzynzynzynzynyzyn"
+        "id": "01",
+        "name": "ZynZynZyn",
+        "price": 10,
+        "currency": "USDC",
+        "image": "images/1773195550399-0-zyn.png",
+        "images": [
+            "images/1773195550399-0-zyn.png"
+        ],
+        "sizes": [
+            "Slim"
+        ],
+        "stock": 100,
+        "description": "zynzynzynzynzynzynyzyn nikotin snus slim beutel"
     }
 ];
 
