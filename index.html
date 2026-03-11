@@ -449,7 +449,7 @@
 
     /* --- MOBILE UX PREMIUM FIXES --- */
     /* CART RESPONSIVE FIX */
-    
+
 
     /* INPUT IOS FIX (Prevent Auto-Zoom) */
     input,
@@ -504,7 +504,7 @@
     /* --- LUXURY MOBILE REDESIGN --- */
 
     /* BOTTOM SHEET CART */
-    
+
 
     /* LUXURY TYPOGRAPHY */
     body {
@@ -601,16 +601,13 @@
         margin-top: 5px !important;
       }
     }
-  
-/* PREVENT DOUBLE TAP ZOOM */
-    html, body {
+
+    /* PREVENT DOUBLE TAP ZOOM */
+    html,
+    body {
       touch-action: manipulation !important;
     }
-
-
-
-    
-</style>
+  </style>
 
 
 
@@ -743,7 +740,7 @@
         font-size: 20px !important;
       }
     }
-  
+
     .cart-icon {
       position: absolute;
       right: 20px;
@@ -762,19 +759,22 @@
       padding: 2px 6px;
       border-radius: 50%;
     }
-
-</style>
+  </style>
 
   <link rel="stylesheet" href="mobile-luxury.css">
 </head>
 
 <body class="">
 
-  <div id="lockScreen" style="height: 100vh; display: flex; flex-direction: column; align-items: center; justify-content: center; background: #ffffff; color: #000; font-family: 'Syncopate', sans-serif;">
+  <div id="lockScreen"
+    style="height: 100vh; display: flex; flex-direction: column; align-items: center; justify-content: center; background: #ffffff; color: #000; font-family: 'Syncopate', sans-serif;">
     <h1 style="letter-spacing: 0.2em; text-transform: uppercase; margin-bottom: 30px;">ACCESS</h1>
-    <input type="password" id="passwordInput" placeholder="Enter password" style="padding: 15px; border: 1px solid #ddd; outline: none; text-align: center; font-family: 'Inter', sans-serif; letter-spacing: 0.1em; width: 300px; max-width: 80%; background: transparent; color: #000; font-size: 14px; border-radius: 0; margin-bottom: 20px;">
-    <button onclick="unlockSite()" style="padding: 15px 40px; background: #000; color: #fff; border: none; cursor: pointer; text-transform: uppercase; letter-spacing: 0.15em; font-family: 'Inter', sans-serif; font-weight: 600; font-size: 13px; transition: 0.3s; width: 300px; max-width: 80%;">Enter</button>
-    <p id="errorMsg" style="color: red; margin-top: 20px; font-family: 'Inter', sans-serif; font-size: 12px; height: 15px;"></p>
+    <input type="password" id="passwordInput" placeholder="Enter password"
+      style="padding: 15px; border: 1px solid #ddd; outline: none; text-align: center; font-family: 'Inter', sans-serif; letter-spacing: 0.1em; width: 300px; max-width: 80%; background: transparent; color: #000; font-size: 14px; border-radius: 0; margin-bottom: 20px;">
+    <button onclick="unlockSite()"
+      style="padding: 15px 40px; background: #000; color: #fff; border: none; cursor: pointer; text-transform: uppercase; letter-spacing: 0.15em; font-family: 'Inter', sans-serif; font-weight: 600; font-size: 13px; transition: 0.3s; width: 300px; max-width: 80%;">Enter</button>
+    <p id="errorMsg"
+      style="color: red; margin-top: 20px; font-family: 'Inter', sans-serif; font-size: 12px; height: 15px;"></p>
   </div>
 
 
@@ -790,13 +790,14 @@
               onmouseout="this.style.opacity=0.3">P</a><a href="index.html">OMSTORE</a></div>
           <div class="nav-menu">
             <div class="cart-icon" id="cart-icon">
-  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" style="width:22px;height:22px;">
-    <path d="M6 2l1 5h10l1-5z"/>
-    <path d="M2 7h20v14H2z"/>
-  </svg>
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"
+                style="width:22px;height:22px;">
+                <path d="M6 2l1 5h10l1-5z" />
+                <path d="M2 7h20v14H2z" />
+              </svg>
 
-  <span class="cart-count" id="cart-count">0</span>
-</div>
+              <span class="cart-count" id="cart-count">0</span>
+            </div>
 
           </div>
         </div>
@@ -809,65 +810,65 @@
       <div class="vanguard-right">
         <h1 class="huge-title">New <i>Arrivals</i></h1>
         <div class="container grid-two" id="productsGrid">
-</div>
-    </div>
-
-    <!-- CART DRAWER -->
-    <div class="cart-overlay" id="cart-overlay"></div>
-    <div id="cart-dropdown">
-      <h2 class="cart-title">Cart</h2>
-      <div id="cart-items"></div>
-      <div class="cart-total">
-        <span>Total</span>
-        <span id="cart-total-price">0 USD</span>
+        </div>
       </div>
-      <button class="checkout-btn" id="proceedCheckout">Proceed to Checkout</button>
+
+      <!-- CART DRAWER -->
+      <div class="cart-overlay" id="cart-overlay"></div>
+      <div id="cart-dropdown">
+        <h2 class="cart-title">Cart</h2>
+        <div id="cart-items"></div>
+        <div class="cart-total">
+          <span>Total</span>
+          <span id="cart-total-price">0 USD</span>
+        </div>
+        <button class="checkout-btn" id="proceedCheckout">Proceed to Checkout</button>
+      </div>
     </div>
-  </div>
 
-  <script>
-    // CART LOGIC MOVED TO cart.js
-</script>
-<!-- ANTI-ZOOM SCRIPT -->
-<script>
-let lastTouchEnd = 0;
-document.addEventListener('touchend', function (event) {
-  const now = Date.now();
-  if (now - lastTouchEnd <= 300) {
-    event.preventDefault();
-  }
-  lastTouchEnd = now;
-}, false);
-</script>
+    <script>
+      // CART LOGIC MOVED TO cart.js
+    </script>
+    <!-- ANTI-ZOOM SCRIPT -->
+    <script>
+      let lastTouchEnd = 0;
+      document.addEventListener('touchend', function (event) {
+        const now = Date.now();
+        if (now - lastTouchEnd <= 300) {
+          event.preventDefault();
+        }
+        lastTouchEnd = now;
+      }, false);
+    </script>
 
 
-<script src="cart.js"></script>
+    <script src="cart.js"></script>
 
-<script>
-function unlockSite(){
-  const password = "dompom2026";
-  const input = document.getElementById("passwordInput").value;
+    <script>
+      function unlockSite() {
+        const password = "Dompom";
+        const input = document.getElementById("passwordInput").value;
 
-  if(input === password){
-    document.getElementById("lockScreen").style.display = "none";
-    document.getElementById("shopContent").style.display = "block";
+        if (input === password) {
+          document.getElementById("lockScreen").style.display = "none";
+          document.getElementById("shopContent").style.display = "block";
 
-    const script = document.createElement("script");
-    script.src = "products.js";
-    document.body.appendChild(script);
+          const script = document.createElement("script");
+          script.src = "products.js";
+          document.body.appendChild(script);
 
-  } else {
-    document.getElementById("errorMsg").innerText = "Wrong password";
-  }
-}
+        } else {
+          document.getElementById("errorMsg").innerText = "Wrong password";
+        }
+      }
 
-document.getElementById("passwordInput").addEventListener("keypress", function(event) {
-  if (event.key === "Enter") {
-    event.preventDefault();
-    unlockSite();
-  }
-});
-</script>
+      document.getElementById("passwordInput").addEventListener("keypress", function (event) {
+        if (event.key === "Enter") {
+          event.preventDefault();
+          unlockSite();
+        }
+      });
+    </script>
 
 </body>
 
