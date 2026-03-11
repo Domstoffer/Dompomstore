@@ -306,7 +306,7 @@
             border-top: 1px solid rgba(0, 0, 0, 0.1);
         }
 
-        
+
         .desc-toggle {
             width: 100%;
             text-align: center;
@@ -334,7 +334,7 @@
             grid-template-rows: 0fr;
             transition: grid-template-rows 0.7s cubic-bezier(0.16, 1, 0.3, 1);
         }
-        
+
         .desc-content-wrapper.open {
             grid-template-rows: 1fr;
         }
@@ -346,7 +346,7 @@
             line-height: 1.6;
             text-align: center;
         }
-        
+
         .desc-content-inner {
             padding-bottom: 24px;
         }
@@ -437,8 +437,6 @@
             <div class="size-label" id="size-label" style="display:none;">Größe Wählen</div>
             <div class="size-row" id="sizes-container"></div>
 
-            <button class="add-to-cart" id="addToCartBtn">In den Warenkorb</button>
-
             <div class="product-description">
                 <button class="desc-toggle" id="desc-toggle">+</button>
                 <div class="desc-content-wrapper" id="desc-wrapper">
@@ -448,129 +446,135 @@
                 </div>
             </div>
 
-    <script src="products.js"></script>
-    <script src="cart.js"></script>
-    <script>
-        let currentProduct = null;
-        let selectedSize = null;
+            <script src="products.js"></script>
+            <script src="cart.js"></script>
+            <script>
+                let currentProduct = null;
+                let selectedSize = null;
 
-        document.addEventListener("DOMContentLoaded", () => {
-            // 1. Read URL Params
-            const params = new URLSearchParams(window.location.search);
-            const productId = params.get("id");
+                document.addEventListener("DOMContentLoaded", () => {
+                    // 1. Read URL Params
+                    const params = new URLSearchParams(window.location.search);
+                    const productId = params.get("id");
 
-            // 2. Find Product
-            if (typeof products !== 'undefined') {
-                currentProduct = products.find(p => p.id === productId);
-            }
+                    // 2. Find Product
+                    if (typeof products !== 'undefined') {
+                        currentProduct = products.find(p => p.id === productId);
+                    }
 
-            if (!currentProduct) {
-                document.getElementById("product-name").innerText = "Product not found";
-                document.getElementById("addToCartBtn").style.display = 'none';
-                return;
-            }
+                    if (!currentProduct) {
+                        document.getElementById("product-name").innerText = "Product not found";
+                        document.getElementById("addToCartBtn").style.display = 'none';
+                        return;
+                    }
 
-            // 3. Populate Data
-            document.title = currentProduct.name + " – Dompomstore";
-            document.getElementById("product-name").innerText = currentProduct.name;
-            document.getElementById("product-price").innerText = currentProduct.price + " " + currentProduct.currency;
-            document.getElementById("product-image").src = currentProduct.image;
-            document.getElementById("product-image").alt = currentProduct.name;
-            document.getElementById("product-description").innerText = currentProduct.description;
+                    // 3. Populate Data
+                    document.title = currentProduct.name + " – Dompomstore";
+                    document.getElementById("product-name").innerText = currentProduct.name;
+                    document.getElementById("product-price").innerText = currentProduct.price + " " + currentProduct.currency;
+                    document.getElementById("product-image").src = currentProduct.image;
+                    document.getElementById("product-image").alt = currentProduct.name;
+                    document.getElementById("product-description").innerText = currentProduct.description;
 
-            // 4. Populate Sizes
-            const sizesContainer = document.getElementById("sizes-container");
-            const sizeLabel = document.getElementById("size-label");
-            if (currentProduct.sizes && currentProduct.sizes.length > 0) {
-                if (currentProduct.sizes.length === 1 && currentProduct.sizes[0] === "OS") {
-                    // If just One Size, we can hide the size selector or default it. Let's hide it to be clean.
-                    selectedSize = "OS";
-                } else {
-                    sizeLabel.style.display = "block";
-                    currentProduct.sizes.forEach(size => {
+                    // 4. Populate Sizes
+                    const sizesContainer = document.getElementById("sizes-container");
+                    const sizeLabel = document.getElementById("size-label");
+                    if (currentProduct.sizes && currentProduct.sizes.length > 0) {
+                        if (currentProduct.sizes.length === 1 && currentProduct.sizes[0] === "OS") {
+                            // Fallback button if product has only "OS", which replaces the Add To Cart button
+                            sizeLabel.style.display = "block";
+                            sizeLabel.innerText = "KAUFEN";
+                            const btn = document.createElement("button");
+                            btn.className = "size-btn";
+                            btn.innerText = "In den Warenkorb";
+                            btn.onclick = function () {
+                                addToCart(currentProduct.name, currentProduct.price, "OS");
+                            };
+                            sizesContainer.appendChild(btn);
+                        } else {
+                            sizeLabel.style.display = "block";
+                            currentProduct.sizes.forEach(size => {
+                                const btn = document.createElement("button");
+                                btn.className = "size-btn";
+                                btn.innerText = size;
+                                btn.onclick = function () {
+                                    // Instantly add to cart when clicking the size
+                                    addToCart(currentProduct.name, currentProduct.price, size);
+                                };
+                                sizesContainer.appendChild(btn);
+                            });
+                        }
+                    } else {
+                        // If completely zero sizes, default to Add to Cart OS mode
+                        sizeLabel.style.display = "block";
+                        sizeLabel.innerText = "KAUFEN";
                         const btn = document.createElement("button");
                         btn.className = "size-btn";
-                        btn.innerText = size;
+                        btn.innerText = "In den Warenkorb";
                         btn.onclick = function () {
-                            document.querySelectorAll(".size-btn").forEach(b => b.classList.remove("selected"));
-                            btn.classList.add("selected");
-                            selectedSize = size;
+                            addToCart(currentProduct.name, currentProduct.price, "OS");
                         };
                         sizesContainer.appendChild(btn);
-                    });
+                    }
+
+                    // 6. Description Toggle
+                    const descToggle = document.getElementById("desc-toggle");
+                    const descWrapper = document.getElementById("desc-wrapper");
+                    if (descToggle && descWrapper) {
+                        descToggle.onclick = function () {
+                            descToggle.classList.toggle("open");
+                            descWrapper.classList.toggle("open");
+                        }
+                    }
+                });
+            </script>
+
+            <!-- ANTI-ZOOM SCRIPT & GESTURE NAVIGATION -->
+            <script>
+                let lastTouchEnd = 0;
+                document.addEventListener('touchend', function (event) {
+                    const now = Date.now();
+                    if (now - lastTouchEnd <= 300) {
+                        event.preventDefault();
+                    }
+                    lastTouchEnd = now;
+                }, false);
+
+                // --- SWIPE / DRAG TO GO BACK ---
+                let startX = 0;
+                let isDragging = false;
+
+                // Mobile Touch
+                document.addEventListener('touchstart', e => {
+                    startX = e.changedTouches[0].screenX;
+                }, { passive: true });
+
+                document.addEventListener('touchend', e => {
+                    let endX = e.changedTouches[0].screenX;
+                    handleSwipe(startX, endX);
+                }, { passive: true });
+
+                // Desktop Mouse Drag
+                document.addEventListener('mousedown', e => {
+                    startX = e.screenX;
+                    isDragging = true;
+                });
+
+                document.addEventListener('mouseup', e => {
+                    if (!isDragging) return;
+                    isDragging = false;
+                    let endX = e.screenX;
+                    handleSwipe(startX, endX);
+                });
+
+                function handleSwipe(start, end) {
+                    const threshold = 150; // Minimum distance swipe right in px to trigger
+                    if ((end - start) > threshold) {
+                        // User swiped/dragged significantly to the right
+                        window.location.href = "index.html";
+                    }
                 }
-            } else {
-                selectedSize = "OS"; // Fallback
-            }
-
-            // 5. Add to Cart Binding
-            const addBtn = document.getElementById("addToCartBtn");
-            addBtn.onclick = () => {
-                if (!selectedSize && currentProduct.sizes.length > 1) {
-                    alert("Bitte wähle eine Größe aus.");
-                    return;
-                }
-                addToCart(currentProduct.name, currentProduct.price, selectedSize || "OS");
-            };
-
-            // 6. Description Toggle
-            const descToggle = document.getElementById("desc-toggle");
-            const descWrapper = document.getElementById("desc-wrapper");
-            if (descToggle && descWrapper) {
-                descToggle.onclick = function () {
-                    descToggle.classList.toggle("open");
-                    descWrapper.classList.toggle("open");
-                }
-            }
-        });
-    </script>
-
-    <!-- ANTI-ZOOM SCRIPT & GESTURE NAVIGATION -->
-    <script>
-        let lastTouchEnd = 0;
-        document.addEventListener('touchend', function (event) {
-            const now = Date.now();
-            if (now - lastTouchEnd <= 300) {
-                event.preventDefault();
-            }
-            lastTouchEnd = now;
-        }, false);
-
-        // --- SWIPE / DRAG TO GO BACK ---
-        let startX = 0;
-        let isDragging = false;
-
-        // Mobile Touch
-        document.addEventListener('touchstart', e => {
-            startX = e.changedTouches[0].screenX;
-        }, { passive: true });
-
-        document.addEventListener('touchend', e => {
-            let endX = e.changedTouches[0].screenX;
-            handleSwipe(startX, endX);
-        }, { passive: true });
-
-        // Desktop Mouse Drag
-        document.addEventListener('mousedown', e => {
-            startX = e.screenX;
-            isDragging = true;
-        });
-
-        document.addEventListener('mouseup', e => {
-            if (!isDragging) return;
-            isDragging = false;
-            let endX = e.screenX;
-            handleSwipe(startX, endX);
-        });
-
-        function handleSwipe(start, end) {
-            const threshold = 150; // Minimum distance swipe right in px to trigger
-            if ((end - start) > threshold) {
-                // User swiped/dragged significantly to the right
-                window.location.href = "index.html";
-            }
-        }
-    </script>
+            </script>
 </body>
 
 </html>
