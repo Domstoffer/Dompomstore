@@ -697,6 +697,7 @@
     input,
     select,
     textarea {
+      appearance: none;
       -webkit-appearance: none;
       border-radius: 0;
     }
@@ -814,6 +815,33 @@
       const secretScript = document.createElement('script');
       secretScript.src = 'secret_products.js?v=' + new Date().getTime();
       document.body.appendChild(secretScript);
+
+      secretScript.onload = () => {
+        const grid = document.getElementById("main-container");
+        if (typeof products !== 'undefined' && grid) {
+          grid.innerHTML = "";
+          products.forEach(p => {
+            const box = document.createElement("a");
+            box.href = "secret_produkt.html?id=" + encodeURIComponent(p.id);
+            box.className = "product-box";
+            box.style.textDecoration = "none";
+            box.style.color = "inherit";
+
+            const imgSrc = Array.isArray(p.images) && p.images.length > 0 ? p.images[0] : p.image;
+
+            box.innerHTML = `
+                  <div class="image-wrapper">
+                    <img src="${imgSrc}" alt="${p.name}" loading="lazy" style="width:100%;height:auto;border-radius:16px 16px 0 0;">
+                  </div>
+                  <div class="product-info-grid" style="padding:20px;">
+                    <div class="product-name" style="font-family:'Syncopate', sans-serif;font-weight:600;font-size:14px;margin-bottom:5px;">${p.name}</div>
+                    <div class="product-price" style="font-family:'Inter', sans-serif;font-size:13px;opacity:0.7;">${p.price} ${p.currency}</div>
+                  </div>
+                `;
+            grid.appendChild(box);
+          });
+        }
+      };
     </script>
   </div>
   </div>
