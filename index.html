@@ -770,8 +770,16 @@
 
 <body class="">
 
+  <div id="lockScreen" style="height: 100vh; display: flex; flex-direction: column; align-items: center; justify-content: center; background: #ffffff; color: #000; font-family: 'Syncopate', sans-serif;">
+    <h1 style="letter-spacing: 0.2em; text-transform: uppercase; margin-bottom: 30px;">ACCESS</h1>
+    <input type="password" id="passwordInput" placeholder="Enter password" style="padding: 15px; border: 1px solid #ddd; outline: none; text-align: center; font-family: 'Inter', sans-serif; letter-spacing: 0.1em; width: 300px; max-width: 80%; background: transparent; color: #000; font-size: 14px; border-radius: 0; margin-bottom: 20px;">
+    <button onclick="unlockSite()" style="padding: 15px 40px; background: #000; color: #fff; border: none; cursor: pointer; text-transform: uppercase; letter-spacing: 0.15em; font-family: 'Inter', sans-serif; font-weight: 600; font-size: 13px; transition: 0.3s; width: 300px; max-width: 80%;">Enter</button>
+    <p id="errorMsg" style="color: red; margin-top: 20px; font-family: 'Inter', sans-serif; font-size: 12px; height: 15px;"></p>
+  </div>
 
-  <div id="shopContent">
+
+
+  <div id="shopContent" style="display:none;">
     <div class="vanguard-layout">
       <!-- FIXED LEFT MENU -->
       <div class="vanguard-left">
@@ -801,47 +809,7 @@
       <div class="vanguard-right">
         <h1 class="huge-title">New <i>Arrivals</i></h1>
         <div class="container grid-two" id="productsGrid">
-
-
-          <div class="product-box" data-price="49" data-link="produkt.html?id=DB-01">
-            <div class="image-wrapper"><img loading="lazy" src="images/DB-01.jpg" alt="DB-01"></div>
-            <div class="product-info-grid">
-              <div class="product-name">DB-01</div>
-            </div>
-          </div>
-
-          <div class="product-box" data-price="19" data-link="produkt.html?id=PS-01">
-            <div class="image-wrapper"><img loading="lazy" src="images/pepe-shirt.jpg" alt="PS-01"></div>
-            <div class="product-info-grid">
-              <div class="product-name">PS-01</div>
-            </div>
-          </div>
-
-          <div class="product-box" data-price="30" data-link="produkt.html?id=TESTCY">
-            <div class="image-wrapper"><img loading="lazy" src="images/test.jpg" alt="Testcy"></div>
-            <div class="product-info-grid">
-              <div class="product-name">Testcy</div>
-            </div>
-          </div>
-
-          <div class="product-box" data-price="22" data-link="produkt.html?id=ZYN">
-            <div class="image-wrapper"><img loading="lazy" src="images/zyn.png" alt="ZYN"></div>
-            <div class="product-info-grid">
-              <div class="product-name">ZYN</div>
-            </div>
-          </div>
-
-          <div class="product-box" data-price="18" data-link="produkt.html?id=PROD-05">
-            <div class="image-wrapper"><img loading="lazy" src="https://picsum.photos/seed/p05/400/400"
-                alt="PRODUKT 05"></div>
-            <div class="product-info-grid">
-              <div class="product-name">PRODUKT 05</div>
-            </div>
-          </div>
-
-
-        </div>
-      </div>
+</div>
     </div>
 
     <!-- CART DRAWER -->
@@ -872,8 +840,35 @@ document.addEventListener('touchend', function (event) {
 }, false);
 </script>
 
-<script src="products.js"></script>
+
 <script src="cart.js"></script>
+
+<script>
+function unlockSite(){
+  const password = "dompom2026";
+  const input = document.getElementById("passwordInput").value;
+
+  if(input === password){
+    document.getElementById("lockScreen").style.display = "none";
+    document.getElementById("shopContent").style.display = "block";
+
+    const script = document.createElement("script");
+    script.src = "products.js";
+    document.body.appendChild(script);
+
+  } else {
+    document.getElementById("errorMsg").innerText = "Wrong password";
+  }
+}
+
+document.getElementById("passwordInput").addEventListener("keypress", function(event) {
+  if (event.key === "Enter") {
+    event.preventDefault();
+    unlockSite();
+  }
+});
+</script>
+
 </body>
 
 </html>

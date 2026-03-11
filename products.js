@@ -51,4 +51,27 @@ const products = [
     }
 ];
 
-// Provide them to the global scope or export depending on usage, but since this is script src="" they just sit here globally.
+function renderProducts(productsArray) {
+    const grid = document.getElementById("productsGrid");
+    if (!grid) return;
+
+    grid.innerHTML = ""; // Clear any existing
+
+    productsArray.forEach(product => {
+        const box = document.createElement("div");
+        box.className = "product-box";
+        box.setAttribute("data-price", product.price);
+        box.onclick = () => window.location.href = "produkt.html?id=" + product.id;
+
+        box.innerHTML = `
+            <div class="image-wrapper"><img loading="lazy" src="${product.image}" alt="${product.name}"></div>
+            <div class="product-info-grid">
+              <div class="product-name">${product.name}</div>
+            </div>
+        `;
+        grid.appendChild(box);
+    });
+}
+
+// Automatically render when script is loaded dynamically
+renderProducts(products);
