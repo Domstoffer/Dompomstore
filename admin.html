@@ -391,7 +391,13 @@
           <input id="prod-price" type="number" placeholder="Preis (Zahl)" required style="flex:1;">
           <input id="prod-sizes" placeholder="Größen (mit Komma, z.B. S, M, L oder OS)" required style="flex:2;">
         </div>
-        <input id="prod-image" placeholder="Bild-Pfad (z.B. images/shirt.jpg)" required style="margin-bottom:10px;">
+        <div style="margin-bottom:14px;">
+          <label for="prod-image-file"
+            style="display:block; font-size:11px; margin-bottom:5px; color:#555; text-transform:uppercase; letter-spacing:0.1em; font-weight:bold;">Produktbild
+            Hochladen:</label>
+          <input type="file" id="prod-image-file" accept="image/*" required
+            style="width:100%; border:1px solid #ccc; padding:8px; border-radius:8px; background:#f5f5f5;">
+        </div>
         <textarea id="prod-desc" placeholder="Produktbeschreibung..." required
           style="width:100%; padding:12px; margin-bottom:14px; border-radius:8px; border:1px solid #ccc; box-sizing:border-box; font-family:inherit; min-height:80px;"></textarea>
         <button type="submit" id="prod-submit-btn">Produkt Hinzufügen</button>
@@ -686,8 +692,39 @@
       e.preventDefault();
       const btn = document.getElementById('prod-submit-btn');
       const msg = document.getElementById('prod-msg');
-      btn.innerText = "Speichere...";
+
+      const fileInput = document.getElementById('prod-image-file');
+      if (!fileInput.files || fileInput.files.length === 0) {
+        msg.style.color = "red";
+        msg.innerText = "❌ Fehler: Bitte wähle ein Bild aus.";
+        return;
+      }
+
+      btn.innerText = "Verarbeite Bild...";
       btn.disabled = true;
+
+      const file = fileInput.files[0];
+
+      // Convert image to Base64
+      const toBase64 = (f) => new Promise((resolve, reject) => {
+        const reader = new FileReader();
+        reader.readAsDataURL(f);
+        reader.onload = () => resolve(reader.result);
+        reader.onerror = err => reject(err);
+      });
+
+      let base64Image;
+      try {
+        base64Image = await toBase64(file);
+      } catch (err) {
+        msg.style.color = "red";
+        msg.innerText = "❌ Fehler beim Lesen des Bildes.";
+        btn.innerText = "Produkt Hinzufügen";
+        btn.disabled = false;
+        return;
+      }
+
+      btn.innerText = "Speichere auf Server...";
 
       const payload = {
         id: document.getElementById('prod-id').value.trim(),
@@ -696,7 +733,8 @@
         currency: "USDC", // Default store currency
         sizes: document.getElementById('prod-sizes').value.split(',').map(s => s.trim()),
         stock: 100, // Default stock mapped
-        image: document.getElementById('prod-image').value.trim(),
+        imageFile: base64Image,
+        imageName: file.name,
         description: document.getElementById('prod-desc').value.trim()
       };
 

@@ -435,7 +435,8 @@ app.post('/api/admin/products', authenticateToken, [
   body('currency').isString().notEmpty().trim(),
   body('sizes').isArray(),
   body('stock').isNumeric(),
-  body('image').isString().notEmpty().trim(),
+    body('imageFile').isString().notEmpty(),
+  body('imageName').isString().notEmpty().trim(),
   body('description').isString().trim().escape()
 ], (req, res) => {
   const errors = validationResult(req);
@@ -445,6 +446,24 @@ app.post('/api/admin/products', authenticateToken, [
   const productsFilePath = path.join(__dirname, '../products.js');
 
   try {
+    const matches = newProduct.imageFile.match(/^data:([A-Za-z-+\/]+);base64,(.+)$/);
+    if (!matches || matches.length !== 3) {
+      return res.status(400).json({ error: "Invalid Base64 image data format" });
+    }
+
+    const imageBuffer = Buffer.from(matches[2], 'base64');
+    
+    // Create a safe, unique filename
+    const safeImageName = newProduct.imageName.replace(/[^a-zA-Z0-9.\-_]/g, '');
+    const uniqueImageName = Date.now() + '-' + safeImageName;
+    const finalImagePath = path.join(imagesDirPath, uniqueImageName);
+    
+    // Write image to disk securely
+    fs.writeFileSync(finalImagePath, imageBuffer);
+
+    // Save relative path for products.js
+    const relativeImagePath = "images/" + uniqueImageName;
+
     let fileContent = fs.readFileSync(productsFilePath, 'utf8');
 
     // Find where the array closes
@@ -454,7 +473,7 @@ app.post('/api/admin/products', authenticateToken, [
     }
 
     // Format new product to inject
-    const newProductString = `,\n    {\n        id: "${newProduct.id}",\n        name: "${newProduct.name}",\n        price: ${newProduct.price},\n        currency: "${newProduct.currency}",\n        image: "${newProduct.image}",\n        sizes: ${JSON.stringify(newProduct.sizes)},\n        stock: ${newProduct.stock},\n        description: "${newProduct.description}"\n    }`;
+    const newProductString = `,\n    {\n        id: "${newProduct.id}",\n        name: "${newProduct.name}",\n        price: ${newProduct.price},\n        currency: "${newProduct.currency}",\n        image: "${relativeImagePath}",\n        sizes: ${JSON.stringify(newProduct.sizes)},\n        stock: ${newProduct.stock},\n        description: "${newProduct.description}"\n    }`;
 
     // Stitch it into the array
     const updatedContent = fileContent.slice(0, closeBracketIndex) + newProductString + '\n' + fileContent.slice(closeBracketIndex);
