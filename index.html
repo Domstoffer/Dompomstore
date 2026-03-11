@@ -3,7 +3,8 @@
 
 <head>
   <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+  <meta name="viewport"
+    content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
   <title>Dompomstore</title>
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -810,6 +811,74 @@
   </style>
 
   <link rel="stylesheet" href="mobile-luxury.css?v=2.6">
+  <style>
+    /* CACHE-BUSTING BULLETPROOF HEADER GRID OVERRIDE */
+    @media (max-width: 768px) {
+      .vanguard-left {
+        display: grid !important;
+        grid-template-columns: 1fr auto 1fr !important;
+        align-items: center !important;
+        height: auto !important;
+        min-height: 80px !important;
+        padding: calc(15px + env(safe-area-inset-top)) 20px 15px 20px !important;
+        box-sizing: border-box !important;
+        border-bottom: 1px solid var(--border) !important;
+        justify-content: unset !important;
+      }
+
+      .vanguard-left>div:first-child {
+        display: contents !important;
+      }
+
+      .vanguard-left::before {
+        content: '' !important;
+        display: block !important;
+        grid-column: 1 !important;
+      }
+
+      .brand-logo {
+        position: static !important;
+        transform: none !important;
+        display: flex !important;
+        flex-direction: column !important;
+        align-items: center !important;
+        margin: 0 !important;
+        grid-column: 2 !important;
+      }
+
+      .nav-menu {
+        position: static !important;
+        grid-column: 3 !important;
+        justify-self: end !important;
+        justify-content: flex-end !important;
+        margin: 0 !important;
+        transform: none !important;
+      }
+
+      .brand-logo img.main-logo-img {
+        height: 26px !important;
+        width: auto !important;
+        margin-bottom: 4px !important;
+        mix-blend-mode: multiply !important;
+      }
+
+      body.dark-mode .brand-logo img.main-logo-img {
+        filter: invert(1) !important;
+        mix-blend-mode: screen !important;
+      }
+
+      .brand-logo div,
+      .brand-logo a {
+        font-size: 14px !important;
+        letter-spacing: 3px !important;
+      }
+
+      .cart-icon {
+        position: static !important;
+        transform: none !important;
+      }
+    }
+  </style>
 </head>
 
 <body class="">
