@@ -23,8 +23,10 @@ body {
 }
 
 .main-logo-img {
-    width: 35px;
-    height: auto;
+    height: 40px;
+    width: auto;
+    max-width: 150px;
+    object-fit: contain;
     margin-bottom: 5px;
     mix-blend-mode: multiply;
 }
@@ -274,6 +276,7 @@ body.dark-mode .main-logo-img {
     .product-container {
         flex-direction: column !important;
         padding: 16px !important;
+        padding-top: calc(var(--nav-height) + 10px) !important;
         margin-top: 0 !important;
     }
 
