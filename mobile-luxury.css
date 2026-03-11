@@ -1,7 +1,7 @@
 /* mobile-luxury.css - Premium Mobile UX Overhaul */
 
 :root {
-    --nav-height: 90px;
+    --nav-height: calc(75px + env(safe-area-inset-top, 0px));
     --safe-bottom: env(safe-area-inset-bottom, 20px);
 }
 
@@ -23,11 +23,11 @@ body {
 }
 
 .main-logo-img {
-    height: 40px;
+    height: 28px;
     width: auto;
     max-width: 150px;
     object-fit: contain;
-    margin-bottom: 5px;
+    margin-bottom: 3px;
     mix-blend-mode: multiply;
 }
 
@@ -85,12 +85,18 @@ body.dark-mode .main-logo-img {
     .logo {
         position: absolute !important;
         left: 50% !important;
-        top: 50% !important;
+        /* Calculate 50% but nudge it down by half the notch height so it centers in the VISIBLE area */
+        top: calc(50% + (env(safe-area-inset-top, 0px) / 2)) !important;
         transform: translate(-50%, -50%) !important;
+        display: flex !important;
+        flex-direction: column !important;
+        align-items: center !important;
+        justify-content: center !important;
+        height: auto !important;
+        width: max-content !important;
         font-size: 1rem !important;
         margin: 0 !important;
         letter-spacing: 4px !important;
-        white-space: nowrap !important;
     }
 
     /* Right-Align Cart in Header */
