@@ -812,6 +812,30 @@
 
   <link rel="stylesheet" href="mobile-luxury.css?v=2.6">
   <style>
+    /* DESKTOP MENU ORDER FIX */
+    @media (min-width: 769px) {
+      .vanguard-left>div:first-child {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+      }
+
+      .header-left-slot {
+        order: 3;
+        margin-top: 15px;
+      }
+
+      .brand-logo {
+        order: 2;
+      }
+
+      .nav-menu {
+        order: 1;
+        width: 100%;
+        margin-bottom: 30px;
+      }
+    }
+
     /* CACHE-BUSTING BULLETPROOF HEADER GRID OVERRIDE */
     @media (max-width: 768px) {
       .vanguard-left {
