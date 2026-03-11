@@ -696,11 +696,14 @@
     const editPreviewContainer = document.getElementById('edit-image-preview-container');
 
     editFileInput.addEventListener('change', (e) => {
-      selectedEditFiles = Array.from(e.target.files);
+      const newFiles = Array.from(e.target.files);
+      selectedEditFiles = [...selectedEditFiles, ...newFiles];
       if (selectedEditFiles.length > 5) {
         alert("Maximal 5 Bilder erlaubt!");
         selectedEditFiles = selectedEditFiles.slice(0, 5);
       }
+      // Reset the input so firing change again works
+      editFileInput.value = '';
       renderEditImagePreviews();
     });
 
@@ -716,7 +719,7 @@
       editPreviewContainer.innerHTML = '';
       selectedEditFiles.forEach((file, index) => {
         const wrap = document.createElement('div');
-        wrap.style.cssText = "display:flex; flex-direction:column; align-items:center; background:#f9f9f9; padding:5px; border-radius:4px; border:1px solid #ddd;";
+        wrap.style.cssText = "display:flex; flex-direction:column; align-items:center; background:#f9f9f9; padding:5px; border-radius:4px; border:1px solid #ddd; position:relative;";
 
         const img = document.createElement('img');
         img.src = URL.createObjectURL(file);
@@ -739,7 +742,17 @@
         rightBtn.onclick = () => swapEditFile(index, index + 1);
         if (index === selectedEditFiles.length - 1) rightBtn.disabled = true;
 
+        const delBtn = document.createElement('button');
+        delBtn.type = "button";
+        delBtn.innerText = "✕";
+        delBtn.style.cssText = "font-size:10px; cursor:pointer; padding:2px 5px; color:#fff; background:#e74c3c; border:none; border-radius:2px;";
+        delBtn.onclick = () => {
+          selectedEditFiles.splice(index, 1);
+          renderEditImagePreviews();
+        };
+
         btnRow.appendChild(leftBtn);
+        btnRow.appendChild(delBtn);
         btnRow.appendChild(rightBtn);
         wrap.appendChild(img);
         wrap.appendChild(btnRow);
@@ -992,11 +1005,14 @@
     const addPreviewContainer = document.getElementById('add-image-preview-container');
 
     addFileInput.addEventListener('change', (e) => {
-      selectedAddFiles = Array.from(e.target.files);
+      const newFiles = Array.from(e.target.files);
+      selectedAddFiles = [...selectedAddFiles, ...newFiles];
       if (selectedAddFiles.length > 5) {
         alert("Maximal 5 Bilder erlaubt!");
         selectedAddFiles = selectedAddFiles.slice(0, 5);
       }
+      // Reset the input so firing change again works
+      addFileInput.value = '';
       renderAddImagePreviews();
     });
 
@@ -1012,7 +1028,7 @@
       addPreviewContainer.innerHTML = '';
       selectedAddFiles.forEach((file, index) => {
         const wrap = document.createElement('div');
-        wrap.style.cssText = "display:flex; flex-direction:column; align-items:center; background:#f9f9f9; padding:5px; border-radius:4px; border:1px solid #ddd;";
+        wrap.style.cssText = "display:flex; flex-direction:column; align-items:center; background:#f9f9f9; padding:5px; border-radius:4px; border:1px solid #ddd; position:relative;";
 
         const img = document.createElement('img');
         img.src = URL.createObjectURL(file);
@@ -1035,7 +1051,17 @@
         rightBtn.onclick = () => swapAddFile(index, index + 1);
         if (index === selectedAddFiles.length - 1) rightBtn.disabled = true;
 
+        const delBtn = document.createElement('button');
+        delBtn.type = "button";
+        delBtn.innerText = "✕";
+        delBtn.style.cssText = "font-size:10px; cursor:pointer; padding:2px 5px; color:#fff; background:#e74c3c; border:none; border-radius:2px;";
+        delBtn.onclick = () => {
+          selectedAddFiles.splice(index, 1);
+          renderAddImagePreviews();
+        };
+
         btnRow.appendChild(leftBtn);
+        btnRow.appendChild(delBtn);
         btnRow.appendChild(rightBtn);
         wrap.appendChild(img);
         wrap.appendChild(btnRow);
