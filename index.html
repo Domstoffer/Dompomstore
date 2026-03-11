@@ -874,7 +874,7 @@
       }
 
       .cart-icon {
-        position: static !important;
+        position: relative !important;
         transform: none !important;
       }
     }
@@ -903,12 +903,14 @@
         <div>
           <div class="brand-logo" style="display: flex; flex-direction: column; align-items: center;">
             <img class="main-logo-img" src="images/logo.png" alt="DOMPOMSTORE Logo">
-            <div><a href="index.html">DOM</a><a href="hidden.html" class="secret-link"
-                style="cursor:pointer; opacity:0.3; transition:0.3s;" onmouseover="this.style.opacity=1"
-                onmouseout="this.style.opacity=0.3">P</a><a href="index.html">OMSTORE</a></div>
-            <button id="gridToggle" class="grid-toggle-btn"
-              style="background:none; border:none; color:inherit; font-size:1.5rem; margin-top:10px; cursor:pointer; font-weight: 300; opacity: 0.5; transition: opacity 0.3s;"
-              onmouseover="this.style.opacity=1" onmouseout="this.style.opacity=0.5">+</button>
+            <div style="display: flex; align-items: center; gap: 8px; justify-content: center;">
+              <button id="gridToggle" class="grid-toggle-btn"
+                style="background:none; border:none; color:inherit; font-size:1.5rem; cursor:pointer; font-weight: 300; opacity: 0.5; transition: opacity 0.3s; padding: 0;"
+                onmouseover="this.style.opacity=1" onmouseout="this.style.opacity=0.5">+</button>
+              <div><a href="index.html">DOM</a><a href="hidden.html" class="secret-link"
+                  style="cursor:pointer; opacity:0.3; transition:0.3s;" onmouseover="this.style.opacity=1"
+                  onmouseout="this.style.opacity=0.3">P</a><a href="index.html">OMSTORE</a></div>
+            </div>
           </div>
           <div class="nav-menu">
             <div class="cart-icon" id="cart-icon">
