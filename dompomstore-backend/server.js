@@ -594,11 +594,48 @@ app.put('/api/admin/products/:id', authenticateToken, [
 
       for (let i = 0; i < productsArray.length; i++) {
         if (productsArray[i].id === targetId) {
+          productFound = true;
+          // Process new images if provided
+          if (updateData.newImages && updateData.newImages.length > 0) {
+            // 1. Delete old images to save disk space
+            const oldImages = productsArray[i].images || (productsArray[i].image ? [productsArray[i].image] : []);
+            oldImages.forEach(imgPath => {
+              try {
+                const fullImagePath = path.join(__dirname, '..', imgPath);
+                if (fs.existsSync(fullImagePath)) {
+                  fs.unlinkSync(fullImagePath);
+                }
+              } catch (imgErr) {
+                console.error("Failed to delete old image during update: ", imgPath, imgErr);
+              }
+            });
+
+            // 2. Save new images
+            const relativeImagePaths = [];
+            const imagesDirPath = path.join(__dirname, '../images');
+            updateData.newImages.forEach((imgObj, index) => {
+              const base64Data = imgObj.data.replace(/^data:image\/\w+;base64,/, "");
+              const buffer = Buffer.from(base64Data, 'base64');
+              const fileExt = path.extname(imgObj.name) || '.jpg';
+              // Keep original image extension and sanitize name
+              const sanitizedName = imgObj.name.replace(/[^a-zA-Z0-9.-]/g, "_");
+              const safeFilename = `${Date.now()}-${index}-${sanitizedName}`;
+              const filePath = path.join(imagesDirPath, safeFilename);
+
+              fs.writeFileSync(filePath, buffer);
+              relativeImagePaths.push(`images/${safeFilename}`);
+            });
+
+            // 3. Update product arrays
+            productsArray[i].image = relativeImagePaths[0];
+            productsArray[i].images = relativeImagePaths;
+          }
+
+          // Update other fields
           productsArray[i].name = updateData.name;
           productsArray[i].price = updateData.price;
           productsArray[i].sizes = updateData.sizes;
           productsArray[i].description = updateData.description;
-          productFound = true;
           break;
         }
       }
