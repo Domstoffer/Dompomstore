@@ -375,30 +375,34 @@
             }
 
             .image-side {
-                width: 100%;
-                height: 38vh;
-                border-right: none;
-                border-bottom: 1px solid rgba(0, 0, 0, 0.05);
-                position: relative;
-                top: auto;
-                overflow: hidden;
+                width: 100% !important;
+                height: 50vh !important;
+                border-right: none !important;
+                border-bottom: 1px solid rgba(0, 0, 0, 0.05) !important;
+                position: relative !important;
+                top: auto !important;
+                overflow: hidden !important;
+                margin: 0 !important;
+                padding: 0 !important;
             }
 
             .image-track {
-                padding: 0;
-                height: 100%;
-                display: flex;
-                flex-direction: row;
-                scroll-snap-type: x mandatory;
-                overflow-x: auto;
+                padding: 0 !important;
+                height: 100% !important;
+                display: flex !important;
+                flex-direction: row !important;
+                scroll-snap-type: x mandatory !important;
+                overflow-x: auto !important;
             }
 
             .image-track img {
-                width: 100vw;
-                height: 38vh;
-                object-fit: contain;
-                scroll-snap-align: center;
-                flex-shrink: 0;
+                width: 100vw !important;
+                height: 50vh !important;
+                object-fit: cover !important;
+                scroll-snap-align: center !important;
+                flex-shrink: 0 !important;
+                border-radius: 0 !important;
+                padding: 0 !important;
             }
 
             .info-side {
@@ -696,13 +700,51 @@
             }
         }
     </script>
-    // Replace scrollBy with a subtle reveal since it's now in the right column
-    // and we don't want a jarring 350px jolt on Desktop anymore.
-    // window.scrollBy({ top: 350, behavior: 'smooth' });
-    }
-    }
-    }, 3000); // 3 Seconds Delay
-    });
+    <script>
+        document.addEventListener("DOMContentLoaded", () => {
+            setTimeout(() => {
+                const relatedSection = document.getElementById("related-products-section");
+                const relatedGrid = document.getElementById("related-grid");
+
+                if (typeof products !== 'undefined' && currentProduct) {
+                    const otherProducts = products.filter(p => p.id !== currentProduct.id);
+                    if (otherProducts.length > 0) {
+                        relatedSection.style.display = "block";
+                        relatedSection.style.marginTop = "0px";
+
+                        otherProducts.forEach(p => {
+                            const card = document.createElement("div");
+                            card.style.minWidth = "220px";
+                            card.style.maxWidth = "220px";
+                            card.style.scrollSnapAlign = "start";
+                            card.style.cursor = "pointer";
+                            card.onclick = () => window.location.href = "produkt.html?id=" + p.id;
+
+                            const imgSrc = Array.isArray(p.images) && p.images.length > 0 ? p.images[0] : p.image;
+
+                            card.innerHTML = `
+                                <div style="width:100%; height:280px; background:#f4f4f4; border-radius:12px; margin-bottom:12px; overflow:hidden;">
+                                    <img src="${imgSrc}" style="width:100%; height:100%; object-fit:cover; transition: transform 0.3s;" onmouseover="this.style.transform='scale(1.05)'" onmouseout="this.style.transform='scale(1)'">
+                                </div>
+                                <div style="font-size:12px; font-weight:600; text-transform:uppercase; font-family:'Inter', sans-serif; color:#000; letter-spacing:0.1em; margin-bottom:4px;">${p.name}</div>
+                                <div style="font-size:11px; color:#777; font-family:'Inter', sans-serif; letter-spacing:0.05em;">${p.price} ${p.currency}</div>
+                            `;
+                            relatedGrid.appendChild(card);
+                        });
+
+                        document.body.style.overflow = "auto";
+                        document.body.style.height = "auto";
+
+                        // Reveal smoothly on mobile only
+                        if (window.innerWidth <= 900) {
+                            setTimeout(() => {
+                                window.scrollBy({ top: 350, behavior: 'smooth' });
+                            }, 100);
+                        }
+                    }
+                }
+            }, 3500); // 3.5 Seconds Delay
+        });
     </script>
 </body>
 
