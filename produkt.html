@@ -235,7 +235,7 @@
 
         .info-side {
             width: 45vw;
-            padding: 100px;
+            padding: 100px 80px;
             justify-content: center;
             display: flex;
             flex-direction: column;
@@ -503,6 +503,19 @@
                     </div>
                 </div> <!-- End desc-wrapper -->
             </div> <!-- End product-description -->
+
+            <!-- RELATED PRODUCTS SECTION (Moved to right column) -->
+            <div id="related-products-section"
+                style="display: none; padding-top: 60px; padding-bottom: 20px; background: transparent; border-top: none; margin-top: 20px;">
+                <h2
+                    style="font-family: 'Syncopate', sans-serif; font-size: 1rem; text-transform: uppercase; margin-bottom: 20px; text-align: left; color: #000;">
+                    Vorschläge</h2>
+                <div id="related-grid"
+                    style="display: flex; gap: 15px; overflow-x: auto; scroll-snap-type: x mandatory; padding-bottom: 20px; -webkit-overflow-scrolling: touch; scrollbar-width: none;">
+                    <!-- Rendered by JS -->
+                </div>
+            </div>
+
         </div> <!-- End info-side -->
     </div> <!-- End split-layout -->
 
@@ -549,6 +562,35 @@
                     img.loading = "lazy";
                     imageTrack.appendChild(img);
                 });
+
+                // Infinite loop logic: clone the first image and append at the end
+                if (currentProduct.images.length > 1) {
+                    const firstClone = document.createElement('img');
+                    firstClone.src = currentProduct.images[0];
+                    firstClone.alt = currentProduct.name + " (clone)";
+                    imageTrack.appendChild(firstClone);
+
+                    let isResetting = false;
+                    imageTrack.addEventListener('scroll', () => {
+                        if (isResetting) return;
+                        // Max scroll width reachable
+                        const maxScroll = imageTrack.scrollWidth - imageTrack.clientWidth;
+                        // If we scrolled exactly to or past the max scroll (at the cloned first image)
+                        if (imageTrack.scrollLeft >= maxScroll - 5) {
+                            isResetting = true;
+                            // Disable scroll snapping temporarily to jump without visual glitch
+                            imageTrack.style.scrollSnapType = 'none';
+                            // Jump to start immediately 
+                            imageTrack.scrollLeft = 0;
+                            // Restore scroll snap 
+                            setTimeout(() => {
+                                imageTrack.style.scrollSnapType = 'x mandatory';
+                                isResetting = false;
+                            }, 50);
+                        }
+                    });
+                }
+
             } else if (currentProduct.image) {
                 const img = document.createElement('img');
                 img.src = currentProduct.image;
@@ -656,62 +698,13 @@
             }
         }
     </script>
-    <!-- RELATED PRODUCTS SECTION -->
-    <div id="related-products-section"
-        style="display: none; padding: 40px 24px; padding-bottom: 120px; background: #ffffff; border-top: 1px solid rgba(0,0,0,0.05); margin-top: 100vh; position: relative; z-index: 10;">
-        <h2
-            style="font-family: 'Syncopate', sans-serif; font-size: 1.2rem; text-transform: uppercase; margin-bottom: 20px; text-align: center; color: #000;">
-            Weitere Produkte</h2>
-        <div id="related-grid"
-            style="display: flex; gap: 20px; overflow-x: auto; scroll-snap-type: x mandatory; padding-bottom: 20px; -webkit-overflow-scrolling: touch;">
-            <!-- Rendered by JS -->
-        </div>
-    </div>
-
-    <script>
-        document.addEventListener("DOMContentLoaded", () => {
-            setTimeout(() => {
-                const relatedSection = document.getElementById("related-products-section");
-                const relatedGrid = document.getElementById("related-grid");
-
-                if (typeof products !== 'undefined' && currentProduct) {
-                    const otherProducts = products.filter(p => p.id !== currentProduct.id);
-                    if (otherProducts.length > 0) {
-                        relatedSection.style.display = "block";
-
-                        // Push the element just below the fold safely
-                        relatedSection.style.marginTop = "0px";
-
-                        otherProducts.forEach(p => {
-                            const card = document.createElement("div");
-                            card.style.minWidth = "220px";
-                            card.style.maxWidth = "220px";
-                            card.style.scrollSnapAlign = "start";
-                            card.style.cursor = "pointer";
-                            card.onclick = () => window.location.href = "produkt.html?id=" + p.id;
-
-                            const imgSrc = Array.isArray(p.images) && p.images.length > 0 ? p.images[0] : p.image;
-
-                            card.innerHTML = `
-                                <div style="width:100%; height:280px; background:#f4f4f4; border-radius:12px; margin-bottom:12px; overflow:hidden;">
-                                    <img src="${imgSrc}" style="width:100%; height:100%; object-fit:cover; transition: transform 0.3s;" onmouseover="this.style.transform='scale(1.05)'" onmouseout="this.style.transform='scale(1)'">
-                                </div>
-                                <div style="font-size:12px; font-weight:600; text-transform:uppercase; font-family:'Inter', sans-serif; color:#000; letter-spacing:0.1em; margin-bottom:4px;">${p.name}</div>
-                                <div style="font-size:11px; color:#777; font-family:'Inter', sans-serif; letter-spacing:0.05em;">${p.price} ${p.currency}</div>
-                            `;
-                            relatedGrid.appendChild(card);
-                        });
-
-                        // Unlock overflow to allow scrolling down to the new section
-                        document.body.style.overflow = "auto";
-                        document.body.style.height = "auto";
-
-                        // Smooth scroll down to reveal it partially
-                        window.scrollBy({ top: 350, behavior: 'smooth' });
-                    }
-                }
-            }, 4000); // 4 Seconds Delay as requested
-        });
+    // Replace scrollBy with a subtle reveal since it's now in the right column
+    // and we don't want a jarring 350px jolt on Desktop anymore.
+    // window.scrollBy({ top: 350, behavior: 'smooth' });
+    }
+    }
+    }, 3000); // 3 Seconds Delay
+    });
     </script>
 </body>
 
