@@ -483,6 +483,14 @@
         <button class="checkout-btn" id="proceedCheckout">Proceed to Checkout</button>
     </div>
 
+    <div id="lightbox-overlay"
+        style="display:none; position:fixed; top:0; left:0; width:100vw; height:100vh; background:rgba(0,0,0,0.9); z-index:9999; justify-content:center; align-items:center;">
+        <img id="lightbox-img" src="" style="max-width:95vw; max-height:95vh; object-fit:contain; border-radius:8px;">
+        <div
+            style="position:absolute; top:20px; right:30px; color:#fff; font-size:30px; font-weight:bold; cursor:pointer;">
+            &times;</div>
+    </div>
+
     <div class="split-layout">
         <div class="image-side">
             <div class="image-track">
@@ -563,6 +571,11 @@
                     const img = document.createElement('img');
                     img.src = imgSrc;
                     img.alt = currentProduct.name;
+                    img.style.cursor = "zoom-in";
+                    img.onclick = () => {
+                        document.getElementById('lightbox-img').src = imgSrc;
+                        document.getElementById('lightbox-overlay').style.display = "flex";
+                    };
                     imageTrack.appendChild(img);
                 });
 
@@ -571,6 +584,11 @@
                     const firstClone = document.createElement('img');
                     firstClone.src = currentProduct.images[0];
                     firstClone.alt = currentProduct.name + " (clone)";
+                    firstClone.style.cursor = "zoom-in";
+                    firstClone.onclick = () => {
+                        document.getElementById('lightbox-img').src = currentProduct.images[0];
+                        document.getElementById('lightbox-overlay').style.display = "flex";
+                    };
                     imageTrack.appendChild(firstClone);
 
                     let isResetting = false;
@@ -598,6 +616,11 @@
                 const img = document.createElement('img');
                 img.src = currentProduct.image;
                 img.alt = currentProduct.name;
+                img.style.cursor = "zoom-in";
+                img.onclick = () => {
+                    document.getElementById('lightbox-img').src = currentProduct.image;
+                    document.getElementById('lightbox-overlay').style.display = "flex";
+                };
                 imageTrack.appendChild(img);
             }
 
@@ -650,6 +673,14 @@
                     descToggle.classList.toggle("open");
                     descWrapper.classList.toggle("open");
                 }
+            }
+
+            // Lightbox close functionality
+            const lightbox = document.getElementById('lightbox-overlay');
+            if (lightbox) {
+                lightbox.onclick = () => {
+                    lightbox.style.display = "none";
+                };
             }
         };
     </script>
