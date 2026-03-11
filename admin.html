@@ -172,7 +172,7 @@
 
     /* --- MOBILE UX PREMIUM FIXES --- */
     /* CART RESPONSIVE FIX */
-    
+
 
     /* INPUT IOS FIX (Prevent Auto-Zoom) */
     input,
@@ -227,7 +227,7 @@
     /* --- LUXURY MOBILE REDESIGN --- */
 
     /* BOTTOM SHEET CART */
-    
+
 
     /* LUXURY TYPOGRAPHY */
     body {
@@ -324,15 +324,16 @@
         margin-top: 5px !important;
       }
     }
-  
-/* PREVENT DOUBLE TAP ZOOM */
-    html, body {
+
+    /* PREVENT DOUBLE TAP ZOOM */
+    html,
+    body {
       touch-action: manipulation !important;
     }
 
 
 
-    
+
 
     .cart-icon {
       position: absolute;
@@ -352,8 +353,7 @@
       padding: 2px 6px;
       border-radius: 50%;
     }
-
-</style>
+  </style>
   <link rel="stylesheet" href="mobile-luxury.css">
 </head>
 
@@ -376,6 +376,28 @@
       <div><button class="logout" onclick="logout()">Logout</button></div>
     </div>
 
+
+    <div id="product-section"
+      style="margin-bottom: 40px; margin-top: 10px; background: #ffffff; padding: 24px; border: 1px solid rgba(0,0,0,0.1);">
+      <h2 style="font-size: 14px; margin-bottom: 20px; color: #000; text-transform: uppercase; letter-spacing: 0.1em;">
+        ➕ Neues Produkt Hinzufügen
+      </h2>
+      <form id="add-product-form" onsubmit="submitProduct(event)">
+        <div style="display:flex; gap:10px; margin-bottom:10px;">
+          <input id="prod-id" placeholder="ID (z.B. SHIRT-01)" required style="flex:1;">
+          <input id="prod-name" placeholder="Name (z.B. Dompom Shirt)" required style="flex:2;">
+        </div>
+        <div style="display:flex; gap:10px; margin-bottom:10px;">
+          <input id="prod-price" type="number" placeholder="Preis (Zahl)" required style="flex:1;">
+          <input id="prod-sizes" placeholder="Größen (mit Komma, z.B. S, M, L oder OS)" required style="flex:2;">
+        </div>
+        <input id="prod-image" placeholder="Bild-Pfad (z.B. images/shirt.jpg)" required style="margin-bottom:10px;">
+        <textarea id="prod-desc" placeholder="Produktbeschreibung..." required
+          style="width:100%; padding:12px; margin-bottom:14px; border-radius:8px; border:1px solid #ccc; box-sizing:border-box; font-family:inherit; min-height:80px;"></textarea>
+        <button type="submit" id="prod-submit-btn">Produkt Hinzufügen</button>
+        <div id="prod-msg" style="font-size:12px; margin-top:10px;"></div>
+      </form>
+    </div>
 
     <div id="paid-section" style="margin-bottom: 40px; margin-top: 10px;">
       <h2
@@ -660,19 +682,64 @@
 
 
 
+    async function submitProduct(e) {
+      e.preventDefault();
+      const btn = document.getElementById('prod-submit-btn');
+      const msg = document.getElementById('prod-msg');
+      btn.innerText = "Speichere...";
+      btn.disabled = true;
+
+      const payload = {
+        id: document.getElementById('prod-id').value.trim(),
+        name: document.getElementById('prod-name').value.trim(),
+        price: Number(document.getElementById('prod-price').value),
+        currency: "USDC", // Default store currency
+        sizes: document.getElementById('prod-sizes').value.split(',').map(s => s.trim()),
+        stock: 100, // Default stock mapped
+        image: document.getElementById('prod-image').value.trim(),
+        description: document.getElementById('prod-desc').value.trim()
+      };
+
+      try {
+        const res = await fetch(API_URL + '/admin/products', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify(payload),
+          credentials: 'include'
+        });
+
+        const data = await res.json();
+        if (data.success) {
+          msg.style.color = "#1c7c3a";
+          msg.innerText = "✅ Produkt erfolgreich hinzugefügt!";
+          document.getElementById('add-product-form').reset();
+        } else {
+          msg.style.color = "red";
+          msg.innerText = "❌ Fehler: " + (data.error || "Unbekannt");
+        }
+      } catch (err) {
+        msg.style.color = "red";
+        msg.innerText = "❌ Netzwerkfehler beim Speichern.";
+      } finally {
+        setTimeout(() => msg.innerText = "", 5000);
+        btn.innerText = "Produkt Hinzufügen";
+        btn.disabled = false;
+      }
+    }
+
     checkAuth();
   </script>
-<!-- ANTI-ZOOM SCRIPT -->
-<script>
-let lastTouchEnd = 0;
-document.addEventListener('touchend', function (event) {
-  const now = Date.now();
-  if (now - lastTouchEnd <= 300) {
-    event.preventDefault();
-  }
-  lastTouchEnd = now;
-}, false);
-</script>
+  <!-- ANTI-ZOOM SCRIPT -->
+  <script>
+    let lastTouchEnd = 0;
+    document.addEventListener('touchend', function (event) {
+      const now = Date.now();
+      if (now - lastTouchEnd <= 300) {
+        event.preventDefault();
+      }
+      lastTouchEnd = now;
+    }, false);
+  </script>
 </body>
 
 </html>

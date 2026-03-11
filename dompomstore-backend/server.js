@@ -12,6 +12,7 @@ const solana = require('./solana');
 const ethereum = require('./ethereum');
 const path = require('path');
 const { body, validationResult, param } = require('express-validator');
+const fs = require('fs');
 
 // Import secure end-to-end communication services
 const pgpService = require('./pgpService');
@@ -427,6 +428,46 @@ app.post('/api/admin/pgp/decrypt', authenticateToken, [
 });
 
 // START SERVER (Harden boot sequence to wait for PGP generation)
+app.post('/api/admin/products', authenticateToken, [
+  body('id').isString().notEmpty().trim().escape(),
+  body('name').isString().notEmpty().trim().escape(),
+  body('price').isNumeric(),
+  body('currency').isString().notEmpty().trim(),
+  body('sizes').isArray(),
+  body('stock').isNumeric(),
+  body('image').isString().notEmpty().trim(),
+  body('description').isString().trim().escape()
+], (req, res) => {
+  const errors = validationResult(req);
+  if (!errors.isEmpty()) return res.status(400).json({ error: "Invalid Input Validation", details: errors.array() });
+
+  const newProduct = req.body;
+  const productsFilePath = path.join(__dirname, '../products.js');
+
+  try {
+    let fileContent = fs.readFileSync(productsFilePath, 'utf8');
+
+    // Find where the array closes
+    const closeBracketIndex = fileContent.lastIndexOf('];');
+    if (closeBracketIndex === -1) {
+      return res.status(500).json({ error: "Failed to parse products.js structure" });
+    }
+
+    // Format new product to inject
+    const newProductString = `,\n    {\n        id: "${newProduct.id}",\n        name: "${newProduct.name}",\n        price: ${newProduct.price},\n        currency: "${newProduct.currency}",\n        image: "${newProduct.image}",\n        sizes: ${JSON.stringify(newProduct.sizes)},\n        stock: ${newProduct.stock},\n        description: "${newProduct.description}"\n    }`;
+
+    // Stitch it into the array
+    const updatedContent = fileContent.slice(0, closeBracketIndex) + newProductString + '\n' + fileContent.slice(closeBracketIndex);
+
+    fs.writeFileSync(productsFilePath, updatedContent, 'utf8');
+
+    res.json({ success: true, message: "Product added securely to products.js" });
+  } catch (e) {
+    console.error('Error writing to products.js', e);
+    res.status(500).json({ error: "Filesystem write failed." });
+  }
+});
+
 pgpService.init().then(() => {
   app.listen(PORT, () => {
     console.log(`SECURE Server running on port ${PORT} with Enterprise Protections and PGP Engine Active.`);
