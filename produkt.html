@@ -374,11 +374,6 @@
                 flex-direction: column;
             }
 
-            body {
-                overflow: auto;
-                height: auto;
-            }
-
             .image-side {
                 width: 100%;
                 height: 38vh;
@@ -408,10 +403,9 @@
 
             .info-side {
                 width: 100%;
-                min-height: 62vh;
-                height: auto;
+                height: 62vh;
                 padding: 20px 24px 80px 24px;
-                overflow: visible;
+                overflow: hidden;
             }
 
             .product-title {
@@ -425,19 +419,11 @@
             }
 
             .size-row {
-                position: fixed;
-                bottom: 0;
-                left: 0;
                 width: 100%;
                 background: #ffffff;
-                padding: 15px 24px;
-                padding-bottom: calc(15px + env(safe-area-inset-bottom));
-                border-top: 1px solid rgba(0, 0, 0, 0.05);
-                z-index: 1000;
-                margin: 0 !important;
+                margin-bottom: 20px !important;
                 display: flex;
                 gap: 12px;
-                box-shadow: 0 -4px 15px rgba(0, 0, 0, 0.03);
             }
 
             .size-btn {
