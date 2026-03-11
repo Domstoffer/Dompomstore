@@ -24,9 +24,10 @@ const products = [
         "name": "ZynZynZyn",
         "price": 10,
         "currency": "USDC",
-        "image": "images/1773195550399-0-zyn.png",
+        "image": "images/1773202992465-0-C040BCF0-B54E-4DCF-8D31-1405112DF14E.PNG",
         "images": [
-            "images/1773195550399-0-zyn.png"
+            "images/1773202992465-0-C040BCF0-B54E-4DCF-8D31-1405112DF14E.PNG",
+            "images/1773202992466-1-IMG_5042.JPG"
         ],
         "sizes": [
             "Slim"
