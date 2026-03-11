@@ -19,11 +19,18 @@ echo "2. Starting Frontend Shop Server (Port 8080) ..."
 npx serve . -l 8080 &
 FRONTEND_PID=$!
 
+LOCAL_IP=$(ipconfig getifaddr en0 || ipconfig getifaddr en1 || echo "localhost")
+
 echo "======================================"
 echo "✅ SYSTEM IS ONLINE"
 echo "======================================"
-echo "🛒 Public Shop:  http://localhost:8080"
-echo "🔐 Admin Panel:  http://localhost:8080/admin.html"
+echo "💻 AM COMPUTER (MAC):"
+echo "🛒 Shop:       http://localhost:8080"
+echo "🔐 Admin:      http://localhost:8080/admin.html"
+echo " "
+echo "📱 AUF DEM HANDY (Im selben WLAN):"
+echo "🛒 Shop:       http://$LOCAL_IP:8080"
+echo "🔐 Admin:      http://$LOCAL_IP:8080/admin.html"
 echo "======================================"
 echo "Drücke CTRL+C um das System zu beenden."
 
