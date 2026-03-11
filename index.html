@@ -820,10 +820,14 @@
       <!-- FIXED LEFT MENU -->
       <div class="vanguard-left">
         <div>
-          <button id="gridToggle" class="grid-toggle-btn">+</button>
-          <div class="brand-logo"><a href="index.html">DOM</a><a href="hidden.html" class="secret-link"
-              style="cursor:pointer; opacity:0.3; transition:0.3s;" onmouseover="this.style.opacity=1"
-              onmouseout="this.style.opacity=0.3">P</a><a href="index.html">OMSTORE</a></div>
+          <div class="brand-logo" style="display: flex; flex-direction: column; align-items: center;">
+            <div><a href="index.html">DOM</a><a href="hidden.html" class="secret-link"
+                style="cursor:pointer; opacity:0.3; transition:0.3s;" onmouseover="this.style.opacity=1"
+                onmouseout="this.style.opacity=0.3">P</a><a href="index.html">OMSTORE</a></div>
+            <button id="gridToggle" class="grid-toggle-btn"
+              style="background:none; border:none; color:inherit; font-size:1.5rem; margin-top:10px; cursor:pointer; font-weight: 300; opacity: 0.5; transition: opacity 0.3s;"
+              onmouseover="this.style.opacity=1" onmouseout="this.style.opacity=0.5">+</button>
+          </div>
           <div class="nav-menu">
             <div class="cart-icon" id="cart-icon">
               <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"
@@ -912,23 +916,16 @@
       const grid = document.getElementById("productsGrid");
 
       if (toggle && grid) {
-        // Initialize to grid-three by default if we want to start at 3er
-        // The user asked "kannst du bilder in 3er reihe machen" meaning start at 3?
-        // Wait, current HTML is "container grid-two". We'll change the HTML below.
-
         toggle.onclick = function () {
           if (grid.classList.contains("grid-three")) {
             grid.classList.remove("grid-three");
             grid.classList.add("grid-two");
-            toggle.innerHTML = "+<br>+";
           } else if (grid.classList.contains("grid-two")) {
             grid.classList.remove("grid-two");
             grid.classList.add("grid-one");
-            toggle.innerHTML = "+<br>+<br>+";
           } else {
             grid.classList.remove("grid-one");
             grid.classList.add("grid-three");
-            toggle.innerHTML = "+";
           }
         };
       }
