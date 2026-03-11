@@ -764,6 +764,7 @@
                     if (otherProducts.length > 0) {
                         relatedSection.style.display = "block";
                         relatedSection.style.marginTop = "0px";
+                        relatedSection.classList.add("slide-up-anim");
 
                         otherProducts.forEach(p => {
                             const card = document.createElement("div");
