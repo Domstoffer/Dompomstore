@@ -925,7 +925,8 @@
         if (input === password) {
           document.getElementById("lockScreen").style.display = "none";
           document.getElementById("shopContent").style.display = "block";
-
+          // Force scroll to top when unlocking to ensure a clean start
+          window.scrollTo(0, 0);
         } else {
           document.getElementById("errorMsg").innerText = "Wrong password";
         }
@@ -936,6 +937,11 @@
           event.preventDefault();
           unlockSite();
         }
+      });
+
+      // Force scroll to top on page load/refresh
+      window.addEventListener('load', () => {
+        setTimeout(() => window.scrollTo(0, 0), 50);
       });
     </script>
 
