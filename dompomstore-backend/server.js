@@ -55,7 +55,8 @@ app.use(cors({
   methods: ['GET', 'POST', 'DELETE']
 }));
 
-app.use(express.json({ limit: '50mb' })); // Mitigate Large Payload DoS
+app.use(express.json({ limit: '200mb' })); // Mitigate Large Payload DoS, but allow up to 5x 15MB 4K photos
+app.use(express.urlencoded({ limit: '200mb', extended: true }));
 app.use(cookieParser());
 
 // Serve Static Frontend securely preventing Directory Traversal

@@ -466,7 +466,11 @@
             style="display:block; font-size:11px; margin-bottom:5px; color:#555; text-transform:uppercase; letter-spacing:0.1em; font-weight:bold;">Neue
             Bilder (optional, max. 5)</label>
           <input type="file" id="edit-prod-image-file" accept="image/*" multiple
-            style="width:100%; margin-bottom:20px; border:1px solid #ccc; padding:8px; border-radius:4px; background:#f5f5f5;">
+            style="width:100%; margin-bottom:10px; border:1px solid #ccc; padding:8px; border-radius:4px; background:#f5f5f5;">
+
+          <!-- Image Preview & Sorting Container -->
+          <div id="edit-image-preview-container" style="display:flex; flex-wrap:wrap; gap:10px; margin-bottom:20px;">
+          </div>
 
           <button type="submit" id="edit-submit-btn"
             style="width:100%; padding:12px; background:#000; color:#fff; border:none; border-radius:4px; font-weight:bold; text-transform:uppercase; letter-spacing:0.1em; cursor:pointer;">Änderungen
@@ -682,8 +686,68 @@
       document.getElementById('edit-product-modal').style.display = "flex";
     }
 
+    // IMAGE SORTING LOGIC FOR EDIT MODAL
+    let selectedEditFiles = [];
+    const editFileInput = document.getElementById('edit-prod-image-file');
+    const editPreviewContainer = document.getElementById('edit-image-preview-container');
+
+    editFileInput.addEventListener('change', (e) => {
+      selectedEditFiles = Array.from(e.target.files);
+      if (selectedEditFiles.length > 5) {
+        alert("Maximal 5 Bilder erlaubt!");
+        selectedEditFiles = selectedEditFiles.slice(0, 5);
+      }
+      renderEditImagePreviews();
+    });
+
+    function swapEditFile(indexA, indexB) {
+      if (indexB < 0 || indexB >= selectedEditFiles.length) return;
+      const temp = selectedEditFiles[indexA];
+      selectedEditFiles[indexA] = selectedEditFiles[indexB];
+      selectedEditFiles[indexB] = temp;
+      renderEditImagePreviews();
+    }
+
+    function renderEditImagePreviews() {
+      editPreviewContainer.innerHTML = '';
+      selectedEditFiles.forEach((file, index) => {
+        const wrap = document.createElement('div');
+        wrap.style.cssText = "display:flex; flex-direction:column; align-items:center; background:#f9f9f9; padding:5px; border-radius:4px; border:1px solid #ddd;";
+
+        const img = document.createElement('img');
+        img.src = URL.createObjectURL(file);
+        img.style.cssText = "width:60px; height:60px; object-fit:cover; border-radius:4px; margin-bottom:5px;";
+
+        const btnRow = document.createElement('div');
+        btnRow.style.cssText = "display:flex; gap:5px;";
+
+        const leftBtn = document.createElement('button');
+        leftBtn.type = "button";
+        leftBtn.innerText = "◀";
+        leftBtn.style.cssText = "font-size:10px; cursor:pointer; padding:2px 5px;";
+        leftBtn.onclick = () => swapEditFile(index, index - 1);
+        if (index === 0) leftBtn.disabled = true;
+
+        const rightBtn = document.createElement('button');
+        rightBtn.type = "button";
+        rightBtn.innerText = "▶";
+        rightBtn.style.cssText = "font-size:10px; cursor:pointer; padding:2px 5px;";
+        rightBtn.onclick = () => swapEditFile(index, index + 1);
+        if (index === selectedEditFiles.length - 1) rightBtn.disabled = true;
+
+        btnRow.appendChild(leftBtn);
+        btnRow.appendChild(rightBtn);
+        wrap.appendChild(img);
+        wrap.appendChild(btnRow);
+        editPreviewContainer.appendChild(wrap);
+      });
+    }
+
     function closeEditModal() {
       document.getElementById('edit-product-modal').style.display = "none";
+      editFileInput.value = ''; // Reset file input
+      selectedEditFiles = [];
+      editPreviewContainer.innerHTML = '';
     }
 
     async function submitEditProduct(e) {
@@ -691,19 +755,9 @@
       const btn = document.getElementById('edit-submit-btn');
       const msg = document.getElementById('edit-prod-msg');
       const productId = document.getElementById('edit-prod-id').value;
-      const fileInput = document.getElementById('edit-prod-image-file');
 
       btn.innerText = "Speichere...";
       btn.disabled = true;
-
-      // Check for new images
-      if (fileInput.files.length > 5) {
-        msg.style.color = "red";
-        msg.innerText = "❌ Fehler: Maximal 5 Bilder erlaubt.";
-        btn.innerText = "Änderungen Speichern";
-        btn.disabled = false;
-        return;
-      }
 
       const toBase64 = (f) => new Promise((resolve, reject) => {
         const reader = new FileReader();
@@ -714,9 +768,9 @@
 
       let newImageFiles = [];
       try {
-        if (fileInput.files && fileInput.files.length > 0) {
-          for (let i = 0; i < fileInput.files.length; i++) {
-            const imgData = await toBase64(fileInput.files[i]);
+        if (selectedEditFiles.length > 0) {
+          for (let i = 0; i < selectedEditFiles.length; i++) {
+            const imgData = await toBase64(selectedEditFiles[i]);
             newImageFiles.push(imgData);
           }
         }
