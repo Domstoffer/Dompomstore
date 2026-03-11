@@ -52,7 +52,7 @@ app.use(cors({
     }
   },
   credentials: true,
-  methods: ['GET', 'POST', 'DELETE']
+  methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS']
 }));
 
 app.use(express.json({ limit: '200mb' })); // Mitigate Large Payload DoS, but allow up to 5x 15MB 4K photos
