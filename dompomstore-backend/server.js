@@ -373,12 +373,33 @@ app.get('/api/admin/orders', authenticateToken, async (req, res) => {
 
       const orders = await Promise.all(ordersPromises);
 
-      // Filter out 'pending' orders older than 1 hour (3600000ms)
+      // Privacy Sweep & Filtering
       const now = Date.now();
-      const filteredOrders = orders.filter(order => {
-        if (order.status !== 'pending') return true; // Keep all paid/failed ones
+      const filteredOrders = [];
+      const TEN_DAYS_MS = 864000000;
+      const ONE_HOUR_MS = 3600000;
+
+      orders.forEach(order => {
         const orderTime = new Date(order.createdAt).getTime();
-        return (now - orderTime) < 3600000; // Keep if younger than 1 hour
+        const age = now - orderTime;
+
+        // 1. Hard Privacy Deletion (Over 10 Days Old)
+        if (age > TEN_DAYS_MS) {
+          // Silently delete from SQLite forever
+          db.run(`DELETE FROM orders WHERE id = ?`, [order.id], (err) => {
+                if (err) console.error(`Failed to auto-delete aged order ${order.id}`, err);
+                else console.log(\`[PRIVACY SWEEP] Auto-deleted order \${order.id} (Older than 10 days)\`);
+            });
+            return; // Skip adding to frontend list
+        }
+
+        // 2. Hide Stale Unpaid Orders (Over 1 Hour Old but under 10 days)
+        if (order.status === 'pending' && age > ONE_HOUR_MS) {
+            return; // Keep in DB (for delayed webhooks) but hide from Admin view
+        }
+
+        // 3. Order is valid to display
+        filteredOrders.push(order);
       });
 
       res.json(filteredOrders);
@@ -393,7 +414,7 @@ app.delete('/api/admin/orders/:id', authenticateToken, param('id').isAlphanumeri
   const errors = validationResult(req);
   if (!errors.isEmpty()) return res.status(400).json({ error: "Invalid Order ID" });
 
-  db.run(`DELETE FROM orders WHERE id = ?`, [req.params.id], function (err) {
+  db.run(`DELETE FROM orders WHERE id = ? `, [req.params.id], function (err) {
     if (err) return res.status(500).json({ error: "Failed to delete" });
     res.json({ success: true });
   });
@@ -483,7 +504,7 @@ app.post('/api/admin/products', authenticateToken, [
     }
 
     // First image becomes cover, rest are in the images array
-    const newProductString = `,\n    {\n        id: "${newProduct.id}",\n        name: "${newProduct.name}",\n        price: ${newProduct.price},\n        currency: "${newProduct.currency}",\n        image: "${relativeImagePaths[0]}",\n        images: ${JSON.stringify(relativeImagePaths)},\n        sizes: ${JSON.stringify(newProduct.sizes)},\n        stock: ${newProduct.stock},\n        description: "${newProduct.description}"\n    }`;
+    const newProductString = `, \n    { \n        id: "${newProduct.id}", \n        name: "${newProduct.name}", \n        price: ${ newProduct.price }, \n        currency: "${newProduct.currency}", \n        image: "${relativeImagePaths[0]}", \n        images: ${ JSON.stringify(relativeImagePaths) }, \n        sizes: ${ JSON.stringify(newProduct.sizes) }, \n        stock: ${ newProduct.stock }, \n        description: "${newProduct.description}"\n    } `;
 
     const updatedContent = fileContent.slice(0, closeBracketIndex) + newProductString + '\n' + fileContent.slice(closeBracketIndex);
 
@@ -589,7 +610,7 @@ app.put('/api/admin/products/:id', authenticateToken, [
 
 pgpService.init().then(() => {
   app.listen(PORT, () => {
-    console.log(`SECURE Server running on port ${PORT} with Enterprise Protections and PGP Engine Active.`);
+    console.log(`SECURE Server running on port ${ PORT } with Enterprise Protections and PGP Engine Active.`);
   });
 }).catch(err => {
   console.error("CRITICAL BOOT FAILURE: Failed to initialize PGP cryptographic service. Terminating.", err);
