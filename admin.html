@@ -696,29 +696,35 @@
       const fileInput = document.getElementById('prod-image-file');
       if (!fileInput.files || fileInput.files.length === 0) {
         msg.style.color = "red";
-        msg.innerText = "❌ Fehler: Bitte wähle ein Bild aus.";
+        msg.innerText = "❌ Fehler: Bitte wähle mindestens ein Bild aus.";
+        return;
+      }
+      
+      if (fileInput.files.length > 5) {
+        msg.style.color = "red";
+        msg.innerText = "❌ Fehler: Maximal 5 Bilder erlaubt.";
         return;
       }
 
-      btn.innerText = "Verarbeite Bild...";
+      btn.innerText = "Verarbeite Bilder...";
       btn.disabled = true;
 
-      const file = fileInput.files[0];
-
-      // Convert image to Base64
       const toBase64 = (f) => new Promise((resolve, reject) => {
         const reader = new FileReader();
         reader.readAsDataURL(f);
-        reader.onload = () => resolve(reader.result);
+        reader.onload = () => resolve({ name: f.name, data: reader.result });
         reader.onerror = err => reject(err);
       });
 
-      let base64Image;
+      let imageFiles = [];
       try {
-        base64Image = await toBase64(file);
+        for (let i = 0; i < fileInput.files.length; i++) {
+          const imgData = await toBase64(fileInput.files[i]);
+          imageFiles.push(imgData);
+        }
       } catch (err) {
         msg.style.color = "red";
-        msg.innerText = "❌ Fehler beim Lesen des Bildes.";
+        msg.innerText = "❌ Fehler beim Lesen der Bilder.";
         btn.innerText = "Produkt Hinzufügen";
         btn.disabled = false;
         return;
@@ -733,8 +739,7 @@
         currency: "USDC", // Default store currency
         sizes: document.getElementById('prod-sizes').value.split(',').map(s => s.trim()),
         stock: 100, // Default stock mapped
-        imageFile: base64Image,
-        imageName: file.name,
+        images: imageFiles, // Send array of objects {name, data}
         description: document.getElementById('prod-desc').value.trim()
       };
 
