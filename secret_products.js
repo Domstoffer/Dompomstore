@@ -1,14 +1,21 @@
 const products = [
     {
-        id: "testcyp",
-        name: "Testosteron Cypionat",
-        price: 80,
-        currency: "USDC",
-        image: "images/1773198321017-0-test.jpg",
-        images: ["images/1773198321017-0-test.jpg"],
-        sizes: ["1", "3", "5"],
-        stock: 100,
-        description: "damit wird man breit"
+        "id": "testcyp",
+        "name": "Testosteron Cypionat",
+        "price": 80,
+        "currency": "USDC",
+        "image": "images/1773200788820-0-test.jpg",
+        "images": [
+            "images/1773200788820-0-test.jpg",
+            "images/1773200788821-1-IMG_70C8F769-8FA1-4204-B0AC-13A9022DFAEA.JPEG"
+        ],
+        "sizes": [
+            "1",
+            "3",
+            "5"
+        ],
+        "stock": 100,
+        "description": "damit wird man breit"
     }
 ];
 
@@ -25,7 +32,7 @@ function renderSecretProducts(productsArray) {
         box.onclick = () => window.location.href = "secret_produkt.html?id=" + product.id;
 
         box.innerHTML = `
-            <div class="image-wrapper"><img loading="lazy" src="${product.image}" alt="${product.name}"></div>
+            <div class="image-wrapper"><img src="${product.image}" alt="${product.name}"></div>
             <div class="product-info-grid">
               <div class="product-name">${product.name}</div>
               <div class="product-price-display" style="display:block; margin-top:8px;">

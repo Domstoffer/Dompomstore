@@ -4,9 +4,12 @@ const products = [
         "name": "FS-01",
         "price": 29,
         "currency": "USDC",
-        "image": "images/1773193258736-0-unisex-garment-dyed-heavyweight-t-shirt-black-back-6953cef82cf54.PNG",
+        "image": "images/1773199884516-0-unisex-garment-dyed-heavyweight-t-shirt-black-front-69714998e2a90.PNG",
         "images": [
-            "images/1773193258736-0-unisex-garment-dyed-heavyweight-t-shirt-black-back-6953cef82cf54.PNG"
+            "images/1773199884516-0-unisex-garment-dyed-heavyweight-t-shirt-black-front-69714998e2a90.PNG",
+            "images/1773199884517-1-unisex-garment-dyed-heavyweight-t-shirt-black-left-69714998e30c8.PNG",
+            "images/1773199884524-2-unisex-garment-dyed-heavyweight-t-shirt-black-back-6953cef82cf54.PNG",
+            "images/1773199884525-3-unisex-garment-dyed-heavyweight-t-shirt-black-right-69714998e32d0.PNG"
         ],
         "sizes": [
             "M",
@@ -46,7 +49,7 @@ function renderProducts(productsArray) {
         box.onclick = () => window.location.href = "produkt.html?id=" + product.id;
 
         box.innerHTML = `
-            <div class="image-wrapper"><img loading="lazy" src="${product.image}" alt="${product.name}"></div>
+            <div class="image-wrapper"><img src="${product.image}" alt="${product.name}"></div>
             <div class="product-info-grid">
               <div class="product-name">${product.name}</div>\n              <div class="product-price">${product.price} ${product.currency}</div>
             </div>
