@@ -883,6 +883,7 @@
 
 
     <script src="cart.js"></script>
+    <script src="products.js"></script>
 
     <script>
       function unlockSite() {
@@ -892,10 +893,6 @@
         if (input === password) {
           document.getElementById("lockScreen").style.display = "none";
           document.getElementById("shopContent").style.display = "block";
-
-          const script = document.createElement("script");
-          script.src = "products.js";
-          document.body.appendChild(script);
 
         } else {
           document.getElementById("errorMsg").innerText = "Wrong password";
