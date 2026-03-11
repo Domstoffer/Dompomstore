@@ -22,6 +22,18 @@ body {
     text-decoration: none !important;
 }
 
+.main-logo-img {
+    width: 45px;
+    height: auto;
+    margin-bottom: 5px;
+    mix-blend-mode: multiply;
+}
+
+body.dark-mode .main-logo-img {
+    filter: invert(1);
+    mix-blend-mode: screen;
+}
+
 /* Make sure the cart overlay behaves well */
 .cart-overlay {
     z-index: 998 !important;
