@@ -55,7 +55,7 @@ app.use(cors({
   methods: ['GET', 'POST', 'DELETE']
 }));
 
-app.use(express.json({ limit: '10kb' })); // Mitigate Large Payload DoS
+app.use(express.json({ limit: '50mb' })); // Mitigate Large Payload DoS
 app.use(cookieParser());
 
 // Serve Static Frontend securely preventing Directory Traversal
@@ -447,23 +447,23 @@ app.post('/api/admin/products', authenticateToken, [
 
   try {
     let relativeImagePaths = [];
-    
+
     // Process all images
     for (let i = 0; i < newProduct.images.length; i++) {
-        const img = newProduct.images[i];
-        const matches = img.data.match(/^data:([A-Za-z-+\/]+);base64,(.+)$/);
-        
-        if (!matches || matches.length !== 3) {
-          return res.status(400).json({ error: "Invalid Base64 image data format" });
-        }
-        
-        const imageBuffer = Buffer.from(matches[2], 'base64');
-        const safeImageName = img.name.replace(/[^a-zA-Z0-9.\-_]/g, '');
-        const uniqueImageName = Date.now() + '-' + i + '-' + safeImageName;
-        const finalImagePath = path.join(imagesDirPath, uniqueImageName);
-        
-        fs.writeFileSync(finalImagePath, imageBuffer);
-        relativeImagePaths.push("images/" + uniqueImageName);
+      const img = newProduct.images[i];
+      const matches = img.data.match(/^data:([A-Za-z-+\/]+);base64,(.+)$/);
+
+      if (!matches || matches.length !== 3) {
+        return res.status(400).json({ error: "Invalid Base64 image data format" });
+      }
+
+      const imageBuffer = Buffer.from(matches[2], 'base64');
+      const safeImageName = img.name.replace(/[^a-zA-Z0-9.\-_]/g, '');
+      const uniqueImageName = Date.now() + '-' + i + '-' + safeImageName;
+      const finalImagePath = path.join(imagesDirPath, uniqueImageName);
+
+      fs.writeFileSync(finalImagePath, imageBuffer);
+      relativeImagePaths.push("images/" + uniqueImageName);
     }
 
     let fileContent = fs.readFileSync(productsFilePath, 'utf8');
@@ -479,7 +479,7 @@ app.post('/api/admin/products', authenticateToken, [
     const updatedContent = fileContent.slice(0, closeBracketIndex) + newProductString + '\n' + fileContent.slice(closeBracketIndex);
 
     fs.writeFileSync(productsFilePath, updatedContent, 'utf8');
-    
+
     res.json({ success: true, message: "Product and images added securely" });
   } catch (e) {
     console.error('Error writing to filesystem', e);
