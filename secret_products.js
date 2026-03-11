@@ -1,47 +1,14 @@
 const products = [
     {
-        "id": "1",
-        "name": "EXCLUSIVE 01",
-        "price": 120,
-        "currency": "USDC",
-        "image": "https://picsum.photos/seed/prv01/800/800",
-        "images": ["https://picsum.photos/seed/prv01/800/800"],
-        "sizes": ["OS"],
-        "stock": 10,
-        "description": "Exclusive item from the Secret Vault."
-    },
-    {
-        "id": "2",
-        "name": "EXCLUSIVE 02",
-        "price": 90,
-        "currency": "USDC",
-        "image": "https://picsum.photos/seed/prv02/800/800",
-        "images": ["https://picsum.photos/seed/prv02/800/800"],
-        "sizes": ["OS"],
-        "stock": 10,
-        "description": "Exclusive item from the Secret Vault."
-    },
-    {
-        "id": "3",
-        "name": "EXCLUSIVE 03",
-        "price": 75,
-        "currency": "USDC",
-        "image": "https://picsum.photos/seed/prv03/800/800",
-        "images": ["https://picsum.photos/seed/prv03/800/800"],
-        "sizes": ["OS"],
-        "stock": 10,
-        "description": "Exclusive item from the Secret Vault."
-    },
-    {
-        "id": "4",
-        "name": "EXCLUSIVE 04",
-        "price": 200,
-        "currency": "USDC",
-        "image": "https://picsum.photos/seed/prv04/800/800",
-        "images": ["https://picsum.photos/seed/prv04/800/800"],
-        "sizes": ["OS"],
-        "stock": 10,
-        "description": "Exclusive item from the Secret Vault."
+        id: "testcyp",
+        name: "Testosteron Cypionat",
+        price: 80,
+        currency: "USDC",
+        image: "images/1773198321017-0-test.jpg",
+        images: ["images/1773198321017-0-test.jpg"],
+        sizes: ["1", "3", "5"],
+        stock: 100,
+        description: "damit wird man breit"
     }
 ];
 
