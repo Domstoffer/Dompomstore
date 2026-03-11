@@ -425,7 +425,23 @@
             }
 
             .size-row {
-                margin-bottom: 20px;
+                position: fixed;
+                bottom: 0;
+                left: 0;
+                width: 100%;
+                background: #ffffff;
+                padding: 15px 24px;
+                padding-bottom: calc(15px + env(safe-area-inset-bottom));
+                border-top: 1px solid rgba(0, 0, 0, 0.05);
+                z-index: 1000;
+                margin: 0 !important;
+                display: flex;
+                gap: 12px;
+                box-shadow: 0 -4px 15px rgba(0, 0, 0, 0.03);
+            }
+
+            .size-btn {
+                flex: 1;
             }
 
             .add-to-cart {
