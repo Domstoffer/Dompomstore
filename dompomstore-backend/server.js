@@ -387,15 +387,15 @@ app.get('/api/admin/orders', authenticateToken, async (req, res) => {
         if (age > TEN_DAYS_MS) {
           // Silently delete from SQLite forever
           db.run(`DELETE FROM orders WHERE id = ?`, [order.id], (err) => {
-                if (err) console.error(`Failed to auto-delete aged order ${order.id}`, err);
-                else console.log(\`[PRIVACY SWEEP] Auto-deleted order \${order.id} (Older than 10 days)\`);
-            });
-            return; // Skip adding to frontend list
+            if (err) console.error(`Failed to auto-delete aged order ${order.id}`, err);
+            else console.log(`[PRIVACY SWEEP] Auto-deleted order ${order.id} (Older than 10 days)`);
+          });
+          return; // Skip adding to frontend list
         }
 
         // 2. Hide Stale Unpaid Orders (Over 1 Hour Old but under 10 days)
         if (order.status === 'pending' && age > ONE_HOUR_MS) {
-            return; // Keep in DB (for delayed webhooks) but hide from Admin view
+          return; // Keep in DB (for delayed webhooks) but hide from Admin view
         }
 
         // 3. Order is valid to display
@@ -504,7 +504,18 @@ app.post('/api/admin/products', authenticateToken, [
     }
 
     // First image becomes cover, rest are in the images array
-    const newProductString = `, \n    { \n        id: "${newProduct.id}", \n        name: "${newProduct.name}", \n        price: ${ newProduct.price }, \n        currency: "${newProduct.currency}", \n        image: "${relativeImagePaths[0]}", \n        images: ${ JSON.stringify(relativeImagePaths) }, \n        sizes: ${ JSON.stringify(newProduct.sizes) }, \n        stock: ${ newProduct.stock }, \n        description: "${newProduct.description}"\n    } `;
+    const newProductString = `,
+    {
+        id: "${newProduct.id}",
+        name: "${newProduct.name}",
+        price: ${newProduct.price},
+        currency: "${newProduct.currency}",
+        image: "${relativeImagePaths[0]}",
+        images: ${JSON.stringify(relativeImagePaths)},
+        sizes: ${JSON.stringify(newProduct.sizes)},
+        stock: ${newProduct.stock},
+        description: "${newProduct.description}"
+    }`;
 
     const updatedContent = fileContent.slice(0, closeBracketIndex) + newProductString + '\n' + fileContent.slice(closeBracketIndex);
 
