@@ -372,7 +372,16 @@ app.get('/api/admin/orders', authenticateToken, async (req, res) => {
       });
 
       const orders = await Promise.all(ordersPromises);
-      res.json(orders);
+
+      // Filter out 'pending' orders older than 1 hour (3600000ms)
+      const now = Date.now();
+      const filteredOrders = orders.filter(order => {
+        if (order.status !== 'pending') return true; // Keep all paid/failed ones
+        const orderTime = new Date(order.createdAt).getTime();
+        return (now - orderTime) < 3600000; // Keep if younger than 1 hour
+      });
+
+      res.json(filteredOrders);
     } catch (processErr) {
       console.error("Critical error mapping orders array:", processErr);
       res.status(500).json({ error: "Order parsing error" });
@@ -497,17 +506,17 @@ app.get('/api/admin/products', authenticateToken, (req, res) => {
   const productsFilePath = path.join(__dirname, '../products.js');
   try {
     const fileContent = fs.readFileSync(productsFilePath, 'utf8');
-    
+
     // Extract the raw JS array string
     const startIndex = fileContent.indexOf('const products = [');
     const endIndex = fileContent.lastIndexOf('];') + 1;
-    
+
     if (startIndex === -1 || endIndex === 0) {
       return res.status(500).json({ error: "Could not locate products array in file" });
     }
-    
+
     let arrayString = fileContent.substring(startIndex + 'const products = '.length, endIndex);
-    
+
     // Safely evaluate the JS string to JSON
     const data = eval('(' + arrayString + ')');
     res.json(data);
@@ -534,44 +543,44 @@ app.put('/api/admin/products/:id', authenticateToken, [
 
   try {
     let fileContent = fs.readFileSync(productsFilePath, 'utf8');
-    
+
     const startIndex = fileContent.indexOf('const products = [');
     const endIndex = fileContent.lastIndexOf('];') + 1;
-    
+
     if (startIndex === -1 || endIndex === 0) {
       return res.status(500).json({ error: "Could not locate products array in file" });
     }
-    
+
     let preArray = fileContent.substring(0, startIndex + 'const products = '.length);
     let arrayString = fileContent.substring(startIndex + 'const products = '.length, endIndex);
     let postArray = fileContent.substring(endIndex);
-    
+
     // Parse the array
     let productsArray = eval('(' + arrayString + ')');
-    
+
     // Find and update the product
     let productFound = false;
     for (let i = 0; i < productsArray.length; i++) {
-        if (productsArray[i].id === targetId) {
-            productsArray[i].name = updateData.name;
-            productsArray[i].price = updateData.price;
-            productsArray[i].sizes = updateData.sizes;
-            productsArray[i].description = updateData.description;
-            productFound = true;
-            break;
-        }
+      if (productsArray[i].id === targetId) {
+        productsArray[i].name = updateData.name;
+        productsArray[i].price = updateData.price;
+        productsArray[i].sizes = updateData.sizes;
+        productsArray[i].description = updateData.description;
+        productFound = true;
+        break;
+      }
     }
-    
+
     if (!productFound) {
-        return res.status(404).json({ error: "Product ID not found" });
+      return res.status(404).json({ error: "Product ID not found" });
     }
-    
+
     // Convert back to formatted JS string securely
     const newArrayString = JSON.stringify(productsArray, null, 4);
-    
+
     fs.writeFileSync(productsFilePath, preArray + newArrayString + postArray, 'utf8');
     res.json({ success: true, message: "Product updated successfully" });
-    
+
   } catch (err) {
     console.error("Error updating product in filesystem:", err);
     res.status(500).json({ error: "Server error during product filesystem update" });
