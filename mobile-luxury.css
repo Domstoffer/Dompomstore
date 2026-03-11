@@ -276,7 +276,7 @@ body.dark-mode .main-logo-img {
     .product-container {
         flex-direction: column !important;
         padding: 16px !important;
-        padding-top: calc(var(--nav-height) + 10px) !important;
+        padding-top: calc(var(--nav-height) + 20px) !important;
         margin-top: 0 !important;
     }
 
@@ -567,7 +567,8 @@ body.dark-mode .grid-toggle-btn {
     display: flex !important;
     justify-content: space-between !important;
     align-items: center !important;
-    padding: 16px !important;
+    padding: 0 16px !important;
+    height: var(--nav-height) !important;
     background: rgba(255, 255, 255, 0.95) !important;
     backdrop-filter: blur(12px) !important;
     -webkit-backdrop-filter: blur(12px) !important;
