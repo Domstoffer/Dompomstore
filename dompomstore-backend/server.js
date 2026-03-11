@@ -619,9 +619,69 @@ app.put('/api/admin/products/:id', authenticateToken, [
   }
 });
 
+// DELETE PRODUCT
+app.delete('/api/admin/products/:id', authenticateToken, [
+  param('id').isString().notEmpty().escape()
+], (req, res) => {
+  const errors = validationResult(req);
+  if (!errors.isEmpty()) return res.status(400).json({ error: "Invalid Input Validation", details: errors.array() });
+
+  const targetId = req.params.id;
+  const productsFilePath = path.join(__dirname, '../products.js');
+
+  try {
+    let fileContent = fs.readFileSync(productsFilePath, 'utf8');
+
+    const startIndex = fileContent.indexOf('const products = [');
+    const endIndex = fileContent.lastIndexOf('];') + 1;
+
+    if (startIndex === -1 || endIndex === 0) {
+      return res.status(500).json({ error: "Could not locate products array in file" });
+    }
+
+    let preArray = fileContent.substring(0, startIndex + 'const products = '.length);
+    let arrayString = fileContent.substring(startIndex + 'const products = '.length, endIndex);
+    let postArray = fileContent.substring(endIndex);
+
+    let productsArray = eval('(' + arrayString + ')');
+
+    // Find the product to delete its images from disk
+    const productToDelete = productsArray.find(p => p.id === targetId);
+    if (!productToDelete) {
+      return res.status(404).json({ error: "Product ID not found" });
+    }
+
+    // Attempt to physically delete the images to save server storage
+    const imagesToDelete = productToDelete.images || (productToDelete.image ? [productToDelete.image] : []);
+    imagesToDelete.forEach(imgPath => {
+      try {
+        const fullImagePath = path.join(__dirname, '..', imgPath);
+        if (fs.existsSync(fullImagePath)) {
+          fs.unlinkSync(fullImagePath);
+        }
+      } catch (imgErr) {
+        console.error("Failed to delete image: ", imgPath, imgErr);
+      }
+    });
+
+    // Remove the product object from the array
+    const updatedArray = productsArray.filter(p => p.id !== targetId);
+
+    // Convert back to formatted JS string securely
+    const newArrayString = JSON.stringify(updatedArray, null, 4);
+
+    fs.writeFileSync(productsFilePath, preArray + newArrayString + postArray, 'utf8');
+    res.json({ success: true, message: "Product and associated images wiped successfully" });
+
+  } catch (err) {
+    console.error("Error deleting product in filesystem:", err);
+    res.status(500).json({ error: "Server error during product filesystem deletion" });
+  }
+});
+
 pgpService.init().then(() => {
   app.listen(PORT, () => {
-    console.log(`SECURE Server running on port ${ PORT } with Enterprise Protections and PGP Engine Active.`);
+    console.log(`SECURE Server running on port ${PORT} with Enterprise Protections and PGP Engine Active.`);
   });
 }).catch(err => {
   console.error("CRITICAL BOOT FAILURE: Failed to initialize PGP cryptographic service. Terminating.", err);

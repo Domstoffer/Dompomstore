@@ -405,41 +405,58 @@
       </form>
     </div>
 
-        <div id="product-list-section" style="margin-bottom: 40px; background: #ffffff; padding: 24px; border: 1px solid rgba(0,0,0,0.1);">
+    <div id="product-list-section"
+      style="margin-bottom: 40px; background: #ffffff; padding: 24px; border: 1px solid rgba(0,0,0,0.1);">
       <h2 style="font-size: 14px; margin-bottom: 20px; color: #000; text-transform: uppercase; letter-spacing: 0.1em;">
         📝 Aktuelle Produkte Bearbeiten
       </h2>
       <div id="products-list-container">Lädt Produkte...</div>
     </div>
-    
+
     <!-- EDIT PRODUCT MODAL (Hidden by default) -->
-    <div id="edit-product-modal" style="display:none; position:fixed; top:0; left:0; width:100%; height:100%; background:rgba(0,0,0,0.5); z-index:2000; align-items:center; justify-content:center;">
-      <div style="background:#fff; width:90%; max-width:500px; padding:24px; border-radius:8px; box-shadow:0 10px 30px rgba(0,0,0,0.2);">
+    <div id="edit-product-modal"
+      style="display:none; position:fixed; top:0; left:0; width:100%; height:100%; background:rgba(0,0,0,0.5); z-index:2000; align-items:center; justify-content:center;">
+      <div
+        style="background:#fff; width:90%; max-width:500px; padding:24px; border-radius:8px; box-shadow:0 10px 30px rgba(0,0,0,0.2);">
         <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:20px;">
-          <h2 style="font-size: 14px; margin:0; color: #000; text-transform: uppercase; letter-spacing: 0.1em;">Produkt Bearbeiten</h2>
-          <button onclick="closeEditModal()" style="background:none; border:none; font-size:18px; cursor:pointer;">✕</button>
+          <h2 style="font-size: 14px; margin:0; color: #000; text-transform: uppercase; letter-spacing: 0.1em;">Produkt
+            Bearbeiten</h2>
+          <button onclick="closeEditModal()"
+            style="background:none; border:none; font-size:18px; cursor:pointer;">✕</button>
         </div>
         <form id="edit-product-form" onsubmit="submitEditProduct(event)">
           <input type="hidden" id="edit-prod-id">
-          
-          <label style="font-size:11px; color:#555; text-transform:uppercase; font-weight:bold; display:block; margin-bottom:5px;">Name</label>
-          <input id="edit-prod-name" required style="width:100%; margin-bottom:15px; padding:10px; border:1px solid #ccc; border-radius:4px;">
-          
+
+          <label
+            style="font-size:11px; color:#555; text-transform:uppercase; font-weight:bold; display:block; margin-bottom:5px;">Name</label>
+          <input id="edit-prod-name" required
+            style="width:100%; margin-bottom:15px; padding:10px; border:1px solid #ccc; border-radius:4px;">
+
           <div style="display:flex; gap:10px; margin-bottom:15px;">
             <div style="flex:1;">
-              <label style="font-size:11px; color:#555; text-transform:uppercase; font-weight:bold; display:block; margin-bottom:5px;">Preis (USD)</label>
-              <input id="edit-prod-price" type="number" required style="width:100%; padding:10px; border:1px solid #ccc; border-radius:4px;">
+              <label
+                style="font-size:11px; color:#555; text-transform:uppercase; font-weight:bold; display:block; margin-bottom:5px;">Preis
+                (USD)</label>
+              <input id="edit-prod-price" type="number" required
+                style="width:100%; padding:10px; border:1px solid #ccc; border-radius:4px;">
             </div>
             <div style="flex:2;">
-              <label style="font-size:11px; color:#555; text-transform:uppercase; font-weight:bold; display:block; margin-bottom:5px;">Größen (Komma-getrennt)</label>
-              <input id="edit-prod-sizes" required style="width:100%; padding:10px; border:1px solid #ccc; border-radius:4px;">
+              <label
+                style="font-size:11px; color:#555; text-transform:uppercase; font-weight:bold; display:block; margin-bottom:5px;">Größen
+                (Komma-getrennt)</label>
+              <input id="edit-prod-sizes" required
+                style="width:100%; padding:10px; border:1px solid #ccc; border-radius:4px;">
             </div>
           </div>
-          
-          <label style="font-size:11px; color:#555; text-transform:uppercase; font-weight:bold; display:block; margin-bottom:5px;">Beschreibung</label>
-          <textarea id="edit-prod-desc" required style="width:100%; padding:12px; margin-bottom:20px; border-radius:4px; border:1px solid #ccc; font-family:inherit; min-height:80px;"></textarea>
-          
-          <button type="submit" id="edit-submit-btn" style="width:100%; padding:12px; background:#000; color:#fff; border:none; border-radius:4px; font-weight:bold; text-transform:uppercase; letter-spacing:0.1em; cursor:pointer;">Änderungen Speichern</button>
+
+          <label
+            style="font-size:11px; color:#555; text-transform:uppercase; font-weight:bold; display:block; margin-bottom:5px;">Beschreibung</label>
+          <textarea id="edit-prod-desc" required
+            style="width:100%; padding:12px; margin-bottom:20px; border-radius:4px; border:1px solid #ccc; font-family:inherit; min-height:80px;"></textarea>
+
+          <button type="submit" id="edit-submit-btn"
+            style="width:100%; padding:12px; background:#000; color:#fff; border:none; border-radius:4px; font-weight:bold; text-transform:uppercase; letter-spacing:0.1em; cursor:pointer;">Änderungen
+            Speichern</button>
           <div id="edit-prod-msg" style="font-size:12px; margin-top:10px; text-align:center;"></div>
         </form>
       </div>
@@ -564,7 +581,7 @@
       }
     }
 
-    
+
     let currentAdminProducts = [];
 
     async function loadAdminProducts() {
@@ -585,7 +602,7 @@
         container.innerHTML = '<p style="font-size:13px; color:#555;">Keine Produkte gefunden.</p>';
         return;
       }
-      
+
       let html = '<div style="display:flex; flex-direction:column; gap:10px;">';
       products.forEach(p => {
         const safeName = escapeHTML(p.name);
@@ -597,7 +614,10 @@
               <strong style="font-size:13px;">${safeName}</strong>
               <div style="font-size:11px; color:#777;">ID: ${safeId} | Preis: ${safePrice} USDC</div>
             </div>
-            <button onclick="openEditModal('${safeId}')" style="padding:6px 14px; font-size:11px; background:#f4f4f4; border:1px solid #ccc; border-radius:4px; cursor:pointer;">Bearbeiten</button>
+            <div style="display:flex; gap:8px;">
+                <button onclick="deleteProduct('${safeId}')" style="padding:6px 14px; font-size:11px; color:#fff; background:#e74c3c; border:none; border-radius:4px; cursor:pointer;">Löschen</button>
+                <button onclick="openEditModal('${safeId}')" style="padding:6px 14px; font-size:11px; background:#f4f4f4; border:1px solid #ccc; border-radius:4px; cursor:pointer;">Bearbeiten</button>
+            </div>
           </div>
         `;
       });
@@ -605,16 +625,37 @@
       container.innerHTML = html;
     }
 
+    async function deleteProduct(productId) {
+      if (confirm(`Warnung: Möchtest du das Produkt "${productId}" wirklich unwiderruflich löschen? Auch die zugehörigen Bilder werden vom Server entfernt.`)) {
+        try {
+          const res = await fetch(`${API_URL}/admin/products/${productId}`, {
+            method: 'DELETE',
+            credentials: 'include'
+          });
+          const data = await res.json();
+          if (res.ok) {
+            alert("Produkt erfolgreich gelöscht.");
+            loadAdminProducts(); // Reload UI
+          } else {
+            alert("Fehler beim Löschen: " + (data.error || "Unbekannter Fehler"));
+          }
+        } catch (err) {
+          console.error("Fehler beim Löschen:", err);
+          alert("Netzwerkfehler beim Löschen.");
+        }
+      }
+    }
+
     function openEditModal(productId) {
       const product = currentAdminProducts.find(p => p.id === productId);
-      if(!product) return;
-      
+      if (!product) return;
+
       document.getElementById('edit-prod-id').value = product.id;
       document.getElementById('edit-prod-name').value = product.name;
       document.getElementById('edit-prod-price').value = product.price;
       document.getElementById('edit-prod-sizes').value = (product.sizes || []).join(', ');
       document.getElementById('edit-prod-desc').value = product.description;
-      
+
       document.getElementById('edit-prod-msg').innerText = "";
       document.getElementById('edit-product-modal').style.display = "flex";
     }
@@ -628,7 +669,7 @@
       const btn = document.getElementById('edit-submit-btn');
       const msg = document.getElementById('edit-prod-msg');
       const productId = document.getElementById('edit-prod-id').value;
-      
+
       btn.innerText = "Speichere...";
       btn.disabled = true;
 
@@ -646,7 +687,7 @@
           body: JSON.stringify(payload),
           credentials: 'include'
         });
-        
+
         const data = await res.json();
         if (data.success) {
           msg.style.color = "#1c7c3a";
@@ -842,7 +883,7 @@
         msg.innerText = "❌ Fehler: Bitte wähle mindestens ein Bild aus.";
         return;
       }
-      
+
       if (fileInput.files.length > 5) {
         msg.style.color = "red";
         msg.innerText = "❌ Fehler: Maximal 5 Bilder erlaubt.";
