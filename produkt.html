@@ -1,0 +1,512 @@
+<!DOCTYPE html>
+<html lang="de">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Product – Dompomstore</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link
+        href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600&family=Syncopate:wght@400;700&display=swap"
+        rel="stylesheet">
+    <link rel="stylesheet" href="mobile-luxury.css">
+    <style>
+        /* PREMIUM MINIMAL THEME */
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            background: #ffffff;
+            color: #000000;
+            -webkit-font-smoothing: antialiased;
+        }
+
+        /* PREVENT DOUBLE TAP ZOOM */
+        html,
+        body {
+            touch-action: manipulation !important;
+        }
+
+        /* HEADER */
+        header {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 18px 25px;
+            background: #ffffff;
+            z-index: 100;
+            border-bottom: 1px solid rgba(0, 0, 0, 0.05);
+        }
+
+        .logo {
+            font-family: 'Syncopate', sans-serif;
+            font-size: 1.1rem;
+            font-weight: 700;
+            letter-spacing: 0.25em;
+            text-transform: uppercase;
+            color: #000;
+            position: absolute;
+            left: 50%;
+            transform: translateX(-50%);
+            text-decoration: none;
+        }
+
+        .cart-icon {
+            position: absolute;
+            right: 20px;
+            top: 50%;
+            transform: translateY(-50%);
+            cursor: pointer;
+        }
+
+        .cart-count {
+            position: absolute;
+            top: -6px;
+            right: -6px;
+            background: black;
+            color: white;
+            font-size: 10px;
+            padding: 2px 6px;
+            border-radius: 50%;
+        }
+
+        /* CART DRAWER */
+        #cart-dropdown {
+            position: fixed;
+            top: 0;
+            right: -100%;
+            width: 400px;
+            height: 100vh;
+            background: var(--bg);
+            border-left: 1px solid var(--border);
+            padding: 60px 40px;
+            transition: right 0.6s cubic-bezier(0.16, 1, 0.3, 1);
+            z-index: 1000;
+            display: flex;
+            flex-direction: column;
+        }
+
+        #cart-dropdown.show {
+            right: 0;
+        }
+
+        .cart-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 24px;
+            border-bottom: 1px solid rgba(0, 0, 0, 0.1);
+        }
+
+        .cart-header h2 {
+            font-family: 'Syncopate', sans-serif;
+            font-size: 1rem;
+            letter-spacing: 0.1em;
+            text-transform: uppercase;
+        }
+
+        #cart-items {
+            flex-grow: 1;
+            overflow-y: auto;
+        }
+
+        .cart-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 16px 24px;
+            border-bottom: 1px solid rgba(0, 0, 0, 0.05);
+        }
+
+        .cart-total {
+            display: flex;
+            justify-content: space-between;
+            font-size: 14px;
+            font-weight: 600;
+            margin-bottom: 20px;
+            letter-spacing: 0.05em;
+        }
+
+        .checkout-btn {
+            display: block;
+            width: 100%;
+            padding: 18px;
+            background: #000;
+            color: #fff;
+            text-align: center;
+            text-decoration: none;
+            font-family: 'Inter', sans-serif;
+            font-size: 13px;
+            font-weight: 600;
+            letter-spacing: 0.15em;
+            text-transform: uppercase;
+            transition: background 0.3s;
+            border: none;
+            cursor: pointer;
+        }
+
+        .checkout-btn:hover {
+            background: #222;
+        }
+
+        .cart-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.3);
+            backdrop-filter: blur(3px);
+            opacity: 0;
+            pointer-events: none;
+            transition: .4s;
+            z-index: 999;
+        }
+
+        .cart-overlay.show {
+            opacity: 1;
+            pointer-events: all;
+        }
+
+        /* SPLIT LAYOUT */
+        .split-layout {
+            display: flex;
+            min-height: 100vh;
+            margin-top: 50px;
+        }
+
+        .image-side {
+            width: 55vw;
+            height: calc(100vh - 50px);
+            position: sticky;
+            top: 50px;
+            background: #ffffff;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .image-track {
+            width: 100%;
+            height: 100%;
+        }
+
+        .image-track img {
+            width: 100%;
+            height: 100%;
+            object-fit: contain;
+            padding: 80px;
+        }
+
+        .info-side {
+            width: 45vw;
+            padding: 100px;
+            justify-content: center;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .product-title {
+            font-family: 'Syncopate', sans-serif;
+            font-size: 2.8rem;
+            letter-spacing: 0.05em;
+            margin-bottom: 12px;
+            line-height: 1.1;
+            color: #000;
+            text-transform: uppercase;
+        }
+
+        .product-price {
+            font-size: 1.4rem;
+            font-weight: 300;
+            color: #000;
+            margin-bottom: 60px;
+            letter-spacing: 0.05em;
+        }
+
+        .size-label {
+            font-size: 10px;
+            font-weight: 600;
+            letter-spacing: 0.15em;
+            text-transform: uppercase;
+            margin-bottom: 16px;
+            color: #777;
+        }
+
+        .size-row {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 12px;
+            margin-bottom: 40px;
+        }
+
+        .size-btn {
+            padding: 14px 0;
+            border: 1px solid rgba(0, 0, 0, 0.1);
+            background: transparent;
+            color: #000;
+            font-family: 'Inter', sans-serif;
+            font-size: 13px;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+
+        .size-btn:hover {
+            border-color: #000;
+        }
+
+        .size-btn.selected {
+            background: #000;
+            color: #fff;
+            border-color: #000;
+            font-weight: 600;
+        }
+
+        .add-to-cart {
+            width: 100%;
+            background: #000;
+            color: #fff;
+            border: none;
+            padding: 26px 0;
+            font-family: 'Inter', sans-serif;
+            font-size: 13px;
+            font-weight: 600;
+            letter-spacing: 0.15em;
+            text-transform: uppercase;
+            cursor: pointer;
+            transition: transform 0.2s, background 0.3s;
+            margin-bottom: 60px;
+        }
+
+        .add-to-cart:hover {
+            background: #222;
+            transform: translateY(-2px);
+        }
+
+        .product-description {
+            margin-top: 24px;
+            border-top: 1px solid rgba(0, 0, 0, 0.1);
+        }
+
+        .desc-toggle {
+            width: 100%;
+            text-align: left;
+            padding: 20px 0;
+            background: none;
+            border: none;
+            font-size: 11px;
+            font-weight: 600;
+            font-family: 'Syncopate', sans-serif;
+            letter-spacing: 0.15em;
+            text-transform: uppercase;
+            color: #000;
+            cursor: pointer;
+        }
+
+        .desc-content {
+            display: none;
+            padding-bottom: 24px;
+            font-size: 14px;
+            color: #777;
+            line-height: 1.6;
+        }
+
+        @media (max-width: 900px) {
+            .split-layout {
+                flex-direction: column;
+            }
+
+            .image-side {
+                width: 100%;
+                height: 60vh;
+                border-right: none;
+                border-bottom: 1px solid rgba(0, 0, 0, 0.05);
+            }
+
+            .info-side {
+                width: 100%;
+                padding: 40px 24px 100px 24px;
+            }
+
+            .product-title {
+                font-size: 1.8rem;
+            }
+
+            .add-to-cart {
+                position: fixed !important;
+                bottom: 0 !important;
+                left: 0 !important;
+                width: 100% !important;
+                margin-bottom: 0 !important;
+                padding-bottom: calc(26px + env(safe-area-inset-bottom)) !important;
+                z-index: 1000 !important;
+            }
+
+            .info-side {
+                padding-bottom: 120px !important;
+            }
+        }
+    </style>
+</head>
+
+<body>
+
+    <header class="store-header">
+        <div class="logo">
+            <a href="index.html" style="text-decoration:none; color:inherit;">DOM</a><a href="hidden.html"
+                class="secret-link"
+                style="cursor:pointer; opacity:0.3; transition:0.3s; text-decoration:none; color:inherit;"
+                onmouseover="this.style.opacity=1" onmouseout="this.style.opacity=0.3">P</a><a href="index.html"
+                style="text-decoration:none; color:inherit;">OMSTORE</a>
+        </div>
+        <div class="cart-icon" id="cart-icon">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"
+                style="width:22px;height:22px;">
+                <path d="M6 2l1 5h10l1-5z" />
+                <path d="M2 7h20v14H2z" />
+            </svg>
+            <span class="cart-count" id="cart-count">0</span>
+        </div>
+    </header>
+
+    <div class="cart-overlay" id="cart-overlay"></div>
+    <div id="cart-dropdown">
+        <h2 class="cart-title">Cart</h2>
+        <div id="cart-items"></div>
+        <div class="cart-total">
+            <span>Total</span>
+            <span id="cart-total-price">0 USD</span>
+        </div>
+        <button class="checkout-btn" id="proceedCheckout">Proceed to Checkout</button>
+    </div>
+
+    <div class="split-layout">
+        <div class="image-side">
+            <div class="image-track">
+                <img loading="lazy" id="product-image" src="" alt="Product Image">
+            </div>
+        </div>
+
+        <div class="info-side">
+            <div class="product-info-centered">
+                <h1 class="product-title" id="product-name">Loading...</h1>
+                <div class="product-price" id="product-price"></div>
+            </div>
+
+            <div class="size-label" id="size-label" style="display:none;">Größe Wählen</div>
+            <div class="size-row" id="sizes-container"></div>
+
+            <button class="add-to-cart" id="addToCartBtn">In den Warenkorb</button>
+
+            <div class="product-description">
+                <button class="desc-toggle" id="desc-toggle">Beschreibung +</button>
+                <div class="desc-content" id="product-description"></div>
+            </div>
+        </div>
+    </div>
+
+    <script src="products.js"></script>
+    <script src="cart.js"></script>
+    <script>
+        let currentProduct = null;
+        let selectedSize = null;
+
+        document.addEventListener("DOMContentLoaded", () => {
+            // 1. Read URL Params
+            const params = new URLSearchParams(window.location.search);
+            const productId = params.get("id");
+
+            // 2. Find Product
+            if (typeof products !== 'undefined') {
+                currentProduct = products.find(p => p.id === productId);
+            }
+
+            if (!currentProduct) {
+                document.getElementById("product-name").innerText = "Product not found";
+                document.getElementById("addToCartBtn").style.display = 'none';
+                return;
+            }
+
+            // 3. Populate Data
+            document.title = currentProduct.name + " – Dompomstore";
+            document.getElementById("product-name").innerText = currentProduct.name;
+            document.getElementById("product-price").innerText = currentProduct.price + " " + currentProduct.currency;
+            document.getElementById("product-image").src = currentProduct.image;
+            document.getElementById("product-image").alt = currentProduct.name;
+            document.getElementById("product-description").innerText = currentProduct.description;
+
+            // 4. Populate Sizes
+            const sizesContainer = document.getElementById("sizes-container");
+            const sizeLabel = document.getElementById("size-label");
+            if (currentProduct.sizes && currentProduct.sizes.length > 0) {
+                if (currentProduct.sizes.length === 1 && currentProduct.sizes[0] === "OS") {
+                    // If just One Size, we can hide the size selector or default it. Let's hide it to be clean.
+                    selectedSize = "OS";
+                } else {
+                    sizeLabel.style.display = "block";
+                    currentProduct.sizes.forEach(size => {
+                        const btn = document.createElement("button");
+                        btn.className = "size-btn";
+                        btn.innerText = size;
+                        btn.onclick = function () {
+                            document.querySelectorAll(".size-btn").forEach(b => b.classList.remove("selected"));
+                            btn.classList.add("selected");
+                            selectedSize = size;
+                        };
+                        sizesContainer.appendChild(btn);
+                    });
+                }
+            } else {
+                selectedSize = "OS"; // Fallback
+            }
+
+            // 5. Add to Cart Binding
+            const addBtn = document.getElementById("addToCartBtn");
+            addBtn.onclick = () => {
+                if (!selectedSize && currentProduct.sizes.length > 1) {
+                    alert("Bitte wähle eine Größe aus.");
+                    return;
+                }
+                addToCart(currentProduct.name, currentProduct.price, selectedSize || "OS");
+            };
+
+            // 6. Description Toggle
+            const descToggle = document.getElementById("desc-toggle");
+            const descContent = document.getElementById("product-description");
+            if (descToggle && descContent) {
+                descToggle.onclick = function () {
+                    if (descContent.style.display === "block") {
+                        descContent.style.display = "none";
+                        descToggle.textContent = "Beschreibung +";
+                    } else {
+                        descContent.style.display = "block";
+                        descToggle.textContent = "Beschreibung −";
+                    }
+                }
+            }
+        });
+    </script>
+
+    <!-- ANTI-ZOOM SCRIPT -->
+    <script>
+        let lastTouchEnd = 0;
+        document.addEventListener('touchend', function (event) {
+            const now = Date.now();
+            if (now - lastTouchEnd <= 300) {
+                event.preventDefault();
+            }
+            lastTouchEnd = now;
+        }, false);
+    </script>
+</body>
+
+</html>

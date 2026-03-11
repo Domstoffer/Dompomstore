@@ -803,35 +803,35 @@
         <div class="container grid-two" id="productsGrid">
 
 
-          <div class="product-box" data-price="49" data-link="produkt1.html">
+          <div class="product-box" data-price="49" data-link="produkt.html?id=DB-01">
             <div class="image-wrapper"><img loading="lazy" src="images/DB-01.jpg" alt="DB-01"></div>
             <div class="product-info-grid">
               <div class="product-name">DB-01</div>
             </div>
           </div>
 
-          <div class="product-box" data-price="19" data-link="produkt2.html">
+          <div class="product-box" data-price="19" data-link="produkt.html?id=PS-01">
             <div class="image-wrapper"><img loading="lazy" src="images/pepe-shirt.jpg" alt="PS-01"></div>
             <div class="product-info-grid">
               <div class="product-name">PS-01</div>
             </div>
           </div>
 
-          <div class="product-box" data-price="30" data-link="produkt3.html">
+          <div class="product-box" data-price="30" data-link="produkt.html?id=TESTCY">
             <div class="image-wrapper"><img loading="lazy" src="images/test.jpg" alt="Testcy"></div>
             <div class="product-info-grid">
               <div class="product-name">Testcy</div>
             </div>
           </div>
 
-          <div class="product-box" data-price="22" data-link="produkt4.html">
+          <div class="product-box" data-price="22" data-link="produkt.html?id=ZYN">
             <div class="image-wrapper"><img loading="lazy" src="images/zyn.png" alt="ZYN"></div>
             <div class="product-info-grid">
               <div class="product-name">ZYN</div>
             </div>
           </div>
 
-          <div class="product-box" data-price="18" data-link="produkt5.html">
+          <div class="product-box" data-price="18" data-link="produkt.html?id=PROD-05">
             <div class="image-wrapper"><img loading="lazy" src="https://picsum.photos/seed/p05/400/400"
                 alt="PRODUKT 05"></div>
             <div class="product-info-grid">
@@ -858,106 +858,8 @@
   </div>
 
   <script>
-
-
-    let cart = [];
-    const cartCount = document.getElementById("cart-count");
-    const cartDrawer = document.getElementById("cart-dropdown");
-    const overlay = document.getElementById("cart-overlay");
-    const checkoutBtn = document.getElementById("proceedCheckout");
-
-    function loadCart() {
-      const stored = localStorage.getItem("cart");
-      cart = stored ? JSON.parse(stored) : [];
-      updateCart(false);
-    }
-
-    function updateCart(save = true) {
-      const cartItems = document.getElementById("cart-items");
-      const totalPriceEl = document.getElementById("cart-total-price");
-      cartItems.innerHTML = "";
-      let total = 0;
-
-      if (cart.length === 0) {
-        cartItems.innerHTML = "<p style='font-size:11px; opacity:0.5; letter-spacing:0.1em; text-transform:uppercase;'>Cart is empty</p>";
-      } else {
-        cart.forEach((item, index) => {
-          total += item.price;
-          const div = document.createElement("div");
-          div.classList.add("cart-item");
-          div.innerHTML = `
-            <div>
-              <div style="font-size:12px; margin-bottom:5px;">${item.name} (${item.size || "OS"})</div>
-              <div style="opacity:0.5;">${item.price} USD</div>
-            </div>
-            <span class="remove-item" onclick="removeItem(${index})">✕</span>
-          `;
-          cartItems.appendChild(div);
-        });
-      }
-
-      totalPriceEl.innerText = total + " USD";
-      cartCount.innerText = cart.length;
-      if (save) localStorage.setItem("cart", JSON.stringify(cart));
-    }
-
-    window.removeItem = function(index) {
-      cart.splice(index, 1);
-      updateCart();
-    }
-
-    document.getElementById("cart-icon").onclick = () => {
-      cartDrawer.classList.add("show");
-      overlay.classList.add("show");
-    };
-
-    overlay.onclick = () => {
-      cartDrawer.classList.remove("show");
-      overlay.classList.remove("show");
-    };
-
-    window.addEventListener("pageshow", loadCart);
-    loadCart();
-
-    // PRODUCT CLICKS
-    document.querySelectorAll('.product-box').forEach(box => {
-      box.addEventListener('click', () => {
-        if (box.dataset.link) window.location.href = box.dataset.link;
-      });
-    });
-
-    
-
-    // CHECKOUT
-    if (checkoutBtn) {
-      checkoutBtn.addEventListener('click', () => {
-        if (cart.length === 0) {
-          alert('Cart is empty.');
-          return;
-        }
-        
-        window.location.href = 'checkout.html';
-      });
-    }
-  
-    
-  
-    const toggle = document.getElementById("gridToggle");
-    const grid = document.getElementById("productsGrid");
-    
-    toggle.onclick = function(){
-    
-    if(grid.classList.contains("grid-two")){
-    grid.classList.remove("grid-two");
-    grid.classList.add("grid-one");
-    } else {
-    grid.classList.remove("grid-one");
-    grid.classList.add("grid-two");
-    }
-    
-    }
-
-  </script>
+    // CART LOGIC MOVED TO cart.js
+</script>
 <!-- ANTI-ZOOM SCRIPT -->
 <script>
 let lastTouchEnd = 0;
@@ -969,6 +871,9 @@ document.addEventListener('touchend', function (event) {
   lastTouchEnd = now;
 }, false);
 </script>
+
+<script src="products.js"></script>
+<script src="cart.js"></script>
 </body>
 
 </html>
