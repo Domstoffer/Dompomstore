@@ -1,7 +1,7 @@
 /* mobile-luxury.css - Premium Mobile UX Overhaul */
 
 :root {
-    --nav-height: 60px;
+    --nav-height: 90px;
     --safe-bottom: env(safe-area-inset-bottom, 20px);
 }
 
@@ -23,7 +23,7 @@ body {
 }
 
 .main-logo-img {
-    width: 45px;
+    width: 35px;
     height: auto;
     margin-bottom: 5px;
     mix-blend-mode: multiply;
